@@ -1,0 +1,86 @@
+.app-frame {
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg-canvas);
+}
+
+.windowControls {
+  position: fixed;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 56px;
+  top: 4px;
+  right: 4px;
+  -webkit-app-region: no-drag;
+}
+
+.windowControls.isInline {
+  position: static;
+  top: auto;
+  right: auto;
+  height: auto;
+  flex-shrink: 0;
+}
+
+html.is-tauri[data-route='settings'] .windowControls:not(.isInline) {
+  top: 0;
+  right: 0;
+}
+
+.windowControl {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 32px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--fg-muted);
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+  transition:
+    background 0.12s var(--ease),
+    color 0.12s var(--ease);
+}
+
+.windowControl i {
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.windowControl:hover {
+  background: var(--overlay-05);
+  color: var(--fg);
+}
+
+.windowControlClose:hover {
+  background: #e81123;
+  color: #fff;
+}
+
+html.is-tauri .window-drag-region {
+  -webkit-app-region: drag;
+}
+
+html.is-tauri .window-drag-region button,
+html.is-tauri .window-drag-region a,
+html.is-tauri .window-drag-region input,
+html.is-tauri .window-drag-region textarea,
+html.is-tauri .window-drag-region select,
+html.is-tauri .window-drag-region [contenteditable],
+html.is-tauri .window-drag-region [data-no-drag],
+html.is-tauri .window-drag-region [data-window-controls],
+html.is-tauri .windowControls,
+html.is-tauri .windowControl {
+  -webkit-app-region: no-drag;
+}
+
+html.is-tauri .list-pane-toolbarDrag,
+html.is-tauri .archivedHeroDrag,
+html.is-tauri .settingsHeroDrag,
+html.is-tauri .sidebar-sectionLabel,
+html.is-tauri .gameSwitcherIdentity {
+  cursor: default;
+}

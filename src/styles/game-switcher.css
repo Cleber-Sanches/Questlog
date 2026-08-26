@@ -1,0 +1,542 @@
+.gameSwitcher {
+  position: relative;
+  z-index: var(--z-dropdown);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.gameSwitcher.isCollapsed {
+  width: 32px;
+  flex-shrink: 0;
+}
+
+/* Trigger card */
+.gameSwitcherTriggerCard {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 46px;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: var(--overlay-05);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s var(--ease);
+}
+
+.gameSwitcherTriggerCard.isCollapsed {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  justify-content: center;
+  gap: 0;
+  background: var(--overlay-075);
+  border: 1px solid var(--accent-blue, #0b84fe);
+  isolation: isolate;
+}
+
+.gameSwitcherTriggerCard.isCollapsed .gameSwitcherTriggerMain {
+  flex: 0 0 auto;
+  justify-content: center;
+}
+
+.gameSwitcherTriggerCard:hover,
+.gameSwitcherTriggerCard[aria-expanded='true'] {
+  background: var(--overlay-075);
+}
+
+.gameSwitcherTriggerMain {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.gameSwitcherTriggerText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.gameSwitcherTriggerName {
+  width: 100%;
+  font-size: var(--fs-md);
+  font-weight: 450;
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+  color: var(--fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gameSwitcherTriggerMeta {
+  width: 100%;
+  font-size: var(--fs-sm);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+  color: var(--fg-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gameSwitcherTriggerMore {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--icon-muted);
+  pointer-events: none;
+}
+
+.gameSwitcherTriggerMore i {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Icons */
+.gameSwitcherIconBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: var(--overlay-05);
+  border: 1px solid var(--overlay-05);
+  overflow: hidden;
+}
+
+.gameSwitcherIconXs,
+.gameSwitcherIconXsFallback {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.gameSwitcherIconXsFallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+  background: var(--overlay-10);
+}
+
+.gameSwitcherIconXs[hidden],
+.gameSwitcherIconXsFallback[hidden] {
+  display: none !important;
+}
+
+/* Dropdown panel */
+.gameSwitcherMenu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 1;
+  padding: 4px;
+  border-radius: 8px;
+  background: linear-gradient(0deg, var(--overlay-10), var(--overlay-10)), var(--bg-surface);
+  border: 1px solid var(--overlay-05);
+  box-shadow: 0 16px 48px rgb(0 0 0 / 0.5);
+  max-height: min(480px, 72vh);
+  overflow: hidden;
+}
+
+.gameSwitcher.isCollapsed .gameSwitcherMenu {
+  left: 0;
+  right: auto;
+  width: min(320px, calc(100vw - 80px));
+}
+
+.gameSwitcherMenuInner {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: min(472px, calc(72vh - 8px));
+}
+
+.gameSwitcherSearch {
+  position: relative;
+  flex-shrink: 0;
+  padding: 2px;
+}
+
+.gameSwitcherSearch i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: var(--icon-muted);
+  pointer-events: none;
+}
+
+.gameSwitcherSearch input {
+  width: 100%;
+  height: 34px;
+  padding: 0 12px 0 32px;
+  border: none;
+  border-radius: 8px;
+  background: var(--overlay-05);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  outline: none;
+}
+
+.gameSwitcherSearch input::placeholder {
+  color: var(--fg-muted);
+}
+
+.gameSwitcherSearch input:focus {
+  box-shadow: inset 0 0 0 1px var(--overlay-15);
+}
+
+.gameSwitcherMenuBody {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 2px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--overlay-15) transparent;
+}
+
+.gameSwitcherSectionLabel {
+  padding: 8px 8px 4px;
+  font-size: var(--fs-sm);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.2px;
+  color: var(--fg-muted);
+}
+
+.gameSwitcherList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gameSwitcherMenuEmpty {
+  padding: 12px 8px;
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+  color: var(--fg-muted);
+  text-align: center;
+}
+
+.gameSwitcherMenuItemRow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-radius: 8px;
+  padding-right: 4px;
+}
+
+.gameSwitcherMenuItemRow:hover:not(.isActive),
+.gameSwitcherMenuItemRow.hasRowMenu {
+  background: var(--overlay-025);
+}
+
+.gameSwitcherMenuItemRow.isActive {
+  background: var(--overlay-05);
+}
+
+.gameSwitcherMenuItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  min-height: 40px;
+  padding: 6px 8px;
+  border: none;
+  border-radius: inherit;
+  background: transparent;
+  color: var(--fg);
+  font-family: var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+}
+
+.gameSwitcherMenuItem.isDisabled {
+  padding: 10px 8px;
+  font-size: var(--fs-sm);
+  color: var(--fg-muted);
+  cursor: default;
+}
+
+.gameSwitcherMenuItem.isAdd:hover:not(:disabled) {
+  background: var(--overlay-025);
+}
+
+.gameSwitcherMenuItemText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+  min-height: 28px;
+}
+
+.gameSwitcherMenuItemName {
+  width: 100%;
+  font-size: var(--fs-md);
+  font-weight: 450;
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+  color: var(--fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gameSwitcherMenuItemMeta {
+  width: 100%;
+  font-size: var(--fs-sm);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+  color: var(--fg-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
+}
+
+.gameSwitcherMenuItemMeta.isAdd {
+  color: var(--accent-bright);
+  font-weight: 450;
+}
+
+.gameSwitcherMenuItemCheckSlot {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--icon-muted);
+}
+
+.gameSwitcherMenuItemCheckSlot i {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.gameSwitcherRowMenuWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.gameSwitcherRowMoreBtn {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin-right: 2px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--icon-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity 0.12s var(--ease),
+    background 0.12s var(--ease),
+    color 0.12s var(--ease);
+}
+
+.gameSwitcherMenuItemRow:hover .gameSwitcherRowMoreBtn,
+.gameSwitcherRowMenuWrap.isOpen .gameSwitcherRowMoreBtn {
+  opacity: 1;
+}
+
+.gameSwitcherRowMoreBtn:hover {
+  background: var(--overlay-05);
+  color: var(--fg);
+}
+
+.gameSwitcherRowMenu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 2;
+  min-width: 140px;
+  padding: 4px;
+  border-radius: 8px;
+  background: linear-gradient(0deg, var(--overlay-10), var(--overlay-10)), var(--bg-surface);
+  border: 1px solid var(--overlay-10);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.45);
+}
+
+.gameSwitcherRowMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 28px;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--fs-md);
+  font-weight: 450;
+  line-height: 1;
+  letter-spacing: -0.2px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s var(--ease);
+}
+
+.gameSwitcherRowMenuItem i {
+  width: 16px;
+  font-size: 16px;
+  color: var(--icon-muted);
+  flex-shrink: 0;
+}
+
+.gameSwitcherRowMenuItem:hover {
+  background: var(--overlay-05);
+}
+
+.gameSwitcherRowMenuItem.isDanger {
+  color: var(--color-danger);
+}
+
+.gameSwitcherRowMenuItem.isDanger i {
+  color: var(--color-danger);
+}
+
+.gameSwitcherRowMenuItem.isDanger:hover {
+  background: var(--color-danger-soft);
+}
+
+.gameSwitcherHint {
+  margin: 0;
+  padding: 6px 8px;
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+  color: var(--fg-muted);
+}
+
+.gameSwitcherHint.isError {
+  color: var(--color-danger);
+}
+
+.gameSwitcherMenuDivider {
+  height: 0;
+  border-top: 1px solid var(--overlay-05);
+  margin: 4px 2px;
+}
+
+.gameSwitcherMenuAction {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 28px;
+  padding: 4px 8px;
+  border: none;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--fs-md);
+  font-weight: 450;
+  line-height: 1;
+  letter-spacing: -0.2px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s var(--ease);
+}
+
+.gameSwitcherMenuAction:hover {
+  background: var(--overlay-05);
+}
+
+.gameSwitcherMenuAction > i {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  color: var(--icon-muted);
+  flex-shrink: 0;
+}
+
+.gameSwitcherMenuAction > span:first-of-type {
+  flex: 1;
+  min-width: 0;
+}
+
+.gameSwitcherMenuActionMeta {
+  flex-shrink: 0;
+  font-size: var(--fs-sm);
+  font-weight: 450;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-muted);
+}
+
+/* Legacy icon sizes */
+.gameSwitcherIcon,
+.gameSwitcherIconFallback {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius);
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.gameSwitcherIconFallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--fg);
+  background: var(--overlay-10);
+}
+
+.gameSwitcherChipIcon,
+.gameSwitcherChipFallback {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+
+.gameSwitcherChipFallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--fg);
+  background: var(--overlay-10);
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" role="img" aria-label="OpenCode">
+  <!-- marca OpenCode (opencode.ai/brand) -->
+  <g transform="translate(4.5 1) scale(0.0625)">
+    <path d="M180 240H60V120h120z" fill="#4B4646"/>
+    <path d="M180 60H60v180h120zm60 240H0V0h240z" fill="#F1ECEC"/>
+  </g>
+</svg>

@@ -1,0 +1,9 @@
+# Preferir pasta sem espaços (junction):
+#   cd C:\Users\Sancs\guia-conquistas
+#   npm run tauri:dev
+#
+# E toolchain MSVC (precisa Visual Studio Build Tools + C++):
+#   rustup default stable-x86_64-pc-windows-msvc
+
+[build]
+target-dir = "C:\\Users\\Sancs\\.cache\\guia-conquistas-target"

@@ -1,0 +1,828 @@
+#achievementList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.achievementGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.groupHeader {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  margin-top: var(--sp-3);
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0 0 var(--sp-2);
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  white-space: normal;
+  cursor: pointer;
+  transform: none;
+  transition: border-color 0.15s ease;
+  box-shadow: none;
+}
+
+.achievementGroup:first-child .groupHeader {
+  margin-top: 0;
+}
+
+.groupHeader:hover {
+  border-bottom-color: var(--color-border-strong);
+}
+
+.groupHeader:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.groupCollapseIcon {
+  flex-shrink: 0;
+  margin-left: auto;
+  font-size: 16px;
+  color: var(--color-text-body);
+  line-height: 1;
+  opacity: 0.65;
+  transform: rotate(180deg);
+  transition: transform 0.28s ease, color 0.15s ease, opacity 0.15s ease;
+}
+
+.groupHeader:hover .groupCollapseIcon {
+  opacity: 1;
+  color: var(--color-text-heading);
+}
+
+.groupHeader.is-collapsed .groupCollapseIcon {
+  transform: rotate(0deg);
+}
+
+.groupHeader h3 {
+  color: var(--color-text-heading);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.groupHeader .groupCount {
+  background: var(--color-panel);
+  color: var(--color-text-body);
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  border: 1px solid var(--color-border);
+}
+
+.groupHeader.baseGameHeader h3 .ph {
+  font-size: 17px;
+  line-height: 1;
+  color: var(--fg-muted);
+}
+
+.groupHeader.dlcHeader h3 {
+  color: var(--dlc-fg-bright);
+}
+
+.groupHeader.dlcHeader h3 .ph {
+  font-size: 17px;
+  line-height: 1;
+  color: var(--dlc-fg);
+}
+
+.groupHeader.levelHeader h3 .ph,
+.groupHeader.reqLevelHeader h3 .ph {
+  font-size: 17px;
+  color: var(--color-text-muted);
+  line-height: 1;
+}
+
+.groupHeader.reqLevelHeader h3 .ph {
+  color: var(--fg-muted);
+}
+
+.groupHeader.levelHeader.is-missable h3 .ph,
+.groupHeader.levelHeader.is-missable h3 .diffHex {
+  color: var(--diff-missable);
+}
+
+.groupHeader.levelHeader.is-easy h3 .ph,
+.groupHeader.levelHeader.is-easy h3 .diffHex {
+  color: var(--diff-easy);
+}
+
+.groupHeader.levelHeader.is-medium h3 .ph,
+.groupHeader.levelHeader.is-medium h3 .diffHex {
+  color: var(--diff-medium);
+}
+
+.groupHeader.levelHeader.is-hard h3 .ph,
+.groupHeader.levelHeader.is-hard h3 .diffHex {
+  color: var(--diff-hard);
+}
+
+.groupHeader.levelHeader h3 .diffHex {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.groupSection {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 0.28s ease;
+  overflow-anchor: none;
+}
+
+.groupSection.is-collapsed {
+  grid-template-rows: 0fr;
+}
+
+.groupSectionInner {
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  contain: layout;
+}
+
+.achievement.isCompact {
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px;
+  border-radius: var(--radius);
+  border-color: transparent;
+  background: transparent;
+}
+
+.achievement.isCompact:hover {
+  background: var(--overlay-05);
+}
+
+.achievement.isCompact.isSelected {
+  background: var(--overlay-05);
+}
+
+.achievement.isCompact.isSelected:hover {
+  background: var(--overlay-075);
+}
+
+.achievement.isCompact .achievementIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+}
+
+.achievement.isCompact .info p {
+  margin-top: 0;
+  font-size: var(--fs-sm);
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+}
+
+.achievement.isCompact .cardMeta,
+.achievement.isCompact .titleMarks,
+.achievement.isCompact .manualBadge {
+  display: none;
+}
+
+.achievement.isCompact .titleRow h2 {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+}
+
+.achievement.isCompact .actions {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.achievement.isCompact .statusLabel,
+.achievement.isCompact .globalStat {
+  display: none;
+}
+
+.achievement.isCompact.isCompleted {
+  background: transparent;
+  border-color: transparent;
+  background-image: none;
+  box-shadow: none;
+}
+
+.achievement.isCompact.isCompleted:hover {
+  background: var(--overlay-05);
+  background-image: none;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.achievement.isCompact.isCompleted.isSelected {
+  background: color-mix(in srgb, var(--color-success) 8%, transparent);
+  background-image: none;
+  box-shadow: none;
+}
+
+.achievement.isCompact.isCompleted.isSelected:hover {
+  background: color-mix(in srgb, var(--color-success) 12%, transparent);
+  background-image: none;
+}
+
+#achievementList.isCompact {
+  gap: 8px;
+}
+
+#achievementList.isCompact .groupHeader {
+  padding: 28px 8px 2px;
+  margin-top: 0;
+  border-bottom: none;
+}
+
+#achievementList.isCompact .groupHeader h3 {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--fg-muted);
+}
+
+#achievementList.isCompact .groupHeader .groupCount {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: var(--fs-sm);
+  color: var(--fg-muted);
+}
+
+#achievementList.isCompact .groupCollapseIcon {
+  display: none;
+}
+
+#achievementList.isCompact .groupSectionInner {
+  gap: 0;
+}
+
+.achievement {
+  position: relative;
+  overflow: visible;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  transition: border-color 0.15s var(--ease), background 0.15s var(--ease);
+  cursor: pointer;
+}
+
+.achievement:hover {
+  border-color: var(--ring);
+  background: var(--color-row-hover);
+}
+
+.achievement.isCompleted {
+  overflow: visible;
+  border: 1px solid var(--border);
+  box-shadow: none;
+  /* degradê só no padding; sob a borda fica o card neutro (sem vazamento verde) */
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-success) 14%, transparent) 0%,
+      color-mix(in srgb, var(--color-success) 4%, transparent) 8%,
+      transparent 18%
+    ) padding-box,
+    linear-gradient(var(--card), var(--card)) border-box;
+  background-clip: padding-box, border-box;
+}
+
+.achievement.isCompleted:hover {
+  border-color: var(--ring);
+  box-shadow: none;
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-success) 32%, transparent) 0%,
+      color-mix(in srgb, var(--color-success) 12%, transparent) 14%,
+      transparent 34%
+    ) padding-box,
+    linear-gradient(var(--color-row-hover), var(--color-row-hover)) border-box;
+  background-clip: padding-box, border-box;
+}
+
+.achievementIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: var(--background);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.achievement.isCompleted .achievementIcon {
+  border-color: var(--border);
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  min-width: 0;
+}
+
+.titleRow h2 {
+  margin: 0;
+  min-width: 0;
+  color: var(--color-text-heading);
+  font-weight: 600;
+  font-size: var(--fs-md);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.titleMarks {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.info p {
+  margin: 2px 0 0;
+  color: var(--color-text-body);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.35;
+  font-size: var(--fs-base);
+  max-width: 100%;
+}
+
+@media (min-width: 1200px) {
+  .info p {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  min-height: 32px;
+  position: relative;
+  z-index: 2;
+}
+
+.metaChip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 26px;
+  max-width: 100%;
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--overlay-10);
+  background: var(--overlay-10);
+  color: rgb(255 255 255 / 0.88);
+  font-size: 12px;
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tracking);
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.metaChip .ph {
+  font-size: 13px;
+  color: rgb(255 255 255 / 0.65);
+}
+
+.metaChip > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.steamDlcTag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 16px;
+  padding: 0 5px;
+  border-radius: 2px;
+  background: var(--dlc);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-transform: uppercase;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+
+.levelTag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 16px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  background: #3f3f46;
+  color: var(--fg);
+  border: 1px solid var(--icon-muted);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.manualBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(232, 165, 75, 0.14);
+  color: var(--color-warning);
+  font-size: 10px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.helpLinks .uiTooltipWrap {
+  display: inline-flex;
+}
+
+.actions .uiTooltipWrap {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.titleMarks .uiTooltipWrap {
+  display: inline-flex;
+}
+
+.helpLinks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  z-index: 2;
+  user-select: none;
+}
+
+.helpLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 72px;
+  min-height: 28px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  border: 1px solid var(--overlay-10);
+  background: var(--overlay-10);
+  color: rgb(255 255 255 / 0.82);
+  font-size: 11px;
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tracking);
+  text-decoration: none;
+  line-height: 1.25;
+  cursor: pointer;
+  box-sizing: border-box;
+  font-family: var(--font-sans);
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+  z-index: 1;
+}
+
+.helpLink .ph {
+  font-size: 13px;
+  color: rgb(255 255 255 / 0.65);
+}
+
+.helpLink:hover:not(.isDisabled):not(.isMuted) {
+  color: var(--fg);
+  border-color: var(--overlay-15);
+  background: var(--overlay-15);
+}
+
+.helpLink:hover:not(.isDisabled):not(.isMuted) .ph {
+  color: var(--fg);
+}
+
+.helpLink.helpTip {
+  position: relative;
+  width: auto;
+  min-width: 72px;
+  padding-inline: 8px;
+}
+
+/* Sem dicas: ainda clicável, só mais discreto */
+.helpLink.helpTip.isMuted {
+  opacity: 0.7;
+  color: rgb(255 255 255 / 0.55);
+}
+
+.helpLink.helpTip.isMuted .ph {
+  color: rgb(255 255 255 / 0.45);
+}
+
+.helpLink.helpTip.isMuted:hover {
+  opacity: 1;
+  color: var(--fg);
+  border-color: var(--overlay-15);
+  background: var(--overlay-15);
+}
+
+.helpTip.hasImages {
+  border-color: var(--overlay-15);
+  color: rgb(255 255 255 / 0.9);
+}
+
+.helpTip.hasImages .ph-note {
+  color: rgb(255 255 255 / 0.7);
+}
+
+.helpTipImageMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: 1px;
+  border-radius: 4px;
+  background: rgba(56, 189, 248, 0.12);
+  color: #7dd3fc;
+  pointer-events: none;
+}
+
+.helpTipImageMark .ph {
+  font-size: 11px;
+  color: inherit;
+}
+
+.helpTip.hasImages:hover:not(.isDisabled) .helpTipImageMark {
+  background: rgba(56, 189, 248, 0.2);
+  color: #bae6fd;
+}
+
+.helpLink.isDisabled {
+  opacity: 0.48;
+  color: rgb(255 255 255 / 0.42);
+  border-color: var(--overlay-05);
+  background: var(--overlay-05);
+  cursor: default;
+  pointer-events: none;
+}
+
+.helpLink.isDisabled .ph {
+  color: rgb(255 255 255 / 0.35);
+}
+
+.achievement.isCompleted .helpLink,
+.achievement.isCompleted .metaChip {
+  background: var(--overlay-10);
+  border-color: var(--overlay-10);
+  color: rgb(255 255 255 / 0.78);
+}
+
+.achievement.isCompleted .helpLink .ph,
+.achievement.isCompleted .metaChip .ph {
+  color: rgb(255 255 255 / 0.6);
+}
+
+.achievement.isCompleted .helpLink.isDisabled {
+  opacity: 0.48;
+  background: var(--overlay-05);
+  border-color: var(--overlay-05);
+  color: rgb(255 255 255 / 0.42);
+}
+
+.achievement.isCompleted .steamDlcTag {
+  opacity: 0.7;
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  flex-shrink: 0;
+  padding-left: 8px;
+}
+
+.globalStat {
+  display: inline-flex;
+  align-items: center;
+  color: #d4d4d8;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.status {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 28px;
+  padding: 4px 8px 4px 6px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  user-select: none;
+  color: var(--fg-muted);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.25;
+  transition: all 0.15s var(--ease);
+  background: transparent;
+  flex-shrink: 0;
+}
+
+.status:hover {
+  color: var(--color-text-title);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.status:has(input:checked) {
+  background: transparent;
+  border-color: transparent;
+  color: var(--color-success);
+}
+
+.status:has(input:checked):hover {
+  background: var(--color-success-soft);
+}
+
+.status:has(input:checked) .statusLabel {
+  font-weight: 500;
+}
+
+.statusLabel {
+  line-height: 1.25;
+}
+
+.status input[type='checkbox'] {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+.statusIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-size: 15px;
+}
+
+.statusIcon .ph {
+  font-size: 15px;
+}
+
+.statusIconOn {
+  display: none;
+  color: var(--color-success);
+}
+
+.statusIconOff {
+  display: inline-flex;
+  color: var(--fg-muted);
+}
+
+.status:has(input:checked) .statusIconOn {
+  display: inline-flex;
+}
+
+.status:has(input:checked) .statusIconOff {
+  display: none;
+}
+
+.diffChip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.diffChip.is-easy {
+  color: var(--diff-easy);
+}
+.diffChip.is-medium {
+  color: var(--diff-medium);
+}
+.diffChip.is-hard {
+  color: var(--diff-hard);
+}
+.diffChip.is-missable {
+  color: var(--diff-missable);
+}
+
+.diffHex {
+  width: 18px;
+  height: 18px;
+}
+
+.diffHexShape {
+  fill: transparent;
+  stroke-width: 1.25;
+  stroke-linejoin: round;
+}
+
+.diffHexMark {
+  stroke-width: 1.25;
+  fill: none;
+}
+
+.diffHex.is-easy .diffHexShape {
+  fill: var(--diff-easy-fill);
+  stroke: var(--diff-easy-stroke);
+}
+.diffHex.is-easy .diffHexMark {
+  stroke: var(--diff-easy-stroke);
+}
+
+.diffHex.is-medium .diffHexShape {
+  fill: var(--diff-medium-fill);
+  stroke: var(--diff-medium-stroke);
+}
+.diffHex.is-medium .diffHexMark {
+  stroke: var(--diff-medium-stroke);
+}
+
+.diffHex.is-hard .diffHexShape {
+  fill: var(--diff-hard-fill);
+  stroke: var(--diff-hard-stroke);
+}
+.diffHex.is-hard .diffHexMark {
+  stroke: var(--diff-hard-stroke);
+}
+
+.diffHex.is-missable .diffHexShape {
+  fill: var(--diff-missable-fill);
+  stroke: var(--diff-missable-stroke);
+  stroke-dasharray: 2.4 1.8;
+  stroke-linecap: round;
+}
+.diffHex.is-missable .diffHexMark {
+  stroke: var(--diff-missable-stroke);
+  stroke-dasharray: none;
+}
+.diffHex.is-missable .diffHexDot {
+  fill: var(--diff-missable-stroke);
+  stroke: none;
+}
+
+.achievement.isCompleted .diffChip {
+  opacity: 0.55;
+}
+.achievement.isCompleted .levelTag {
+  opacity: 0.72;
+}

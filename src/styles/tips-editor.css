@@ -1,0 +1,201 @@
+/* React Quill + visualização de dicas HTML */
+
+.tipsEditor {
+  width: 100%;
+  min-height: 0;
+  border: none;
+  border-radius: 8px;
+  background: #141414;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.tipsEditor > .quill {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.tipsEditor--loading {
+  min-height: 100px;
+  display: grid;
+  place-items: center;
+  color: rgb(255 255 255 / 0.5);
+  font-size: 14px;
+}
+
+.tipsEditor .ql-toolbar.ql-snow {
+  border: none;
+  border-bottom: 0.5px solid rgb(255 255 255 / 0.05);
+  background: transparent;
+  padding: 8px 10px;
+  flex-shrink: 0;
+}
+
+.tipsEditor .ql-container.ql-snow {
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  color: #fff;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.tipsEditor .ql-editor {
+  min-height: 100%;
+  overflow: visible;
+  line-height: 1.45;
+  letter-spacing: -0.2px;
+  padding-bottom: 12px;
+}
+
+.tipsEditor .ql-editor.ql-blank::before {
+  color: rgb(255 255 255 / 0.5);
+  font-style: normal;
+  opacity: 1;
+}
+
+.tipsEditor .ql-snow .ql-stroke {
+  stroke: var(--color-text-muted);
+}
+
+.tipsEditor .ql-snow .ql-fill {
+  fill: var(--color-text-muted);
+}
+
+.tipsEditor .ql-snow .ql-picker {
+  color: var(--color-text-muted);
+}
+
+.tipsEditor .ql-snow.ql-toolbar button:hover .ql-stroke,
+.tipsEditor .ql-snow.ql-toolbar button.ql-active .ql-stroke {
+  stroke: var(--color-text-heading);
+}
+
+.tipsEditor .ql-snow.ql-toolbar button:hover .ql-fill,
+.tipsEditor .ql-snow.ql-toolbar button.ql-active .ql-fill {
+  fill: var(--color-text-heading);
+}
+
+.tipsEditor .ql-editor img,
+.tipsView img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 0.5rem 0;
+  display: block;
+}
+
+.tipsView--html img {
+  cursor: zoom-in;
+  outline: 1px solid transparent;
+  transition: outline-color 0.15s ease, opacity 0.15s ease;
+}
+
+.tipsView--html img:hover {
+  outline-color: rgba(255, 255, 255, 0.18);
+  opacity: 0.95;
+}
+
+.tipsView {
+  color: var(--color-text-body);
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+}
+
+.tipsView--plain {
+  white-space: pre-wrap;
+}
+
+.tipsView--html p {
+  margin: 0 0 0.65em;
+}
+
+.tipsView--html p:last-child {
+  margin-bottom: 0;
+}
+
+.tipsView--html ul,
+.tipsView--html ol {
+  margin: 0 0 0.65em 1.2em;
+  padding: 0;
+}
+
+.tipsView--html a {
+  color: var(--color-accent);
+}
+
+.tipsEmpty {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+}
+
+/* Lightbox (acima do modal de dicas) */
+.tipsLightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 24px 28px;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(6px);
+  cursor: zoom-out;
+}
+
+.tipsLightboxCloseTip {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+}
+
+.tipsLightboxClose {
+  position: relative;
+  top: auto;
+  right: auto;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(24, 24, 27, 0.9);
+  color: var(--color-text-title);
+  cursor: pointer;
+}
+
+.tipsLightboxClose:hover {
+  background: rgba(39, 39, 42, 0.95);
+  color: var(--fg);
+}
+
+.tipsLightboxImg {
+  max-width: min(96vw, 1200px);
+  max-height: min(82vh, 900px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+  cursor: default;
+}
+
+.tipsLightboxHint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--fg-muted);
+}

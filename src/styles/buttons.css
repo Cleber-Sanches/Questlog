@@ -1,0 +1,169 @@
+.btn {
+  position: relative;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-md);
+  letter-spacing: -0.2px;
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+  cursor: pointer;
+  transition:
+    background 0.12s var(--ease),
+    border-color 0.12s var(--ease),
+    color 0.12s var(--ease);
+}
+
+.btn:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: default;
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-brand) 45%, transparent);
+}
+
+.btn-primary:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-brand) 55%, transparent);
+}
+
+.btn-danger:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--danger-hot) 40%, transparent);
+}
+
+.btn-sm {
+  height: 28px;
+  padding: 0 10px;
+  font-size: var(--fs-sm);
+}
+
+.btn-md {
+  height: 32px;
+  padding: 0 12px;
+}
+
+.btn-lg {
+  height: 36px;
+  padding: 0 14px;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  gap: 0;
+}
+
+.btn-has-ripple {
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: var(--color-brand);
+  color: #fff;
+  border-color: transparent;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-brand-hover);
+}
+
+.btn-primary:active:not(:disabled) {
+  background: color-mix(in srgb, var(--color-brand) 88%, #000);
+}
+
+.btn-secondary {
+  background: var(--overlay-10);
+  border-color: transparent;
+  color: var(--fg);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--overlay-15);
+}
+
+.btn-outline {
+  background: var(--overlay-10);
+  border-color: transparent;
+  color: var(--fg);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: var(--overlay-15);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--fg-muted);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  color: var(--fg);
+  background: var(--overlay-10);
+}
+
+.btn-danger {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+  border-color: transparent;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--danger-hot) 22%, transparent);
+}
+
+.btnIcon {
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.btn-sm .btnIcon {
+  font-size: 14px;
+}
+
+.btn-icon .btnIcon,
+.btn-icon > i {
+  font-size: 16px;
+  color: inherit;
+}
+
+.btn-secondary.btn-icon,
+.btn-outline.btn-icon,
+.btn-ghost.btn-icon {
+  color: var(--icon-muted);
+}
+
+.btn-secondary.btn-icon:hover:not(:disabled),
+.btn-outline.btn-icon:hover:not(:disabled),
+.btn-ghost.btn-icon:hover:not(:disabled) {
+  color: var(--fg);
+}
+
+.btnRippleLayer {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.btnRipple {
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+}

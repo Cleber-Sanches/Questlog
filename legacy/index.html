@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Conquistas - Soulmask</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/duotone/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css">
+    <link rel="stylesheet" href="style.css?v=20260803d">
+</head>
+
+<body>
+
+<div class="sidebar">
+    <div class="gameSwitcher" id="gameSwitcher">
+        <button type="button" class="gameSwitcherTrigger" id="gameSwitcherTrigger" aria-haspopup="listbox" aria-expanded="false">
+            <img id="activeGameIcon" class="gameSwitcherIcon" src="" alt="" hidden>
+            <span class="gameSwitcherIconFallback" id="activeGameIconFallback" aria-hidden="true">SM</span>
+            <span class="gameSwitcherText">
+                <span class="gameSwitcherLabel">Jogo</span>
+                <span class="gameSwitcherName" id="activeGameName">Soulmask</span>
+            </span>
+            <svg class="gameSwitcherChevrons" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="7 9 12 4 17 9"/><polyline points="7 15 12 20 17 15"/>
+            </svg>
+        </button>
+
+        <div class="gameSwitcherMenu hidden" id="gameSwitcherMenu" role="listbox">
+            <div class="gameSwitcherSearch">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="search" id="gameSearchInput" placeholder="Buscar na lista ou na Steam..." autocomplete="off">
+            </div>
+            <div class="gameSwitcherMenuBody">
+                <div class="gameSwitcherSectionLabel" id="gameLibraryLabel">Seus jogos</div>
+                <div id="gameLibraryList" class="gameSwitcherList"></div>
+                <div class="gameSwitcherSectionLabel hidden" id="gameSearchLabel">Resultados da Steam</div>
+                <div id="gameSearchResults" class="gameSwitcherList"></div>
+                <p class="gameSwitcherHint" id="gameSwitcherHint">Digite o nome para filtrar ou adicionar um jogo.</p>
+            </div>
+            <button type="button" class="gameSwitcherArchivedLink" id="openArchivedGames">
+                <span class="gameSwitcherArchivedLinkLabel">
+                    <i class="ph-duotone ph-archive" aria-hidden="true"></i>
+                    <span>Arquivados</span>
+                </span>
+                <span class="gameSwitcherArchivedMeta">
+                    <span class="gameSwitcherArchivedCount" id="archivedCount">0</span>
+                    <i class="ph-bold ph-caret-right" aria-hidden="true"></i>
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <ul>
+        <li class="active" data-filter="all">
+            <span class="navLabel">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+                Todas
+            </span>
+            <span id="countAll">0</span>
+        </li>
+        <li data-filter="completed">
+            <span class="navLabel">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.13V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+                Concluídas
+            </span>
+            <span id="countCompleted">0</span>
+        </li>
+        <li data-filter="pending">
+            <span class="navLabel">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                Pendentes
+            </span>
+            <span id="countPending">0</span>
+        </li>
+    </ul>
+
+    <div class="sidebarBackup">
+        <p class="sidebarBackupLabel">Backup do perfil</p>
+        <div class="sidebarBackupSeg" role="group" aria-label="Backup do perfil">
+            <button type="button" class="sidebarBackupSegBtn" id="exportProfileBtn">
+                <i class="ph-bold ph-export" aria-hidden="true"></i>
+                <span>Exportar</span>
+            </button>
+            <button type="button" class="sidebarBackupSegBtn" id="importProfileBtn">
+                <i class="ph-bold ph-download-simple" aria-hidden="true"></i>
+                <span>Importar</span>
+            </button>
+        </div>
+        <input type="file" id="importProfileFile" accept=".json,application/json" hidden>
+    </div>
+
+</div>
+
+<div class="content">
+    <div id="guideView">
+    <header class="pageHeader">
+        <h1>Guia de Conquistas</h1>
+        <div class="headerToolbar">
+            <div class="searchWrap">
+                <i class="ph-duotone ph-magnifying-glass searchIcon" aria-hidden="true"></i>
+                <input
+                    id="search"
+                    type="search"
+                    placeholder="Pesquisar conquista, nv 20…"
+                    autocomplete="off">
+                <kbd class="searchKbd">Ctrl K</kbd>
+            </div>
+            <div class="header-actions">
+                <div class="gameLinksHeader" id="gameLinksHeader">
+                    <button type="button" class="btn btn-secondary btn-links" id="gameLinksTrigger" aria-haspopup="menu" aria-expanded="false">
+                        <i class="ph-bold ph-link-simple btnIcon" aria-hidden="true"></i>
+                        <span>Links</span>
+                        <i class="ph-bold ph-caret-down btnIcon btnIconCaret" aria-hidden="true"></i>
+                    </button>
+                    <div class="gameLinksHeaderMenu hidden" id="gameLinksHeaderMenu" role="menu"></div>
+                </div>
+                <div class="headerGuideGroup" role="group" aria-label="Guia do jogo">
+                    <button type="button" class="btn btn-secondary headerGuideBtn" id="exportGuideBtn" data-tooltip="Exportar guia deste jogo" data-tooltip-pos="bottom">
+                        <i class="ph-bold ph-export btnIcon" aria-hidden="true"></i>
+                        <span>Exportar</span>
+                    </button>
+                    <button type="button" class="btn btn-secondary headerGuideBtn" id="importGuideBtn" data-tooltip="Importar guia deste jogo (não altera o progresso)" data-tooltip-pos="bottom">
+                        <i class="ph-bold ph-download-simple btnIcon" aria-hidden="true"></i>
+                        <span>Importar</span>
+                    </button>
+                    <input type="file" id="importGuideFile" accept=".json,application/json" hidden>
+                </div>
+                <button id="newAchievement" class="btn btn-primary" type="button">
+                    <i class="ph-bold ph-plus btnIcon" aria-hidden="true"></i>
+                    <span>Nova Conquista</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="viewToggle">
+        <div class="listControls">
+            <div class="listControlShell">
+                <div class="groupByWrap" id="groupByWrap">
+                    <button type="button" class="listControlBtn" id="groupByTrigger" aria-haspopup="listbox" aria-expanded="false">
+                        <span class="listControlLead" aria-hidden="true">
+                            <i class="ph-duotone ph-rows"></i>
+                        </span>
+                        <span class="listControlText">
+                            <span class="listControlLabel">Agrupar</span>
+                            <span class="listControlValue" id="groupByValue">Lista</span>
+                        </span>
+                        <i class="ph-bold ph-caret-down listControlCaret" aria-hidden="true"></i>
+                    </button>
+                    <div class="listControlMenu hidden" id="groupByMenu" role="listbox" aria-label="Agrupar por">
+                        <button type="button" class="listControlOption is-active" role="option" data-view="flat" aria-selected="true">
+                            <span class="listControlOptionIcon" aria-hidden="true"><i class="ph-duotone ph-list-bullets"></i></span>
+                            <span class="listControlOptionLabel">Lista</span>
+                            <i class="ph-bold ph-check listControlOptionCheck" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="listControlOption" role="option" data-view="grouped" aria-selected="false">
+                            <span class="listControlOptionIcon" aria-hidden="true"><i class="ph-duotone ph-squares-four"></i></span>
+                            <span class="listControlOptionLabel">Grupos</span>
+                            <i class="ph-bold ph-check listControlOptionCheck" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="listControlOption" role="option" data-view="dlc" aria-selected="false">
+                            <span class="listControlOptionIcon" aria-hidden="true"><i class="ph-duotone ph-puzzle-piece"></i></span>
+                            <span class="listControlOptionLabel">DLC</span>
+                            <i class="ph-bold ph-check listControlOptionCheck" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="listControlOption" role="option" data-view="level" aria-selected="false">
+                            <span class="listControlOptionIcon" aria-hidden="true"><i class="ph-duotone ph-gauge"></i></span>
+                            <span class="listControlOptionLabel">Dificuldade</span>
+                            <i class="ph-bold ph-check listControlOptionCheck" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="listControlOption" role="option" data-view="reqLevel" aria-selected="false">
+                            <span class="listControlOptionIcon" aria-hidden="true"><i class="ph-duotone ph-stairs"></i></span>
+                            <span class="listControlOptionLabel">Nível</span>
+                            <i class="ph-bold ph-check listControlOptionCheck" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="listControlDivider" aria-hidden="true"></div>
+
+                <div class="filtersWrap" id="filtersWrap">
+                    <button type="button" class="listControlBtn" id="filtersTrigger" aria-haspopup="dialog" aria-expanded="false">
+                        <span class="listControlLead" aria-hidden="true">
+                            <i class="ph-duotone ph-funnel"></i>
+                        </span>
+                        <span class="listControlLabel is-solo">Filtros</span>
+                        <span class="filtersCount hidden" id="filtersCount" aria-hidden="true">0</span>
+                        <i class="ph-bold ph-caret-down listControlCaret" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <div class="filtersPanel hidden" id="filtersPanel" role="dialog" aria-label="Filtros da lista">
+                    <div class="filtersPanelHead">
+                        <span>Combinar filtros</span>
+                        <button type="button" class="filtersClearBtn" id="filtersClearBtn">Limpar</button>
+                    </div>
+                    <div class="filtersPanelBody">
+                        <div class="filtersSection">
+                            <span class="filtersSectionTitle">Dificuldade</span>
+                            <div class="filtersChips" id="filterDifficultyChips"></div>
+                        </div>
+                        <div class="filtersSection filtersSectionLevels">
+                            <span class="filtersSectionTitle">Nível</span>
+                            <div class="filtersChips" id="filterReqLevelChips"></div>
+                        </div>
+                        <div class="filtersSection">
+                            <span class="filtersSectionTitle">DLC</span>
+                            <div class="filtersChips" id="filterDlcChips"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="syncCluster">
+            <button type="button" id="syncNow" class="syncBtn" data-tooltip="Sincronizar progresso da Steam" data-tooltip-pos="bottom">
+                <i class="ph-bold ph-arrows-clockwise syncBtnIcon" aria-hidden="true"></i>
+                <span class="syncBtnLabel">Sync</span>
+            </button>
+            <span id="syncStatus" class="syncStatus hidden"></span>
+        </div>
+    </div>
+
+    <div id="achievementList"></div>
+    </div>
+
+    <div id="archivedView" class="archivedView hidden">
+        <header class="archivedHero">
+            <button type="button" id="archivedBackBtn" class="archivedBackBtn" aria-label="Voltar ao guia">
+                <i class="ph-bold ph-arrow-left" aria-hidden="true"></i>
+            </button>
+            <div class="archivedHeroCopy">
+                <h1>Arquivados</h1>
+                <span class="archivedPageSubtitle" id="archivedPageSubtitle">0</span>
+            </div>
+            <label class="archivedHeroSearch" for="archivedSearch">
+                <i class="ph-duotone ph-magnifying-glass archivedSearchIcon" aria-hidden="true"></i>
+                <input
+                    id="archivedSearch"
+                    type="search"
+                    placeholder="Filtrar…"
+                    autocomplete="off">
+            </label>
+        </header>
+        <div id="archivedGamesGrid" class="archivedGamesGrid"></div>
+    </div>
+</div>
+
+<div id="toastContainer" class="toastContainer"></div>
+
+<div id="confirmManualModal" class="hidden">
+    <div class="modal confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmManualTitle">
+        <div class="confirmModalIconWrap">
+            <img id="confirmManualIcon" class="confirmModalHeroIcon" src="" alt="">
+        </div>
+
+        <h2 id="confirmManualTitle" class="confirmModalName"></h2>
+        <p class="confirmModalMeta">
+            <span id="confirmManualGroup" class="confirmModalGroup"></span>
+            <span class="confirmModalMetaSep" aria-hidden="true">·</span>
+            <span class="confirmModalManualTag">
+                <i class="ph-duotone ph-hand" aria-hidden="true"></i>
+                Manual
+            </span>
+        </p>
+
+        <p class="confirmModalNote">
+            Ainda não desbloqueada na Steam. Confirmar marca no guia como Manual.
+        </p>
+
+        <div class="confirmModalActions">
+            <button id="confirmManualCancel" type="button">Cancelar</button>
+            <button id="confirmManualOk" type="button">
+                Concluir mesmo assim
+                <i class="ph-bold ph-caret-right" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="videoPlayerModal" class="hidden">
+    <div class="modal videoPlayerModal" role="dialog" aria-modal="true" aria-labelledby="videoPlayerTitle">
+        <div class="videoPlayerHeader">
+            <div class="videoPlayerHeading">
+                <p class="videoPlayerEyebrow">Vídeo</p>
+                <h2 id="videoPlayerTitle">Assistir</h2>
+            </div>
+            <div class="videoPlayerHeaderActions">
+                <a id="videoPlayerOpenExternal" class="btn btn-secondary videoPlayerExternal" href="#" target="_blank" rel="noopener noreferrer">
+                    <i class="ph-bold ph-arrow-square-out btnIcon" aria-hidden="true"></i>
+                    <span>Abrir no site</span>
+                </a>
+                <button type="button" id="videoPlayerClose" class="manageLinksClose" aria-label="Fechar">
+                    <i class="ph-bold ph-x" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+        <div class="videoPlayerFrameWrap">
+            <iframe
+                id="videoPlayerFrame"
+                title="Player de vídeo"
+                src=""
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+                referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+    </div>
+</div>
+
+<div id="manageLinksModal" class="hidden">
+    <div class="modal manageLinksModal" role="dialog" aria-modal="true" aria-labelledby="manageLinksTitle">
+        <div class="manageLinksHeader">
+            <div>
+                <h2 id="manageLinksTitle">Links úteis</h2>
+                <p class="manageLinksSubtitle" id="manageLinksSubtitle">Jogo</p>
+            </div>
+            <button type="button" id="manageLinksClose" class="manageLinksClose" aria-label="Fechar">
+                <i class="ph-bold ph-x" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div id="gameLinksList" class="gameLinksList"></div>
+        <form id="gameLinksForm" class="gameLinksForm hidden">
+            <input type="text" id="gameLinkLabelInput" placeholder="Nome (ex: Mapa, Wiki)" maxlength="40" autocomplete="off">
+            <input type="url" id="gameLinkUrlInput" placeholder="https://..." autocomplete="off">
+            <div class="gameLinksFormActions">
+                <button type="button" class="btn btn-secondary" id="gameLinksFormCancel">Cancelar</button>
+                <button type="submit" class="btn btn-primary" id="gameLinksFormSave">Salvar</button>
+            </div>
+        </form>
+        <div class="manageLinksFooter">
+            <button type="button" class="btn btn-secondary" id="gameLinksAddBtn">
+                <i class="ph-bold ph-plus btnIcon" aria-hidden="true"></i>
+                <span>Adicionar link</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="confirmDeleteGameModal" class="hidden">
+    <div class="modal confirmDeleteModal" role="dialog" aria-modal="true" aria-labelledby="confirmDeleteGameTitle">
+        <div class="confirmDeleteCover">
+            <div class="confirmDeleteGameIconWrap">
+                <img id="confirmDeleteGameIcon" class="confirmModalHeroIcon" src="" alt="" hidden>
+                <span id="confirmDeleteGameFallback" class="confirmDeleteGameFallback" aria-hidden="true">??</span>
+            </div>
+        </div>
+
+        <div class="confirmDeleteBody">
+            <div class="confirmDeleteHeader">
+                <h2 id="confirmDeleteGameTitle" class="confirmDeleteTitle">Remover jogo</h2>
+                <p class="confirmDeleteMeta" id="confirmDeleteGameAppId">
+                    AppID <span id="confirmDeleteGameAppIdValue">—</span>
+                </p>
+            </div>
+
+            <p class="confirmDeleteNote" id="confirmDeleteGameNote">
+                Esta ação é permanente. As conquistas importadas deste jogo serão apagadas.
+            </p>
+
+            <div class="confirmDeleteCodeBlock">
+                <label class="confirmDeleteCodeLabel" for="confirmDeleteGameCodeInput">
+                    Digite <span id="confirmDeleteGameCode" class="confirmDeleteCodeValue">------</span> para confirmar
+                </label>
+                <input
+                    id="confirmDeleteGameCodeInput"
+                    class="confirmDeleteCodeInput"
+                    type="text"
+                    inputmode="text"
+                    autocomplete="off"
+                    spellcheck="false"
+                    maxlength="8"
+                    placeholder="Código de confirmação"
+                    aria-label="Código de confirmação">
+                <span id="confirmDeleteGameCodeHint" class="confirmDeleteCodeHint hidden">Código incorreto</span>
+            </div>
+        </div>
+
+        <div class="confirmDeleteActions">
+            <button id="confirmDeleteGameCancel" type="button" class="confirmDeleteCancel">Cancelar</button>
+            <button id="confirmDeleteGameOk" type="button" class="confirmDeleteGameOk" disabled>Remover</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal" class="hidden">
+    <div class="modal drawerPanel" role="dialog" aria-modal="true" aria-labelledby="title">
+        <button type="button" id="modalClose" class="drawerClose" aria-label="Fechar" data-tooltip="Fechar" data-tooltip-pos="left">
+            <i class="ph-bold ph-x" aria-hidden="true"></i>
+        </button>
+
+        <div class="drawerBody">
+            <p class="drawerMode" id="modalModeLabel">Nova conquista</p>
+
+            <div class="drawerHero">
+                <div id="pasteArea" class="drawerIconSlot" tabindex="0" data-tooltip="CTRL + V para colar o ícone" data-tooltip-pos="bottom">
+                    <span class="drawerIconPlaceholder">
+                        <i class="ph-duotone ph-image" aria-hidden="true"></i>
+                    </span>
+                </div>
+                <input
+                    id="title"
+                    class="drawerTitleInput"
+                    type="text"
+                    placeholder="Nome da conquista"
+                    aria-label="Nome da conquista">
+            </div>
+
+            <section class="drawerSection">
+                <div class="drawerSectionHeader">
+                    <span class="drawerSectionTitle">Dados</span>
+                    <span class="drawerSectionHint">Grupo e descrição da conquista</span>
+                </div>
+                <div class="drawerFields">
+                    <label class="drawerField">
+                        <span>Grupo</span>
+                        <input
+                            id="group"
+                            type="text"
+                            list="groupList"
+                            placeholder="Ex.: Chefes de Aldeias"
+                            autocomplete="off"
+                            aria-label="Grupo">
+                        <datalist id="groupList"></datalist>
+                    </label>
+                    <label class="drawerField">
+                        <span>Descrição</span>
+                        <textarea
+                            id="description"
+                            placeholder="O que precisa fazer para desbloquear..."
+                            aria-label="Descrição"
+                            rows="4"></textarea>
+                    </label>
+                </div>
+            </section>
+
+            <section class="drawerSection">
+                <div class="drawerSectionHeader">
+                    <span class="drawerSectionTitle">Dados adicionais</span>
+                    <span class="drawerSectionHint">Vídeo, guia e dicas que aparecem no card</span>
+                </div>
+                <div class="drawerFields drawerFieldsSplit">
+                    <label class="drawerField">
+                        <span>Vídeo</span>
+                        <input id="videoUrl" type="url" placeholder="YouTube ou walkthrough">
+                    </label>
+                    <label class="drawerField">
+                        <span>Guia</span>
+                        <input id="guideUrl" type="url" placeholder="Wiki ou guia">
+                    </label>
+                    <label class="drawerField drawerFieldFull">
+                        <span>Dicas</span>
+                        <textarea id="tips" placeholder="Ex.: farmar de noite, levar X item…" rows="3"></textarea>
+                    </label>
+                </div>
+            </section>
+
+            <section class="drawerSection">
+                <div class="drawerSectionHeader">
+                    <span class="drawerSectionTitle">Classificação</span>
+                    <span class="drawerSectionHint">Nível, dificuldade e se pode perder na platina</span>
+                </div>
+                <div class="drawerFields">
+                    <label class="drawerField">
+                        <span>Nível recomendado</span>
+                        <input id="reqLevel" type="text" inputmode="numeric" placeholder="Ex.: 20 ou 15-50" autocomplete="off">
+                    </label>
+                    <div class="drawerField drawerFieldFull">
+                        <span>Dificuldade</span>
+                        <input type="hidden" id="difficulty" value="">
+                        <div class="diffSeg" role="radiogroup" aria-label="Dificuldade">
+                            <button type="button" class="diffSegBtn is-active" data-diff="" aria-pressed="true">Sem dificuldade</button>
+                            <button type="button" class="diffSegBtn is-easy" data-diff="easy" aria-pressed="false"><span class="diffSegIcon" data-diff-icon="easy"></span>Fácil</button>
+                            <button type="button" class="diffSegBtn is-medium" data-diff="medium" aria-pressed="false"><span class="diffSegIcon" data-diff-icon="medium"></span>Médio</button>
+                            <button type="button" class="diffSegBtn is-hard" data-diff="hard" aria-pressed="false"><span class="diffSegIcon" data-diff-icon="hard"></span>Difícil</button>
+                        </div>
+                    </div>
+                    <label class="drawerSwitchRow" for="missable">
+                        <span class="drawerSwitchCopy">
+                            <span class="drawerSwitchTitle">Perdível</span>
+                            <span class="drawerSwitchHint">Pode ser perdida se não fizer no momento certo</span>
+                        </span>
+                        <input id="missable" type="checkbox" class="drawerSwitchInput">
+                        <span class="drawerSwitchTrack" aria-hidden="true"><span class="drawerSwitchThumb"></span></span>
+                    </label>
+                </div>
+            </section>
+        </div>
+
+        <div class="drawerFooter">
+            <button id="deleteAchievementBtn" type="button" class="btn btn-danger hidden">Excluir</button>
+            <div class="drawerFooterRight">
+                <button id="cancel" type="button" class="btn btn-secondary">Cancelar</button>
+                <button id="saveAchievement" type="button" class="btn btn-primary">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="script.js?v=20260803a"></script>
+<script>
+    document.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+            e.preventDefault();
+            document.getElementById("search")?.focus();
+        }
+        if (e.key === "Escape") {
+            if (typeof videoPlayerModal !== "undefined" && videoPlayerModal && !videoPlayerModal.classList.contains("hidden")) {
+                closeVideoPlayerModal();
+                return;
+            }
+            if (manageLinksModal && !manageLinksModal.classList.contains("hidden")) {
+                closeManageLinksModal();
+                return;
+            }
+            if (confirmDeleteGameModal && !confirmDeleteGameModal.classList.contains("hidden")) {
+                closeConfirmDeleteGameModal();
+                return;
+            }
+            if (confirmManualModal && !confirmManualModal.classList.contains("hidden")) {
+                closeConfirmManualModal();
+                return;
+            }
+            if (modal && !modal.classList.contains("hidden")) {
+                closeModal();
+            }
+        }
+    });
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,752 @@
+.viewToggle {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: var(--sp-3) var(--sp-5);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.viewToggle.isCompact {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 0;
+  border-bottom: none;
+  width: auto;
+}
+
+.viewToggle.isCompact .listControls {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.viewToggle.isCompact .listControlShell {
+  width: auto;
+  max-width: 100%;
+  height: 32px;
+  padding: 2px;
+  gap: 0;
+  border-radius: 8px;
+  border: none;
+  background: var(--overlay-10);
+  box-shadow: none;
+}
+
+.viewToggle.isCompact .listControlBtn {
+  min-height: 28px;
+  height: 28px;
+  padding: 0 8px 0 6px;
+  gap: 6px;
+  border-radius: 6px;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tracking);
+  color: rgb(255 255 255 / 0.72);
+}
+
+.viewToggle.isCompact .listControlBtn:hover {
+  background: var(--overlay-10);
+  color: var(--fg);
+}
+
+.viewToggle.isCompact .groupByWrap.isOpen .listControlBtn,
+.viewToggle.isCompact .filtersWrap.isOpen .listControlBtn {
+  background: var(--overlay-10);
+  color: var(--fg);
+  box-shadow: none;
+}
+
+/* Ícone solto — sem caixinha dentro da cápsula */
+.viewToggle.isCompact .listControlLead {
+  width: 16px;
+  height: 16px;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.viewToggle.isCompact .listControlBtn:hover .listControlLead,
+.viewToggle.isCompact .groupByWrap.isOpen .listControlLead,
+.viewToggle.isCompact .filtersWrap.isOpen .listControlLead,
+.viewToggle.isCompact .listControlBtn.hasFilters .listControlLead {
+  background: transparent;
+  color: var(--color-brand-bright);
+}
+
+.viewToggle.isCompact .listControlLead .ph {
+  font-size: 15px;
+}
+
+.viewToggle.isCompact .listControlText {
+  gap: 0;
+}
+
+.viewToggle.isCompact .listControlValue,
+.viewToggle.isCompact .listControlLabel.is-solo {
+  font-size: 12px;
+  font-weight: var(--fw-medium);
+  color: inherit;
+  letter-spacing: var(--tracking);
+}
+
+.viewToggle.isCompact .listControlText .listControlLabel::after {
+  display: none;
+}
+
+.viewToggle.isCompact .listControlDivider {
+  margin: 5px 1px;
+  background: var(--overlay-15);
+}
+
+.viewToggle.isCompact .listControlCaret {
+  margin-left: 0;
+  font-size: 10px !important;
+  color: rgb(255 255 255 / 0.45) !important;
+}
+
+.viewToggle.isCompact .groupByWrap.isOpen .listControlCaret,
+.viewToggle.isCompact .filtersWrap.isOpen .listControlCaret {
+  color: rgb(255 255 255 / 0.65) !important;
+}
+
+.viewToggle.isCompact .filtersCount {
+  min-width: 16px;
+  height: 16px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--color-brand);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.viewToggle.isCompact .syncCluster {
+  margin-left: 0;
+  flex-shrink: 0;
+}
+
+.viewToggle.isCompact .syncBtn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  background: var(--overlay-10);
+  color: var(--icon-muted);
+}
+
+.viewToggle.isCompact .syncBtn i {
+  font-size: 16px;
+  color: inherit;
+}
+
+.viewToggle.isCompact .syncBtn:hover {
+  background: var(--overlay-15);
+  color: var(--fg);
+}
+
+.listControls {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.listControlShell {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  height: 40px;
+  padding: 3px;
+  background: var(--bg-canvas);
+  border: 1px solid var(--overlay-10);
+  border-radius: 11px;
+  box-shadow: inset 0 1px 0 var(--overlay-025);
+}
+
+.groupByWrap,
+.filtersWrap {
+  position: relative;
+  display: flex;
+}
+
+.listControlDivider {
+  width: 1px;
+  margin: 6px 2px;
+  background: #2a2a2e;
+  flex-shrink: 0;
+}
+
+.listControlBtn {
+  height: 100%;
+  min-height: 34px;
+  padding: 0 10px 0 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--fg-muted);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.listControlBtn:hover {
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--color-text-title);
+}
+
+.groupByWrap.isOpen .listControlBtn,
+.filtersWrap.isOpen .listControlBtn {
+  background: var(--overlay-10);
+  color: var(--fg);
+  box-shadow: none;
+}
+
+.listControlBtn.hasFilters {
+  color: var(--fg);
+}
+
+.listControlLead {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: #1a1a1d;
+  color: #8b8b93;
+  flex-shrink: 0;
+}
+
+.listControlBtn:hover .listControlLead,
+.groupByWrap.isOpen .listControlLead,
+.filtersWrap.isOpen .listControlLead,
+.listControlBtn.hasFilters .listControlLead {
+  background: #2a2a2e;
+  color: var(--color-brand-bright);
+}
+
+.listControlLead .ph {
+  font-size: 14px;
+}
+
+.listControlText {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.listControlLabel {
+  color: #6b6b73;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.listControlLabel.is-solo {
+  font-size: 12px;
+  font-weight: 600;
+  color: #d4d4d8;
+}
+
+.listControlBtn:hover .listControlLabel.is-solo,
+.filtersWrap.isOpen .listControlLabel.is-solo,
+.listControlBtn.hasFilters .listControlLabel.is-solo {
+  color: var(--fg);
+}
+
+.listControlValue {
+  color: #f4f4f5;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.listControlText .listControlLabel::after {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  margin: 0 1px 0 6px;
+  border-radius: 50%;
+  background: #3f3f46;
+  vertical-align: middle;
+}
+
+.listControlCaret {
+  font-size: 11px !important;
+  color: var(--icon-muted) !important;
+  margin-left: 2px;
+  transition: transform 0.15s var(--ease);
+}
+
+.groupByWrap.isOpen .listControlCaret,
+.filtersWrap.isOpen .listControlCaret {
+  transform: rotate(180deg);
+  color: #8b8b93 !important;
+}
+
+.filtersCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-brand) 22%, transparent);
+  color: var(--color-brand-bright);
+  border: 1px solid color-mix(in srgb, var(--color-brand) 40%, transparent);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.listControlMenu,
+.filtersPanel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 40;
+  background: var(--bg-surface);
+  border: 1px solid var(--overlay-10);
+  border-radius: 12px;
+  box-shadow:
+    0 0 0 1px var(--overlay-025),
+    0 18px 40px rgb(0 0 0 / 0.55);
+  animation: listControlPop 0.14s var(--ease);
+}
+
+@keyframes listControlPop {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.listControlMenu {
+  min-width: 208px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.listControlOption {
+  display: grid;
+  grid-template-columns: 20px 1fr 16px;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 34px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: rgb(255 255 255 / 0.72);
+  font-size: 12px;
+  font-weight: var(--fw-medium);
+  font-family: var(--font-sans);
+  letter-spacing: var(--tracking);
+  cursor: pointer;
+  text-align: left;
+}
+
+.listControlOptionIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 0;
+  background: transparent;
+  color: rgb(255 255 255 / 0.45);
+}
+
+.listControlOptionIcon .ph {
+  font-size: 15px;
+}
+
+.listControlOptionCheck {
+  font-size: 12px;
+  color: var(--color-brand-bright);
+  opacity: 0;
+  justify-self: end;
+}
+
+.listControlOption:hover {
+  background: var(--overlay-05);
+  color: var(--fg);
+}
+
+.listControlOption:hover .listControlOptionIcon {
+  color: rgb(255 255 255 / 0.72);
+}
+
+.listControlOption.is-active {
+  background: transparent;
+  color: var(--fg);
+}
+
+.listControlOption.is-active .listControlOptionIcon {
+  background: transparent;
+  color: var(--color-brand-bright);
+}
+
+.listControlOption.is-active .listControlOptionLabel {
+  color: var(--fg);
+  font-weight: var(--fw-medium);
+}
+
+.listControlOption.is-active .listControlOptionCheck {
+  opacity: 1;
+}
+
+.listControlOption.is-active:hover {
+  background: var(--overlay-05);
+}
+
+.listControlShell > .filtersPanel {
+  width: min(480px, calc(100vw - 48px));
+  max-height: min(560px, calc(100vh - 100px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.filtersPanelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--overlay-05);
+  font-size: 13px;
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tracking);
+  color: var(--fg);
+}
+
+.filtersPanelHeadTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filtersPanelHeadTitle .ph {
+  font-size: 15px;
+  color: var(--color-brand-bright);
+}
+
+.filtersPanelBody {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 14px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.filtersClearBtn {
+  height: 28px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: rgb(255 255 255 / 0.72);
+  font-size: 12px;
+  font-weight: var(--fw-medium);
+  font-family: var(--font-sans);
+  letter-spacing: var(--tracking);
+  cursor: pointer;
+}
+
+.filtersClearBtn:hover:not(:disabled) {
+  color: var(--fg);
+  background: var(--overlay-10);
+}
+
+.filtersClearBtn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.filtersSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filtersSectionTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: var(--fw-medium);
+  color: rgb(255 255 255 / 0.5);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.filtersSectionTitle .ph {
+  font-size: 14px;
+  color: rgb(255 255 255 / 0.55);
+}
+
+.filtersChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filtersChips.is-levels {
+  gap: 6px;
+}
+
+.filtersChips.is-dlc {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 6px;
+}
+
+.filtersEmpty {
+  font-size: 12px;
+  color: var(--icon-muted);
+}
+
+.filterChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--overlay-10);
+  background: var(--overlay-05);
+  color: rgb(255 255 255 / 0.78);
+  font-size: 12px;
+  font-weight: var(--fw-medium);
+  font-family: var(--font-sans);
+  letter-spacing: var(--tracking);
+  cursor: pointer;
+  text-align: left;
+  outline: none;
+  transition:
+    background 0.12s var(--ease),
+    border-color 0.12s var(--ease),
+    color 0.12s var(--ease),
+    box-shadow 0.12s var(--ease);
+}
+
+.filterChip:focus {
+  outline: none;
+}
+
+.filterChip:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-brand) 45%, transparent);
+}
+
+.filterChip.is-dlc:focus-visible:not(.is-base) {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--dlc) 50%, transparent);
+}
+
+.filterChipIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.filterChipIcon .ph {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.filterChipIcon .diffHex {
+  width: 14px;
+  height: 14px;
+}
+
+.filterChipLabel {
+  min-width: 0;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filterChip.is-levels {
+  height: 28px;
+  min-width: 52px;
+  justify-content: center;
+  padding: 0 10px;
+}
+
+.filterChip.is-dlc {
+  width: 100%;
+  height: auto;
+  min-height: 34px;
+  padding: 8px 10px;
+  gap: 8px;
+  border-color: color-mix(in srgb, var(--dlc) 22%, transparent);
+  background: color-mix(in srgb, var(--dlc-surface) 70%, transparent);
+  color: var(--dlc-fg-bright);
+}
+
+.filterChip.is-dlc .filterChipIcon {
+  width: 18px;
+  color: var(--dlc-fg);
+}
+
+/* Jogo base — neutro (não é DLC) */
+.filterChip.is-dlc.is-base {
+  border-color: var(--overlay-10);
+  background: var(--overlay-05);
+  color: rgb(255 255 255 / 0.78);
+}
+
+.filterChip.is-dlc.is-base .filterChipIcon {
+  color: rgb(255 255 255 / 0.5);
+}
+
+.filterChip.is-dlc:hover:not(.is-base) {
+  border-color: color-mix(in srgb, var(--dlc) 40%, transparent);
+  background: var(--dlc-surface);
+  color: #fff;
+}
+
+.filterChip.is-dlc.is-base:hover {
+  border-color: var(--overlay-15);
+  color: var(--fg);
+  background: var(--overlay-10);
+}
+
+.filterChip.is-dlc.is-active:not(.is-base) {
+  border-color: color-mix(in srgb, var(--dlc) 40%, transparent);
+  background: color-mix(in srgb, var(--dlc) 22%, var(--dlc-surface));
+  color: #fff;
+}
+
+.filterChip.is-dlc.is-active:not(.is-base) .filterChipIcon {
+  color: #fff;
+}
+
+.filterChip.is-dlc.is-base.is-active {
+  border-color: color-mix(in srgb, var(--color-brand) 40%, transparent);
+  background: color-mix(in srgb, var(--color-brand) 22%, var(--brand-surface));
+  color: #fff;
+}
+
+.filterChip.is-dlc.is-base.is-active .filterChipIcon {
+  color: var(--brand-fg);
+}
+
+.filterChip.is-difficulty {
+  padding: 0 10px 0 8px;
+}
+
+.filterChip:hover {
+  border-color: var(--overlay-15);
+  color: var(--fg);
+  background: var(--overlay-10);
+}
+
+.filterChip.is-active {
+  border-color: color-mix(in srgb, var(--color-brand) 40%, transparent);
+  background: color-mix(in srgb, var(--color-brand) 22%, var(--brand-surface));
+  color: #fff;
+}
+
+.filterChip.is-active .filterChipIcon {
+  color: var(--brand-fg);
+}
+
+/* Dificuldade nos filtros — cores semânticas, sem laranja da marca */
+.filterChip.is-difficulty.is-diff-easy.is-active {
+  border-color: color-mix(in srgb, var(--diff-easy-stroke) 45%, transparent);
+  background: var(--diff-easy-fill);
+  color: var(--diff-easy);
+}
+.filterChip.is-difficulty.is-diff-easy.is-active .filterChipIcon {
+  color: var(--diff-easy);
+}
+
+.filterChip.is-difficulty.is-diff-medium.is-active {
+  border-color: color-mix(in srgb, var(--diff-medium-stroke) 45%, transparent);
+  background: var(--diff-medium-fill);
+  color: var(--diff-medium);
+}
+.filterChip.is-difficulty.is-diff-medium.is-active .filterChipIcon {
+  color: var(--diff-medium);
+}
+
+.filterChip.is-difficulty.is-diff-hard.is-active {
+  border-color: color-mix(in srgb, var(--diff-hard-stroke) 45%, transparent);
+  background: var(--diff-hard-fill);
+  color: var(--diff-hard);
+}
+.filterChip.is-difficulty.is-diff-hard.is-active .filterChipIcon {
+  color: var(--diff-hard);
+}
+
+.filterChip.is-difficulty.is-diff-missable.is-active {
+  border-color: color-mix(in srgb, var(--diff-missable-stroke) 45%, transparent);
+  background: var(--diff-missable-fill);
+  color: var(--diff-missable);
+}
+.filterChip.is-difficulty.is-diff-missable.is-active .filterChipIcon {
+  color: var(--diff-missable);
+}
+
+/* Seção DLC no painel — ícone roxo */
+.filtersSection:has(.filtersChips.is-dlc) .filtersSectionTitle .ph {
+  color: var(--dlc-fg);
+}
+
+.syncCluster {
+  margin-left: auto;
+}
+
+.syncBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: none;
+  background: var(--overlay-10);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tracking);
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.12s var(--ease);
+}
+
+.syncBtn i {
+  font-size: 16px;
+  color: var(--icon-muted);
+  line-height: 1;
+}
+
+.syncBtn:hover {
+  background: var(--overlay-15);
+}
+
+.syncBtn:hover i {
+  color: var(--fg);
+}

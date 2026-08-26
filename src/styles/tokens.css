@@ -1,0 +1,189 @@
+:root {
+  /* Canvas — paleta do layout (Figma) */
+  --bg-canvas: #141414;
+  --bg-surface: #1a1a1a;
+  --fg: #ffffff;
+  --fg-muted: rgb(255 255 255 / 0.5);
+  --fg-subtle: rgb(255 255 255 / 0.4);
+  --fg-faint: rgb(255 255 255 / 0.3);
+  --icon-muted: #797979;
+
+  --overlay-025: rgb(255 255 255 / 0.025);
+  --overlay-05: rgb(255 255 255 / 0.05);
+  --overlay-075: rgb(255 255 255 / 0.075);
+  --overlay-10: rgb(255 255 255 / 0.1);
+  --overlay-15: rgb(255 255 255 / 0.15);
+
+  --accent-blue: #0b84fe; /* Steam / links — não é marca */
+  --accent-brand: #c64d2e;
+  --accent-brand-bright: #e05a38;
+  --accent-brand-hover: #8f341c;
+  --brand-surface: #2a1612;
+  --brand-fg: #ffd4c4;
+  --accent-purple: #9359ff;
+  --dlc: var(--accent-purple);
+  --dlc-surface: #2e2243;
+  --dlc-fg: #d5bdff;
+  --dlc-fg-bright: #f9f7ff;
+  --danger-hot: #ff1f5a;
+  --danger-surface: #461a23;
+  --tag-zero-bg: #442f0b;
+  --tag-zero-fg: #ffebca;
+  --tag-ux-bg: #2e2243;
+  --tag-ux-fg: #eadeff;
+  --tag-personal-bg: #3a1c14;
+  --tag-personal-fg: #ffd4c4;
+  --tag-design-bg: #182a43;
+  --tag-design-fg: #d5e7ff;
+
+  --background: oklch(99% 0 0);
+  --foreground: oklch(15% 0 0);
+  --card: oklch(97% 0 0);
+  --card-foreground: oklch(15% 0 0);
+  --popover: oklch(97% 0 0);
+  --popover-foreground: oklch(15% 0 0);
+  --primary: oklch(15% 0 0);
+  --primary-foreground: oklch(99% 0 0);
+  --secondary: oklch(97% 0 0);
+  --secondary-foreground: oklch(15% 0 0);
+  --muted: oklch(97% 0 0);
+  --muted-foreground: oklch(50% 0 0);
+  --accent: var(--accent-brand);
+  --accent-bright: var(--accent-brand-bright);
+  --accent-foreground: oklch(98% 0 0);
+  --destructive: oklch(62% 0.22 25);
+  --border: oklch(15% 0 0 / 0.06);
+  --input: oklch(15% 0 0 / 0.06);
+  --ring: oklch(15% 0 0 / 0.12);
+
+  --color-bg: var(--background);
+  --color-sidebar: var(--background);
+  --color-panel: var(--card);
+  --color-panel-2: var(--overlay-075);
+  --color-row: var(--card);
+  --color-row-hover: var(--overlay-05);
+  --color-input: var(--background);
+
+  --color-border: var(--border);
+  --color-border-strong: var(--ring);
+
+  --color-brand: var(--accent-brand);
+  --color-brand-hover: var(--accent-brand-hover);
+  --color-brand-bright: var(--accent-brand-bright);
+  --color-accent: var(--accent-brand);
+  --color-accent-hover: var(--accent-brand-hover);
+  --color-accent-soft: color-mix(in srgb, var(--accent-brand) 18%, transparent);
+  --color-accent-fill: color-mix(in srgb, var(--accent-brand) 12%, transparent);
+
+  --color-text-heading: var(--foreground);
+  --color-text-title: color-mix(in oklch, var(--foreground) 88%, var(--muted-foreground));
+  --color-text-body: var(--muted-foreground);
+  --color-text-muted: var(--fg-muted);
+  --color-text-white: var(--fg);
+
+  --color-success: #39ae4a;
+  --color-success-soft: color-mix(in srgb, #39ae4a 16%, transparent);
+  --color-danger: var(--destructive);
+  --color-danger-soft: color-mix(in oklch, var(--destructive) 14%, transparent);
+  --color-warning: oklch(78% 0.14 75);
+
+  /* Dificuldade — semântica própria (não usa laranja da marca) */
+  --diff-easy: #4ade80;
+  --diff-easy-stroke: #39ae4a;
+  --diff-easy-fill: color-mix(in srgb, #39ae4a 16%, transparent);
+  --diff-medium: #22d3ee;
+  --diff-medium-stroke: #06b6d4;
+  --diff-medium-fill: color-mix(in srgb, #22d3ee 14%, transparent);
+  --diff-hard: #f43f5e;
+  --diff-hard-stroke: #e11d48;
+  --diff-hard-fill: color-mix(in srgb, #f43f5e 16%, transparent);
+  --diff-missable: #f2c94c;
+  --diff-missable-stroke: #eab308;
+  --diff-missable-fill: color-mix(in srgb, #f2c94c 12%, transparent);
+
+  --color-shadow: oklch(15% 0 0 / 0.28);
+  --color-modal-backdrop: oklch(15% 0 0 / 0.62);
+  --color-ring: var(--ring);
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", Consolas, "Courier New", ui-monospace, monospace;
+
+  /* Inter variável — Figma usa 450 (medium leve) */
+  --fw-regular: 400;
+  --fw-medium: 450;
+  --fw-semibold: 500;
+  --fw-bold: 600;
+
+  --fs-xs: 11px;
+  --fs-sm: 12px;
+  --fs-base: 14px;
+  --fs-md: 14px;
+  --fs-lg: 16px;
+  --fs-xl: 20px;
+  --fs-xxl: 28px;
+
+  --tracking: -0.2px;
+
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+
+  --radius-sm: 6px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 12px;
+  --radius-pill: 999px;
+
+  --sidebar-width: 280px;
+  --sidebar-width-collapsed: 64px;
+  --sidebar-pad-x: 12px;
+  --list-pane-width: 380px;
+  --row-height: 72px;
+  --btn-h-sm: 28px;
+  --btn-h-md: 32px;
+
+  --shadow-sm: 0 1px 2px var(--color-shadow);
+  --shadow-md: 0 4px 12px -2px var(--color-shadow);
+  --shadow-lg: 0 16px 40px -8px var(--color-shadow);
+  --z-dropdown: 40;
+  --z-modal: 100;
+  --z-toast: 110;
+
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark {
+  --background: var(--bg-canvas);
+  --foreground: var(--fg);
+  --card: var(--bg-surface);
+  --card-foreground: var(--fg);
+  --popover: var(--bg-surface);
+  --popover-foreground: var(--fg);
+  --primary: var(--fg);
+  --primary-foreground: var(--bg-canvas);
+  --secondary: var(--bg-surface);
+  --secondary-foreground: var(--fg);
+  --muted: var(--overlay-05);
+  --muted-foreground: var(--fg-muted);
+  --accent: var(--accent-brand);
+  --accent-bright: var(--accent-brand-bright);
+  --accent-foreground: var(--fg);
+  --destructive: var(--danger-hot);
+  --border: var(--overlay-05);
+  --input: var(--overlay-05);
+  --ring: var(--overlay-10);
+
+  --color-panel-2: var(--overlay-075);
+  --color-row-hover: var(--overlay-05);
+  --color-text-heading: var(--fg);
+  --color-text-title: rgb(255 255 255 / 0.88);
+  --color-text-body: var(--fg-muted);
+  --color-text-muted: var(--fg-muted);
+  --color-danger: var(--danger-hot);
+  --color-danger-soft: color-mix(in srgb, var(--danger-hot) 16%, transparent);
+  --color-shadow: rgb(0 0 0 / 0.5);
+  --color-modal-backdrop: rgb(0 0 0 / 0.8);
+}

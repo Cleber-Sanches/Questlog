@@ -1,0 +1,1233 @@
+{
+  "type": "guia-conquistas-pack",
+  "version": 2,
+  "exportedAt": "2026-08-01T20:04:25.303Z",
+  "game": {
+    "appId": "2646460",
+    "name": "Soulmask",
+    "links": [
+      {
+        "label": "Mapa base (DaOpa)",
+        "url": "https://gamingwithdaopa.ellatha.com/soulmask/map/"
+      },
+      {
+        "label": "Mapa Shifting Sands",
+        "url": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/"
+      },
+      {
+        "label": "Guia: todas as conquistas",
+        "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3261512701"
+      },
+      {
+        "label": "Guia: mapa interativo",
+        "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3258157896"
+      },
+      {
+        "label": "Conquistas Steam",
+        "url": "https://steamcommunity.com/stats/2646460/achievements/?l=brazilian"
+      },
+      {
+        "label": "TrueSteamAchievements",
+        "url": "https://truesteamachievements.com/game/Soulmask/achievements"
+      }
+    ]
+  },
+  "achievements": [
+    {
+      "apiName": "BP_ChengJiu_MianJuLevel_10",
+      "title": "Máscara da Alma",
+      "group": "01 · Progressão",
+      "tips": "Nv. 10 — Meta: Força de Consciência 10. XP de craft, exploração e combate — sai naturalmente no começo.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "10"
+    },
+    {
+      "apiName": "BP_ChengJiu_ZhiZao_WenMing01",
+      "title": "Primeiros Passos do Assentamento",
+      "group": "03 · Civilização",
+      "tips": "Nv. 1 — Construa a Fogueira (Bonfire) — marco inicial do assentamento.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "1"
+    },
+    {
+      "apiName": "BP_ChengJiu_ManRen_JingYing",
+      "title": "Silencioso, porém ocupado.",
+      "group": "02 · Tribo",
+      "tips": "Nv. 1 — No menu da tribo, atribua qualquer trabalho a um membro (colher, craft, caça, etc.).",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "1"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ShouLie01",
+      "title": "1 em 10",
+      "group": "06 · Presas especiais",
+      "tips": "Nv. 10 — Mate 1 Presa Verde (marcadores de caça especiais). Arco ajuda. No mapa base (botão Guia), abra a lupa e busque: \"Beast Lair\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "medium",
+      "missable": false,
+      "reqLevel": "10"
+    },
+    {
+      "apiName": "BP_ChengJiu_ManRen_zhenShe_2",
+      "title": "Morra ou siga-me",
+      "group": "02 · Tribo",
+      "tips": "Nv. 5 — Com a máscara, dissuada 2 selvagens quase mortos (não mate) — intimidar/recrutar.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "5"
+    },
+    {
+      "apiName": "BP_ChengJiu_ManRen_KongZhi",
+      "title": "Sincronização Profunda",
+      "group": "02 · Tribo",
+      "tips": "Nv. 5 — Use o controle/possessão da máscara em qualquer membro da tribo.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "5"
+    },
+    {
+      "apiName": "BP_ChengJiu_ManRen_zhaoMu_3",
+      "title": "Prosperidade da Tribo",
+      "group": "02 · Tribo",
+      "tips": "Nv. 10 — Recrute 3 membros no total (cativeiro + conversão). Fácil nos primeiros acampamentos.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "10"
+    },
+    {
+      "apiName": "BP_ChengJiu_ManRen_MingLing",
+      "title": "Sob o Meu Comando",
+      "group": "02 · Tribo",
+      "tips": "Nv. 5 — Selecione um membro e emita qualquer ordem de combate/movimento.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "5"
+    },
+    {
+      "apiName": "BP_ChengJiu_MianJuLevel_20",
+      "title": "Melhorando",
+      "group": "01 · Progressão",
+      "tips": "Nv. 20 — Meta: Consciência 20. Continue recrutando, craftando e abrindo o mapa da Floresta Tropical.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "20"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ShouLie02",
+      "title": "Pelo de Qualidade",
+      "group": "06 · Presas especiais",
+      "tips": "Nv. 20 — Mate 1 Presa Azul (Rara). No mapa base (botão Guia), abra a lupa e busque: \"Beast Lair\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "medium",
+      "missable": false,
+      "reqLevel": "20"
+    },
+    {
+      "apiName": "BP_ChengJiu_ZhiZao_WenMing02",
+      "title": "Carvão Coberto com Brilho Dourado.",
+      "group": "03 · Civilização",
+      "tips": "Nv. 15 — Craft: Lingote de Bronze. Desbloqueia tools/armas melhores.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "15"
+    },
+    {
+      "apiName": "BP_ChengJiu_MianJuLevel_30",
+      "title": "Mais, melhor, mais longe",
+      "group": "01 · Progressão",
+      "tips": "Nv. 30 — Meta: Consciência 30. Foque em bronze, base estável e primeiros chefes leves.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "30"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_JianChiHu01",
+      "title": "Garras à Espreita",
+      "group": "08 · Chefes · Dente-de-sabre",
+      "tips": "Nv. 20 — Fera Dente-de-sabre Feroz (Fierce). Esquive garras; gear bronze+. No mapa base (botão Guia), abra a lupa e busque: \"Saber\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "medium",
+      "missable": false,
+      "reqLevel": "20"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ZhaiZi02",
+      "title": "Retrorrefletor",
+      "group": "14 · Sacerdotes tribais",
+      "tips": "Nv. 20 — Sumo Sacerdote — Floresta Tropical Oeste (Retrorrefletor). Acampamento tribal da região. No mapa base (botão Guia), abra a lupa e busque: \"Western Rainforest\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "20"
+    },
+    {
+      "apiName": "BP_ChengJiu_ZhiZao_JianZhu01",
+      "title": "Mestre dos Blocos de Construção",
+      "group": "03 · Civilização",
+      "tips": "Nv. 5 — Construa uma Fundação de Madeira.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "5"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ShouLie03",
+      "title": "Arqueiro Experiente e Habilidade",
+      "group": "06 · Presas especiais",
+      "tips": "Nv. 30 — Mate 1 Presa Roxa (Peerless/Única). No mapa base (botão Guia), abra a lupa e busque: \"Beast Lair\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "medium",
+      "missable": false,
+      "reqLevel": "30"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_Lang_10",
+      "title": "Inimigo Vitalício",
+      "group": "07 · Fauna (x10)",
+      "tips": "Nv. 10 — Mate 10 onças/jaguares na selva.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "10"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_Zhu_10",
+      "title": "Jantar Galopante",
+      "group": "07 · Fauna (x10)",
+      "tips": "Nv. 5 — Mate 10 perus/turkeys. Farm fácil perto da base inicial.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "5"
+    },
+    {
+      "apiName": "BP_ChengJiu_ManRen_SiWang_3",
+      "title": "Sacrifício",
+      "group": "02 · Tribo",
+      "tips": "Nv. 10 — Deixe 3 membros morrerem (combate ou de propósito). Não trava platina.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "10"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ShouLie04",
+      "title": "Presa Diferenciada",
+      "group": "06 · Presas especiais",
+      "tips": "Nv. 40 — Mate 1 Presa Laranja (Lendária). No mapa base (botão Guia), abra a lupa e busque: \"Beast Lair\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "medium",
+      "missable": false,
+      "reqLevel": "40"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ZhaiZi01",
+      "title": "Quebrador de Rochas",
+      "group": "14 · Sacerdotes tribais",
+      "tips": "Nv. 20 — Sumo Sacerdote — Floresta Tropical Leste (Quebrador de Rochas). Limpe o Barbarian Camp da região. No mapa base (botão Guia), abra a lupa e busque: \"Eastern Rainforest\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "20"
+    },
+    {
+      "apiName": "BP_ChengJiu_MianJuLevel_40",
+      "title": "Ferro e Sangue",
+      "group": "01 · Progressão",
+      "tips": "Nv. 40 — Meta: Consciência 40. Biomas médios (pântano/colinas/planalto) com gear de ferro.",
+      "difficulty": "medium",
+      "missable": false,
+      "reqLevel": "40"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_DiMianYiJi01",
+      "title": "Trio Parada Dura da Floresta Tropical",
+      "group": "13 · Saqueadores",
+      "tips": "Nv. 25 — Derrote qualquer um dos 3 Plunderer Leaders nas ruínas de chão da Floresta Tropical Oeste. No mapa base (botão Guia), abra a lupa e busque: \"Western Rainforest\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "medium",
+      "missable": false,
+      "reqLevel": "25"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_YiJiDiGong06",
+      "title": "Pérola Escondida: Vale do Rio",
+      "group": "15 · Ruínas (Pérolas)",
+      "tips": "Nv. 25 — Guardião — Vale do Rio / River Valley. No mapa base (botão Guia), abra a lupa e busque: \"River Valley\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "25"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ShouLie05",
+      "title": "Caça ou Caçador?",
+      "group": "06 · Presas especiais",
+      "tips": "Nv. 50 — Mate 1 Presa Vermelha (Mítica). Prepare gear mid/end. No mapa base (botão Guia), abra a lupa e busque: \"Beast Lair\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "50"
+    },
+    {
+      "apiName": "BP_ChengJiu_ZhiZao_WenMing03",
+      "title": "Chama Fluente",
+      "group": "03 · Civilização",
+      "tips": "Nv. 30 — Craft: Lingote de Ferro.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "30"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_MGW01",
+      "title": "Não morra por veneno",
+      "group": "09 · Chefes · Sapo da Névoa",
+      "tips": "Nv. 30 — Sapo da Névoa / Poison Fogfrog. Antídoto obrigatório. No mapa base (botão Guia), abra a lupa e busque: \"Fog\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "medium",
+      "missable": false,
+      "reqLevel": "30"
+    },
+    {
+      "apiName": "BP_ChengJiu_ZhiZao_MianJia01",
+      "title": "Tocha da Eternidade",
+      "group": "05 · Máscaras",
+      "tips": "Nv. 20 — Desbloqueie a máscara Tocha da Eternidade (Torch of Eternity) na árvore de máscaras/alma.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "20"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_YiJiDiGong01",
+      "title": "Pérola Escondida: Vale da Fenda",
+      "group": "15 · Ruínas (Pérolas)",
+      "tips": "Nv. 30 — Guardião da ruína — Vale da Fenda / Rift Valley. Limpe a dungeon. No mapa base (botão Guia), abra a lupa e busque: \"Rift Valley\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "30"
+    },
+    {
+      "apiName": "BP_ChengJiu_ZhiZao_PengRen01",
+      "title": "O Bastante Para Encher a Barriga!",
+      "group": "04 · Culinária",
+      "tips": "Nv. 1 — Cozinhe Batata Cozida (Cooked Potato).",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "1"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_JuYuan01",
+      "title": "Cara a Cara",
+      "group": "10 · Chefes · Primata",
+      "tips": "Nv. 20 — Primata/Vajra Ape Fierce. Escudo duro — ele pula e é rápido. No mapa base (botão Guia), abra a lupa e busque: \"Ape\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "medium",
+      "missable": false,
+      "reqLevel": "20"
+    },
+    {
+      "apiName": "BP_ChengJiu_ZhiZao_PengRen02",
+      "title": "Barriga Cheia, Sorriso no Rosto",
+      "group": "04 · Culinária",
+      "tips": "Nv. 15 — Cozinhe Bife Premium / Premium Steak.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "15"
+    },
+    {
+      "apiName": "BP_ChengJiu_MianJuLevel_50",
+      "title": "Civilizações em Camadas",
+      "group": "01 · Progressão",
+      "tips": "Nv. 50 — Meta: Consciência 50. Aço, ruínas e world bosses aceleram o farm de XP.",
+      "difficulty": "medium",
+      "missable": false,
+      "reqLevel": "50"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ShouLie06",
+      "title": "Mítico",
+      "group": "06 · Presas especiais",
+      "tips": "Nv. 60 — Mate 1 Presa Vermelha (Mítica). Endgame — consumíveis e tribo. No mapa base (botão Guia), abra a lupa e busque: \"Beast Lair\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "60"
+    },
+    {
+      "apiName": "BP_ChengJiu_ZhiZao_JianZhu02",
+      "title": "Arquiteto Certificado",
+      "group": "03 · Civilização",
+      "tips": "Nv. 20 — Construa uma Fundação de Pedra.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "20"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_JianChiHu02",
+      "title": "Lança e Escudo Alheios",
+      "group": "08 · Chefes · Dente-de-sabre",
+      "tips": "Nv. 40 — Versão Berserk. Arma pesada de bronze/ferro e boa defesa. No mapa base (botão Guia), abra a lupa e busque: \"Saber\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "40"
+    },
+    {
+      "apiName": "BP_ChengJiu_ZhiZao_JianZhu04",
+      "title": "Serra, Serra, Serrador",
+      "group": "03 · Civilização",
+      "tips": "Nv. 15 — Construa um Logging Yard / Pátio de Extração de Madeira.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "15"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ZhaiZi03",
+      "title": "Observador",
+      "group": "14 · Sacerdotes tribais",
+      "tips": "Nv. 25 — Sumo Sacerdote — Mangue (Observador). No mapa base (botão Guia), abra a lupa e busque: \"Mangrove\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "25"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_SenLuoE03",
+      "title": "Fierce Sobek Crocodile",
+      "group": "19 · DLC · Chefes (Sobek)",
+      "tips": "Nv. 20 — Sobek Fierce (1/3). Gear de deserto; farma lair/arena do DLC. No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Sobek\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "medium",
+      "missable": false,
+      "reqLevel": "20"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ZhaiZi05",
+      "title": "Astrólogo",
+      "group": "14 · Sacerdotes tribais",
+      "tips": "Nv. 50 — Sumo Sacerdote — Floresta à Beira do Lago (Astrólogo). No mapa base (botão Guia), abra a lupa e busque: \"Lakeside Forest\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "50"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_YiJiDiGong07",
+      "title": "Pérola Escondida: Pântano",
+      "group": "15 · Ruínas (Pérolas)",
+      "tips": "Nv. 35 — Guardião — Pântano / Wetland. No mapa base (botão Guia), abra a lupa e busque: \"Wetland\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "35"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_ZhaiZi01",
+      "title": "Toughbone",
+      "group": "20 · DLC · Líderes tribais",
+      "tips": "Nv. 30 — Líder tribal — River Delta (Toughbone). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"River Delta\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "30"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_JiNiao01",
+      "title": "Sombra Obscura",
+      "group": "11 · Chefes · Grifo",
+      "tips": "Nv. 20 — Grifo Tempestuoso Fierce. Arco é muito efetivo; armas pesadas falham. No mapa base (botão Guia), abra a lupa e busque: \"Griffin\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "20"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ZhaiZi04",
+      "title": "Bebedor de Sangue",
+      "group": "14 · Sacerdotes tribais",
+      "tips": "Nv. 30 — Sumo Sacerdote — Colina do Poço / Pit Hill (Bebedor de Sangue). No mapa base (botão Guia), abra a lupa e busque: \"Pit Hill\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "30"
+    },
+    {
+      "apiName": "BP_ChengJiu_ZhiZao_WenMing04",
+      "title": "Brilho em Colisão",
+      "group": "03 · Civilização",
+      "tips": "Nv. 45 — Craft: Lingote de Aço. Mid/endgame — ruínas e tech tree.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "45"
+    },
+    {
+      "apiName": "BP_ChengJiu_ZhiZao_MianJia03",
+      "title": "Marca da Selva",
+      "group": "05 · Máscaras",
+      "tips": "Nv. 30 — Desbloqueie Marca da Selva (Wilderness Mark).",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "30"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_YiJiDiGong08",
+      "title": "Pérola Escondida: Deserto do Norte",
+      "group": "15 · Ruínas (Pérolas)",
+      "tips": "Nv. 45 — Guardião — Deserto do Norte / Northern Wasteland. No mapa base (botão Guia), abra a lupa e busque: \"Northern Wasteland\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "45"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_YiJiDiGong06",
+      "title": "Patroller",
+      "group": "21 · DLC · Guardiões",
+      "tips": "Nv. 40 — Guardião de dungeon — Wind-eroded Dunes (Patroller). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Wind-eroded\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "40"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ZhaiZi07",
+      "title": "Osso Duro",
+      "group": "14 · Sacerdotes tribais",
+      "tips": "Nv. 45 — Sumo Sacerdote — Pradaria (Osso Duro). No mapa base (botão Guia), abra a lupa e busque: \"Great Prairie\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "45"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_YiJiDiGong02",
+      "title": "Pérola Escondida: Caverna da Selva",
+      "group": "15 · Ruínas (Pérolas)",
+      "tips": "Nv. 40 — Guardião — Caverna da Selva / Jungle Cave. No mapa base (botão Guia), abra a lupa e busque: \"Jungle Cave\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "40"
+    },
+    {
+      "apiName": "BP_ChengJiu_MianJuLevel_60",
+      "title": "Não responda",
+      "group": "01 · Progressão",
+      "tips": "Nv. 60 — Meta: Consciência 60 — último patamar. Priorize endgame (neve/vulcão) e ruínas.",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "60"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_DiMianYiJi02",
+      "title": "Lado Sombrio da Floresta Vulcânica",
+      "group": "13 · Saqueadores",
+      "tips": "Nv. 50 — Plunderer Leader nas ruínas da Floresta Vulcânica. Resist calor. No mapa base (botão Guia), abra a lupa e busque: \"Volcanic Forest\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "50"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_MGW02",
+      "title": "Ouriço-d'água",
+      "group": "09 · Chefes · Sapo da Névoa",
+      "tips": "Nv. 40 — Fogfrog Berserk. Resist veneno + dano furador. No mapa base (botão Guia), abra a lupa e busque: \"Fog\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "40"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_YinHunQuan03",
+      "title": "Fierce Anubis Hound",
+      "group": "19 · DLC · Chefes (Anubis)",
+      "tips": "Nv. 20 — Anubis Hound Fierce (1/3). Combate corpo/rápido. No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Anubis\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "medium",
+      "missable": false,
+      "reqLevel": "20"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_MMX01",
+      "title": "Escultura de Gelo Estilosa",
+      "group": "12 · Chefes · Mamute",
+      "tips": "Nv. 20 — Mamute Titã Fierce (gelo). Leve calor/fogo; combate em frio. No mapa base (botão Guia), abra a lupa e busque: \"Mammoth\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "20"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_JianChiHu03",
+      "title": "Caçador Veterano de Fera Dente-de-sabre",
+      "group": "08 · Chefes · Dente-de-sabre",
+      "tips": "Nv. 60 — Versão Doom. Poções + tribo de suporte. No mapa base (botão Guia), abra a lupa e busque: \"Saber\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "60"
+    },
+    {
+      "apiName": "BP_ChengJiu_ZhiZao_MianJia05",
+      "title": "Instruções Táticas",
+      "group": "05 · Máscaras",
+      "tips": "Nv. 25 — Desbloqueie Instruções Táticas (Tactical Guidance).",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "25"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_ZhaiZi05",
+      "title": "Stoneclaw",
+      "group": "20 · DLC · Líderes tribais",
+      "tips": "Nv. 30 — Líder tribal — Three River Junction (Stoneclaw). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Three River\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "30"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_YiJiDiGong03",
+      "title": "Pérola Escondida: Cratera Gigante",
+      "group": "15 · Ruínas (Pérolas)",
+      "tips": "Nv. 50 — Guardião — Cratera Gigante / Giant Crater. No mapa base (botão Guia), abra a lupa e busque: \"Giant Crater\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "50"
+    },
+    {
+      "apiName": "BP_ChengJiu_ZhiZao_PengRen04",
+      "title": "Sobremesa da Tarde",
+      "group": "04 · Culinária",
+      "tips": "Nv. 25 — Faça Anéis de Abóbora Frita (Fried Pumpkin Ring).",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "25"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_YiJiDiGong01",
+      "title": "Transmuter",
+      "group": "21 · DLC · Guardiões",
+      "tips": "Nv. 40 — Guardião de ruína de superfície — Coastal Dunes (Transmuter). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Coastal Dunes\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "40"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ZhaiZi11",
+      "title": "Guardião da Floresta",
+      "group": "14 · Sacerdotes tribais",
+      "tips": "Nv. 50 — Sumo Sacerdote — Floresta Negra (Guardião da Floresta). No mapa base (botão Guia), abra a lupa e busque: \"Dark Forest\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "50"
+    },
+    {
+      "apiName": "BP_ChengJiu_ManRen_zhaoMu_100",
+      "title": "Pessoas Diferentes, Jeitos Diferentes",
+      "group": "02 · Tribo",
+      "tips": "Nv. 15–50 — Recrute 100 membros ao longo do save (não precisa manter 100 vivos). Farma camps alinhados ao seu gear. No mapa base (botão Guia), abra a lupa e busque: \"Barbarian Camp\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "15–50"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_JuYuan02",
+      "title": "Guerra de Exaustão",
+      "group": "10 · Chefes · Primata",
+      "tips": "Nv. 40 — Ape Berserk. Gerencie Vigor/stamina. No mapa base (botão Guia), abra a lupa e busque: \"Ape\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "40"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ZhaiZi08",
+      "title": "Sangrador",
+      "group": "14 · Sacerdotes tribais",
+      "tips": "Nv. 45 — Sumo Sacerdote — Floresta de Madeira Gigante (Sangrador). No mapa base (botão Guia), abra a lupa e busque: \"Giant Wood Forest\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "45"
+    },
+    {
+      "apiName": "BP_ChengJiu_ZhiZao_MianJia02",
+      "title": "Caminhante das Sombras",
+      "group": "05 · Máscaras",
+      "tips": "Nv. 55 — Desbloqueie Caminhante das Sombras (Shadow Walker) — drop da pérola do Vulcão Escaldante.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "55"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_HuangShi_10",
+      "title": "Faltou o Fodão",
+      "group": "07 · Fauna (x10)",
+      "tips": "Nv. 30 — Mate 10 leões na estepe/pradaria.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "30"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ZhaiZi06",
+      "title": "Coração de Cobra",
+      "group": "14 · Sacerdotes tribais",
+      "tips": "Nv. 40 — Sumo Sacerdote — Chapada / Table Mountain (Coração de Cobra). No mapa base (botão Guia), abra a lupa e busque: \"Table Mountain\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "40"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ZhaiZi10",
+      "title": "Matador",
+      "group": "14 · Sacerdotes tribais",
+      "tips": "Nv. 50 — Sumo Sacerdote — Prado Árido (Matador). No mapa base (botão Guia), abra a lupa e busque: \"Barren Meadow\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "50"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_YiJiDiGong05",
+      "title": "Pérola Escondida: Cânion Congelado",
+      "group": "15 · Ruínas (Pérolas)",
+      "tips": "Nv. 65 — Guardião — Cânion Congelado / Frost Canyon. Resist frio. No mapa base (botão Guia), abra a lupa e busque: \"Frost Canyon\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "65"
+    },
+    {
+      "apiName": "BP_ChengJiu_ZhiZao_PengRen03",
+      "title": "Suquinho de Frutas",
+      "group": "04 · Culinária",
+      "tips": "Nv. 20 — Produza Tequila (estação de bebida/fermentação).",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "20"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_YiJiDiGong09",
+      "title": "Destroyer",
+      "group": "21 · DLC · Guardiões",
+      "tips": "Nv. 55 — Guardião Holy Ruins — Sulfur Pool (Destroyer). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Sulfur Pool\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "55"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_JiNiao02",
+      "title": "Você! Desça aqui!",
+      "group": "11 · Chefes · Grifo",
+      "tips": "Nv. 40 — Griffin Berserk. Force a pousar / ranged pesado. No mapa base (botão Guia), abra a lupa e busque: \"Griffin\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "40"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_YiJiDiGong04",
+      "title": "Pérola Escondida: Vulcão Escaldante",
+      "group": "15 · Ruínas (Pérolas)",
+      "tips": "Nv. 55 — Guardião — Vulcão Escaldante. Resist calor obrigatório. No mapa base (botão Guia), abra a lupa e busque: \"Scorching Volcano\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "55"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ZhaiZi09",
+      "title": "Veneno",
+      "group": "14 · Sacerdotes tribais",
+      "tips": "Nv. 50 — Sumo Sacerdote — Deserto do Sul (Veneno). Leve antídoto. No mapa base (botão Guia), abra a lupa e busque: \"Southern Wasteland\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "50"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_YiJiDiGong09",
+      "title": "Pérola Escondida: Floresta Negra",
+      "group": "15 · Ruínas (Pérolas)",
+      "tips": "Nv. 60 — Guardião — Floresta Negra / Dark Forest. No mapa base (botão Guia), abra a lupa e busque: \"Dark Forest\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "60"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_ZhaiZi02",
+      "title": "Ironfoot",
+      "group": "20 · DLC · Líderes tribais",
+      "tips": "Nv. 30 — Líder tribal — Moon Bay (Ironfoot). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Moon Bay\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "30"
+    },
+    {
+      "apiName": "BP_ChengJiu_ZhiZao_PengRen05",
+      "title": "Alegria com Gelo",
+      "group": "04 · Culinária",
+      "tips": "Nv. 35 — Faça Cacau Gelado (Iced Cocoa).",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "35"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_JuYuan03",
+      "title": "Caçador Veterano de Primatas Poderosos",
+      "group": "10 · Chefes · Primata",
+      "tips": "Nv. 60 — Ape of Doom. Luta longa — comida e pots de stamina. No mapa base (botão Guia), abra a lupa e busque: \"Ape\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "60"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_YiJiDiGong07",
+      "title": "Observer",
+      "group": "21 · DLC · Guardiões",
+      "tips": "Nv. 40 — Guardião de dungeon — Scorching Desert (Observer). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Scorching Desert\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "40"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_MGW03",
+      "title": "Caçador Veterano de Sapo da Névoa",
+      "group": "09 · Chefes · Sapo da Névoa",
+      "tips": "Nv. 60 — Fogfrog of Doom. Prep total de veneno e ranged. No mapa base (botão Guia), abra a lupa e busque: \"Fog\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "60"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ZhaiZi12",
+      "title": "Açougueiro",
+      "group": "14 · Sacerdotes tribais",
+      "tips": "Nv. 50 — Sumo Sacerdote — Bosque Frostleaf (Açougueiro). Resist frio. No mapa base (botão Guia), abra a lupa e busque: \"Frostleaf Grove\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "50"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ShengJiaChong03",
+      "title": "Fierce Onyx Scarab",
+      "group": "19 · DLC · Chefes (Scarab)",
+      "tips": "Nv. 20 — Onyx Scarab Fierce (1/3). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Scarab\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "medium",
+      "missable": false,
+      "reqLevel": "20"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_SenLuoE03",
+      "title": "Berserk Sobek Crocodile",
+      "group": "19 · DLC · Chefes (Sobek)",
+      "tips": "Nv. 40 — Sobek Berserk (2/3). Mais agressivo — pots e tribo. No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Sobek\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "40"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_ZhaiZi06",
+      "title": "Bloodfang",
+      "group": "20 · DLC · Líderes tribais",
+      "tips": "Nv. 30 — Líder tribal — Rockhenge Desert (Bloodfang). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Rockhenge\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "30"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_YiJiDiGongFinal",
+      "title": "Núcleo Central",
+      "group": "15 · Ruínas (Pérolas)",
+      "tips": "Nv. 70 — Núcleo Central — guardião oculto extra no Frost Canyon (além da pérola local). Endgame do base. No mapa base (botão Guia), abra a lupa e busque: \"Frost Canyon\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "70"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_DaXiang_10",
+      "title": "Porcos-espinhos Desesperados",
+      "group": "07 · Fauna (x10)",
+      "tips": "Nv. 25 — Mate 10 elefantes gigantes. Prefira distância e suporte da tribo.",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "25"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_DiMianYiJi03",
+      "title": "Louco do Sangue Enregelado",
+      "group": "13 · Saqueadores",
+      "tips": "Nv. 60 — Qualquer um dos 2 Plunderer Leaders nas ruínas do Alpine Land (neve). Resist frio. No mapa base (botão Guia), abra a lupa e busque: \"Alpine Land\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "medium",
+      "missable": false,
+      "reqLevel": "60"
+    },
+    {
+      "apiName": "BP_ChengJiu_TanSUoDian_002",
+      "title": "Caminhada na Floresta Tropical",
+      "group": "17 · Exploração",
+      "tips": "Nv. 15 — 100% dos pontos de exploração da Floresta Tropical. Limpe fog of war e markers. No mapa base (botão Guia), abra a lupa e busque: \"Rainforest\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "15"
+    },
+    {
+      "apiName": "BP_ChengJiu_TanSUoDian_003",
+      "title": "Caminhada na Colina",
+      "group": "17 · Exploração",
+      "tips": "Nv. 25 — 100% exploração — Colinas / Pit Hill e entorno. No mapa base (botão Guia), abra a lupa e busque: \"Hill\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "25"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_JiNiao03",
+      "title": "Caçador Veterano de Grifos Tempestuosos",
+      "group": "11 · Chefes · Grifo",
+      "tips": "Nv. 60 — Griffin of Doom. Endgame aéreo — flechas e mobilidade. No mapa base (botão Guia), abra a lupa e busque: \"Griffin\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "60"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_MMX02",
+      "title": "A Paixão que se Apaga",
+      "group": "12 · Chefes · Mamute",
+      "tips": "Nv. 40 — Mamute Berserk. Não tire a proteção de frio no meio da luta. No mapa base (botão Guia), abra a lupa e busque: \"Mammoth\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "40"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_MMX03",
+      "title": "Caçador de Mamutes Experiente",
+      "group": "12 · Chefes · Mamute",
+      "tips": "Nv. 60 — Mamute of Doom. Um dos mais duros do base — gear top + tribo. No mapa base (botão Guia), abra a lupa e busque: \"Mammoth\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "60"
+    },
+    {
+      "apiName": "BP_ChengJiu_ZhiZao_JianZhu03",
+      "title": "Mestre do Empilhamento Desconhecido",
+      "group": "03 · Civilização",
+      "tips": "Nv. 40 — Construa uma Fundação de Pedra Negra (Blackstone).",
+      "difficulty": "easy",
+      "missable": false,
+      "reqLevel": "40"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_YiJiDiGong02",
+      "title": "Sandburier",
+      "group": "21 · DLC · Guardiões",
+      "tips": "Nv. 40 — Guardião — Sunken City (Sandburier). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Sunken City\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "40"
+    },
+    {
+      "apiName": "BP_ChengJiu_TanSUoDian_004",
+      "title": "Caminhada no Pântano",
+      "group": "17 · Exploração",
+      "tips": "Nv. 30 — 100% exploração — Pântano / Wetland. No mapa base (botão Guia), abra a lupa e busque: \"Wetland\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "30"
+    },
+    {
+      "apiName": "BP_ChengJiu_TanSUoDian_005",
+      "title": "Caminhada no Planalto",
+      "group": "17 · Exploração",
+      "tips": "Nv. 35 — 100% exploração — Planalto / Plateau Woodland. No mapa base (botão Guia), abra a lupa e busque: \"Plateau\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "35"
+    },
+    {
+      "apiName": "BP_ChengJiu_TanSUoDian_006",
+      "title": "Caminhada no Vulcão",
+      "group": "17 · Exploração",
+      "tips": "Nv. 45 — 100% exploração — Vulcão. Resist calor. No mapa base (botão Guia), abra a lupa e busque: \"Volcano\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "45"
+    },
+    {
+      "apiName": "BP_ChengJiu_TanSUoDian_007",
+      "title": "Caminhada na Montanha Nevada",
+      "group": "17 · Exploração",
+      "tips": "Nv. 50 — 100% exploração — Montanha Nevada / Alpine. Resist frio. No mapa base (botão Guia), abra a lupa e busque: \"Alpine\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "50"
+    },
+    {
+      "apiName": "BP_ChengJiu_ZhiZao_MianJia04",
+      "title": "Guarda de Sangue Feroz",
+      "group": "05 · Máscaras",
+      "tips": "Nv. 45 — Desbloqueie Guarda de Sangue Feroz (Ironblood Guard).",
+      "difficulty": "medium",
+      "missable": false,
+      "reqLevel": "45"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ZhaiZi13",
+      "title": "Veneno Frio",
+      "group": "14 · Sacerdotes tribais",
+      "tips": "Nv. 50 — Sumo Sacerdote — Terra Alpina (Veneno Frio). Resist frio + antídoto. No mapa base (botão Guia), abra a lupa e busque: \"Alpine Land\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "50"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_ZhaiZi03",
+      "title": "Sharpskull",
+      "group": "20 · DLC · Líderes tribais",
+      "tips": "Nv. 30 — Líder tribal — Rock Lake (Sharpskull). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Rock Lake\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "30"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_YiJiDiGong10",
+      "title": "Huntsman",
+      "group": "21 · DLC · Guardiões",
+      "tips": "Nv. 55 — Guardião Holy Ruins — Eye of Sands (Huntsman). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Eye of Sands\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "55"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_YiJiDiGong04",
+      "title": "King of Wilderness",
+      "group": "21 · DLC · Guardiões",
+      "tips": "Nv. 50 — Guardião da pirâmide — Star Plain (King of Wilderness). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Star Plain\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "50"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_ZhaiZi04",
+      "title": "Moltenpalm",
+      "group": "20 · DLC · Líderes tribais",
+      "tips": "Nv. 30 — Líder tribal — Darkriver Valley (Moltenpalm). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Darkriver\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "30"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_ZhaiZi08",
+      "title": "Scareye",
+      "group": "20 · DLC · Líderes tribais",
+      "tips": "Nv. 30 — Líder tribal — Star Plain (Scareye). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Star Plain\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "30"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_YinHunQuan03",
+      "title": "Berserk Anubis Hound",
+      "group": "19 · DLC · Chefes (Anubis)",
+      "tips": "Nv. 40 — Anubis Hound Berserk (2/3). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Anubis\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "40"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_YiJiDiGong08",
+      "title": "Trailblazer",
+      "group": "21 · DLC · Guardiões",
+      "tips": "Nv. 55 — Guardião — Blackstone Cliff Ancient Ruins (Trailblazer). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Blackstone Cliff\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "55"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_SenLuoE03",
+      "title": "Sobek Crocodile of Doom",
+      "group": "19 · DLC · Chefes (Sobek)",
+      "tips": "Nv. 60 — Sobek of Doom (3/3). Tier final — gear top do DLC. No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Sobek\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "60"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_ZhaiZi07",
+      "title": "Spikebone",
+      "group": "20 · DLC · Líderes tribais",
+      "tips": "Nv. 30 — Líder tribal — Sandcry Gorge (Spikebone). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Sandcry\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "30"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_YiJiDiGong03",
+      "title": "King of Red Sand",
+      "group": "21 · DLC · Guardiões",
+      "tips": "Nv. 50 — Guardião — Red Dunes (King of Red Sand). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Red Dunes\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "50"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_YinHunQuan03",
+      "title": "Anubis Hound of Doom",
+      "group": "19 · DLC · Chefes (Anubis)",
+      "tips": "Nv. 60 — Anubis Hound of Doom (3/3). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Anubis\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "60"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ShengJiaChong03",
+      "title": "Berserk Onyx Scarab",
+      "group": "19 · DLC · Chefes (Scarab)",
+      "tips": "Nv. 40 — Onyx Scarab Berserk (2/3). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Scarab\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "40"
+    },
+    {
+      "apiName": "BP_ChengJiu_ShiBan_002",
+      "title": "Sábio Sagrado",
+      "group": "16 · Tábuas",
+      "tips": "Nv. 35–65 — Decifre TODAS as Tábuas Sagradas/Divinas. Mid/endgame — passe por cada bioma. No mapa base (botão Guia), abra a lupa e busque: \"Tablet\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "35–65"
+    },
+    {
+      "apiName": "BP_ChengJiu_ShiBan_001",
+      "title": "Erudito Antigo",
+      "group": "16 · Tábuas",
+      "tips": "Nv. 15–50 — Decifre TODAS as Tábuas Antigas. No mapa, ligue a legenda e vá marcando. Tracker: L → Trip. No mapa base (botão Guia), abra a lupa e busque: \"Tablet\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/map/",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "15–50"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_ShengJiaChong03",
+      "title": "Onyx Scarab of Doom",
+      "group": "19 · DLC · Chefes (Scarab)",
+      "tips": "Nv. 60 — Onyx Scarab of Doom (3/3). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Scarab\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "60"
+    },
+    {
+      "apiName": "BP_ChengJiu_Collect_All",
+      "title": "Alma Imortal",
+      "group": "18 · Platina (Base)",
+      "tips": "Nv. 60 — Alma Imortal: complete TODOS os outros Trip Milestones do jogo base (90). Deixe por último. In-game: tecla L → Trip.",
+      "guideUrl": "https://steamcommunity.com/sharedfiles/filedetails/?id=3261512701",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "60"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_YiJiDiGong05",
+      "title": "King of Fiery Flames",
+      "group": "21 · DLC · Guardiões",
+      "tips": "Nv. 50 — Guardião da pirâmide — Burning Highland (King of Fiery Flames). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Burning Highland\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "50"
+    },
+    {
+      "apiName": "BP_ChengJiu_Kill_AJ_YiJiDiGong11",
+      "title": "Divine Punishment",
+      "group": "21 · DLC · Guardiões",
+      "tips": "Nv. 60 — Guardião Holy Ruins — Burning Highland (Divine Punishment). No mapa Shifting Sands (botão Guia), abra a lupa e busque: \"Burning Highland\".",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "60"
+    },
+    {
+      "apiName": "BP_ChengJiu_AJ_Collect_All",
+      "title": "Rise in the Shifting Sands",
+      "group": "22 · Platina (DLC)",
+      "tips": "Nv. 60 — Complete TODOS os outros Trip Milestones do DLC Shifting Sands (28) e deixe este por último.",
+      "guideUrl": "https://gamingwithdaopa.ellatha.com/soulmask/shifting-sands-map/",
+      "dlc": "Soulmask: Shifting Sands",
+      "difficulty": "hard",
+      "missable": false,
+      "reqLevel": "60"
+    }
+  ],
+  "note": "Guia platina Soulmask v2 — grupos, dicas e mapa filtrado por termo de busca (base ou DLC). Progresso vem da Steam."
+}

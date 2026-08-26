@@ -1,0 +1,55 @@
+/* Tooltip — estilo BeUI motion/tooltip */
+
+.uiTooltipWrap {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  vertical-align: middle;
+  flex: 0 0 auto;
+}
+
+.uiTooltipWrap.is-stretch {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+}
+
+.uiTooltipWrap > * {
+  max-width: 100%;
+}
+
+.uiTooltipAnchor {
+  position: fixed;
+  z-index: 400;
+  pointer-events: none;
+  display: flex;
+}
+
+.uiTooltipAnchor.is-top,
+.uiTooltipAnchor.is-bottom {
+  justify-content: center;
+}
+
+.uiTooltipAnchor.is-left,
+.uiTooltipAnchor.is-right {
+  align-items: center;
+}
+
+.uiTooltip {
+  display: block;
+  width: max-content;
+  max-width: min(280px, calc(100vw - 24px));
+  padding: 7px 11px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--popover);
+  color: var(--popover-foreground);
+  box-shadow: 0 12px 28px -10px rgb(0 0 0 / 0.55);
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 1.4;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: normal;
+}

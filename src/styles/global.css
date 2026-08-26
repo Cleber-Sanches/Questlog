@@ -1,0 +1,131 @@
+@import './tokens.css';
+@import './reset.css';
+@import './buttons.css';
+@import './toast.css';
+@import './notifications.css';
+@import './tooltip.css';
+@import './layouts.css';
+@import './window-controls.css';
+@import './achievements.css';
+@import './drawer.css';
+@import './list-controls.css';
+@import './game-switcher.css';
+@import './archived.css';
+@import './settings.css';
+@import './ai-chat.css';
+@import './tips-editor.css';
+
+.app-loading {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  color: var(--color-text-muted);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  background: var(--color-input);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.55rem 0.75rem;
+  color: var(--color-text-heading);
+  outline: none;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: var(--color-border-strong);
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-xs);
+  background: var(--color-panel-2);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+
+.badge-success {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+  border-color: transparent;
+}
+
+.badge-danger {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+  border-color: transparent;
+}
+
+.badge-warning {
+  background: rgba(232, 165, 75, 0.14);
+  color: var(--color-warning);
+  border-color: transparent;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--color-modal-backdrop);
+  z-index: var(--z-modal);
+  display: grid;
+  place-items: center;
+  padding: var(--sp-5);
+}
+
+.modal {
+  width: min(560px, 100%);
+  max-height: min(85vh, 800px);
+  overflow: auto;
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  padding: var(--sp-5);
+}
+
+.modal.is-wide {
+  width: min(920px, 100%);
+}
+
+.modal h2 {
+  color: var(--color-text-heading);
+  font-size: var(--fs-lg);
+  margin-bottom: var(--sp-3);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--sp-2);
+  margin-top: var(--sp-4);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: var(--sp-3);
+}
+
+.field label {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.empty {
+  padding: var(--sp-6);
+  text-align: center;
+  color: var(--color-text-muted);
+}

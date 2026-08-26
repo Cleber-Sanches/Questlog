@@ -1,0 +1,35 @@
+/** Espelho tipado dos tokens CSS principais (uso opcional em JS). */
+export const tokens = {
+  color: {
+    background: 'var(--background)',
+    foreground: 'var(--foreground)',
+    card: 'var(--card)',
+    primary: 'var(--primary)',
+    accent: 'var(--accent)',
+    accentBright: 'var(--accent-bright)',
+    muted: 'var(--muted-foreground)',
+    destructive: 'var(--destructive)',
+    border: 'var(--border)',
+    bg: 'var(--color-bg)',
+    panel: 'var(--color-panel)',
+    success: 'var(--color-success)',
+    danger: 'var(--color-danger)',
+    textHeading: 'var(--color-text-heading)',
+    textBody: 'var(--color-text-body)',
+    textMuted: 'var(--color-text-muted)',
+  },
+  space: {
+    1: 'var(--sp-1)',
+    2: 'var(--sp-2)',
+    3: 'var(--sp-3)',
+    4: 'var(--sp-4)',
+    5: 'var(--sp-5)',
+    6: 'var(--sp-6)',
+  },
+  radius: {
+    sm: 'var(--radius-sm)',
+    md: 'var(--radius)',
+    lg: 'var(--radius-lg)',
+  },
+  sidebarWidth: 'var(--sidebar-width)',
+} as const

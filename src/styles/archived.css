@@ -1,0 +1,428 @@
+.archived-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  padding: 4px;
+}
+
+.archived-pane {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.archivedHero {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 10px 14px 10px 20px;
+  margin: 0;
+  border-bottom: 1px solid var(--overlay-05);
+}
+
+.archivedHero .sidebarCollapseToggle.is-toolbar {
+  flex-shrink: 0;
+}
+
+.archivedHeroDrag {
+  flex: 1;
+  min-width: 0;
+  min-height: 28px;
+  align-self: stretch;
+}
+
+.archivedHeroSearch {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  width: min(340px, 42vw);
+  height: 32px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  margin: 0;
+  background: var(--bg-canvas);
+  border-radius: 8px;
+}
+
+.archivedSearchIcon {
+  flex-shrink: 0;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--icon-muted);
+  pointer-events: none;
+}
+
+.archivedHeroSearch input {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  height: 100%;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--fs-md);
+  font-weight: 450;
+  line-height: 1;
+  letter-spacing: -0.2px;
+  outline: none;
+  box-shadow: none;
+}
+
+.archivedHeroSearch input::placeholder {
+  color: rgb(255 255 255 / 0.4);
+  font-weight: 450;
+}
+
+.archivedHeroSearch input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.archivedGamesGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px 12px 24px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--overlay-15) transparent;
+}
+
+.archivedGameCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  background: var(--overlay-025);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  transition:
+    background 0.12s var(--ease),
+    border-color 0.12s var(--ease);
+}
+
+.archivedGameCard:hover {
+  background: var(--overlay-05);
+}
+
+.archivedGameCard.isPlatinum {
+  background:
+    linear-gradient(90deg, rgb(212 175 55 / 0.1) 0%, transparent 28%),
+    var(--overlay-025);
+  border-color: rgb(240 215 140 / 0.18);
+}
+
+.archivedGameCard.isPlatinum:hover {
+  background:
+    linear-gradient(90deg, rgb(212 175 55 / 0.14) 0%, transparent 28%),
+    var(--overlay-05);
+}
+
+.archivedGameMedia {
+  position: relative;
+  width: 120px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--bg-canvas);
+  border: 1px solid var(--overlay-05);
+}
+
+.archivedGameMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.archivedPlatinumShine {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 34%,
+    rgb(255 244 210 / 0.06) 42%,
+    rgb(255 236 180 / 0.28) 50%,
+    rgb(255 244 210 / 0.06) 58%,
+    transparent 66%
+  );
+  animation: archivedPlatinumSweep 3.2s ease-in-out infinite;
+}
+
+@keyframes archivedPlatinumSweep {
+  0%,
+  60% {
+    transform: translateX(-140%);
+    opacity: 0;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(140%);
+    opacity: 0;
+  }
+}
+
+.archivedGameFallback {
+  width: 100%;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--overlay-05);
+  color: var(--fg-muted);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+
+.archivedGameMedia img[hidden],
+.archivedGameFallback[hidden] {
+  display: none !important;
+}
+
+.archivedGameBody {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.archivedGameTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.archivedGameTitleRow .uiTooltipWrap {
+  flex-shrink: 0;
+}
+
+.archivedGameName {
+  margin: 0;
+  font-size: var(--fs-md);
+  font-weight: 450;
+  letter-spacing: -0.2px;
+  color: var(--fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.archivedPlatinumBadge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 20px;
+  padding: 0 8px 0 6px;
+  border-radius: var(--radius-pill);
+  background: rgb(212 175 55 / 0.14);
+  border: 1px solid rgb(240 215 140 / 0.22);
+  color: #f0d78c;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: -0.1px;
+}
+
+.archivedPlatinumBadge .ph {
+  font-size: 12px;
+  line-height: 1;
+  color: #f0d78c;
+}
+
+.archivedGameMeta {
+  margin: 0;
+  color: var(--fg-muted);
+  font-size: var(--fs-sm);
+  letter-spacing: -0.2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.archivedGameMetaSep {
+  opacity: 0.5;
+}
+
+.archivedGameProgress {
+  color: var(--fg-muted);
+}
+
+.archivedGameProgress.isPlatinum {
+  color: #e8c86a;
+  font-weight: 500;
+}
+
+.archivedProgressTrack {
+  margin-top: 2px;
+  width: min(200px, 100%);
+  height: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--overlay-10);
+  overflow: hidden;
+}
+
+.archivedProgressFill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent-bright);
+}
+
+.archivedGameCard.isPlatinum .archivedProgressFill {
+  background: linear-gradient(90deg, #a8841d, #e8c86a 55%, #f5e6b8);
+}
+
+.archivedGameActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.archivedGameActions .uiTooltipWrap {
+  display: inline-flex;
+}
+
+.archivedRestoreBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 6px;
+  background: var(--overlay-10);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  font-weight: 450;
+  letter-spacing: -0.2px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.12s var(--ease);
+}
+
+.archivedRestoreBtn i {
+  font-size: 14px;
+  color: var(--fg-muted);
+  line-height: 1;
+}
+
+.archivedRestoreBtn:hover {
+  background: var(--overlay-15);
+}
+
+.archivedRestoreBtn:hover i {
+  color: var(--fg);
+}
+
+.archivedDeleteBtn {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--icon-muted);
+  cursor: pointer;
+  transition:
+    background 0.12s var(--ease),
+    color 0.12s var(--ease);
+}
+
+.archivedDeleteBtn i {
+  font-size: 15px;
+  line-height: 1;
+}
+
+.archivedDeleteBtn:hover {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.archivedEmpty {
+  padding: 56px 20px;
+  text-align: center;
+  color: var(--fg-muted);
+  border: 1px dashed var(--overlay-10);
+  border-radius: 10px;
+  background: var(--overlay-025);
+}
+
+.archivedEmpty .empty-icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+  color: var(--icon-muted);
+}
+
+.archivedEmpty p {
+  margin: 0 0 6px;
+  color: var(--fg);
+  font-size: var(--fs-md);
+  font-weight: 450;
+  letter-spacing: -0.2px;
+}
+
+.archivedEmpty span {
+  font-size: var(--fs-sm);
+  color: var(--fg-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .archivedPlatinumShine {
+    animation: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .archivedHero {
+    flex-wrap: wrap;
+  }
+
+  .archivedHeroSearch {
+    width: 100%;
+    order: 3;
+  }
+
+  .archivedGameCard {
+    flex-wrap: wrap;
+  }
+
+  .archivedGameMedia {
+    width: 100%;
+    height: 90px;
+  }
+
+  .archivedGameActions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
