@@ -110,5 +110,5 @@ pub fn run() {
             commands::media::media_resolve_path,
         ])
         .run(tauri::generate_context!())
-        .expect("erro ao iniciar TrophyDesk");
+        .expect("erro ao iniciar Questlog");
 }

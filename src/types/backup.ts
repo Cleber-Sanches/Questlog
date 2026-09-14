@@ -11,7 +11,7 @@ export interface BackupStatus {
 }
 
 export interface ProfilePack {
-  type: 'trophy-desk-profile' | 'guia-conquistas-profile'
+  type: 'questlog-profile' | 'trophy-desk-profile' | 'guia-conquistas-profile'
   version: number
   exportedAt?: string
   activeGameAppId?: string | null
@@ -23,7 +23,7 @@ export interface ProfilePack {
 }
 
 export interface GuidePack {
-  type: 'trophy-desk-pack' | 'guia-conquistas-pack'
+  type: 'questlog-pack' | 'trophy-desk-pack' | 'guia-conquistas-pack'
   version: number
   exportedAt?: string
   game: {

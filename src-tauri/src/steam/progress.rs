@@ -20,6 +20,11 @@ pub struct ProgressAchievement {
     pub icon_hash: Option<String>,
     pub stat_group: String,
     pub bit_index: i64,
+    /// Progresso parcial (ex.: Valheim 14/20). Ausente se a conquista for só binária.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub progress: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub progress_max: Option<i64>,
 }
 
 #[derive(Debug, Serialize)]
@@ -88,6 +93,20 @@ pub fn get_steam_progress(app_id: &str, custom_install_dir: Option<&str>) -> App
     };
 
     let mut achievements = HashMap::new();
+
+    // Stats INT/FLOAT: nome → group id (ex.: CraftFood → "10")
+    let mut stat_name_to_group: HashMap<String, String> = HashMap::new();
+    for (group_id, group_val) in stats {
+        if group_val.get("bits").and_then(|v| v.as_object()).is_some() {
+            continue;
+        }
+        if let Some(name) = group_val.get("name").and_then(|v| v.as_str()) {
+            if !name.is_empty() {
+                stat_name_to_group.insert(name.to_string(), group_id.clone());
+            }
+        }
+    }
+
     for (group_id, group_val) in stats {
         let bits = match group_val.get("bits").and_then(|v| v.as_object()) {
             Some(b) => b,
@@ -130,6 +149,9 @@ pub fn get_steam_progress(app_id: &str, custom_install_dir: Option<&str>) -> App
                 .map(|s| s.to_string());
             let icon_hash = icon.as_deref().and_then(extract_icon_hash);
 
+            let (progress, progress_max) =
+                read_bit_progress(bit, &stat_name_to_group, &cache, completed);
+
             achievements.insert(
                 name,
                 ProgressAchievement {
@@ -140,6 +162,8 @@ pub fn get_steam_progress(app_id: &str, custom_install_dir: Option<&str>) -> App
                     icon_hash,
                     stat_group: group_id.clone(),
                     bit_index,
+                    progress,
+                    progress_max,
                 },
             );
         }
@@ -183,6 +207,8 @@ pub fn get_steam_progress(app_id: &str, custom_install_dir: Option<&str>) -> App
                         icon_hash: unlock.icon_hash,
                         stat_group: "community".into(),
                         bit_index: -1,
+                        progress: None,
+                        progress_max: None,
                     },
                 );
                 applied += 1;
@@ -326,8 +352,61 @@ struct CommunityUnlock {
     icon_hash: Option<String>,
 }
 
+fn read_bit_progress(
+    bit: &Value,
+    stat_name_to_group: &HashMap<String, String>,
+    cache: &serde_json::Map<String, Value>,
+    completed: bool,
+) -> (Option<i64>, Option<i64>) {
+    let progress = match bit.get("progress") {
+        Some(p) => p,
+        None => return (None, None),
+    };
+
+    let max_val = progress
+        .get("max_val")
+        .and_then(value_as_i64)
+        .filter(|n| *n > 0);
+    let Some(max_val) = max_val else {
+        return (None, None);
+    };
+
+    let min_val = progress.get("min_val").and_then(value_as_i64).unwrap_or(0);
+    let operation = progress
+        .pointer("/value/operation")
+        .and_then(|v| v.as_str())
+        .unwrap_or("");
+    let operand = progress
+        .pointer("/value/operand1")
+        .and_then(|v| v.as_str())
+        .unwrap_or("");
+
+    let mut current = if completed {
+        max_val
+    } else if operation.eq_ignore_ascii_case("statvalue") && !operand.is_empty() {
+        stat_name_to_group
+            .get(operand)
+            .and_then(|gid| cache.get(gid))
+            .and_then(|g| g.get("data"))
+            .and_then(value_as_i64)
+            .unwrap_or(min_val)
+    } else {
+        min_val
+    };
+
+    if current < min_val {
+        current = min_val;
+    }
+    if current > max_val {
+        current = max_val;
+    }
+
+    (Some(current), Some(max_val))
+}
+
 fn value_as_i64(v: &Value) -> Option<i64> {
     v.as_i64()
         .or_else(|| v.as_u64().map(|n| n as i64))
-        .or_else(|| v.as_f64().map(|n| n as i64))
+        .or_else(|| v.as_f64().map(|n| n.round() as i64))
+        .or_else(|| v.as_str().and_then(|s| s.parse().ok()))
 }

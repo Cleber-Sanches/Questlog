@@ -1,8 +1,8 @@
 [package]
-name = "trophy-desk"
+name = "questlog"
 version = "0.1.0"
-description = "TrophyDesk — guia local de conquistas com sync Steam"
-authors = ["TrophyDesk"]
+description = "Questlog — guia local de conquistas com sync Steam"
+authors = ["Questlog"]
 edition = "2021"
 rust-version = "1.77.2"
 

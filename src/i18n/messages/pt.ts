@@ -61,7 +61,7 @@ export const pt = {
 
   // Updates
   'settings.update.title': 'Atualizações',
-  'settings.update.subtitle': 'O TrophyDesk pode baixar e instalar novas versões sozinho.',
+  'settings.update.subtitle': 'O Questlog pode baixar e instalar novas versões sozinho.',
   'settings.update.current': 'Versão instalada',
   'settings.update.version': 'v{version}',
   'settings.update.check': 'Verificar agora',
@@ -76,7 +76,7 @@ export const pt = {
   'settings.update.checkError': 'Não foi possível verificar atualizações',
   'settings.update.installError': 'Falha ao baixar ou instalar a atualização',
   'settings.update.endpointHint':
-    'Publique um release no GitHub (Cleber-Sanches/TrophyDesk) com latest.json ou ajuste o endpoint em tauri.conf.json.',
+    'Publique um release no GitHub (Cleber-Sanches/Questlog) com latest.json ou ajuste o endpoint em tauri.conf.json.',
 
   // Backup settings
   'settings.backup.local.title': 'Backup local',
@@ -99,7 +99,7 @@ export const pt = {
     'Isso substitui todos os seus jogos e conquistas pelos dados do backup. Faça um backup antes se não tiver certeza.',
   'settings.backup.restore.success': 'Backup restaurado. Recarregando…',
   'settings.backup.recovery.hint':
-    'Perdeu dados após atualizar? Procure backups em %APPDATA%\\com.trophydesk.desktop\\, %APPDATA%\\com.myconquist.desktop\\ ou %APPDATA%\\com.guiaconquistas.desktop\\backups\\ — ou um arquivo .json exportado antes.',
+    'Perdeu dados após atualizar? Procure backups em %APPDATA%\\com.questlog.desktop\\, %APPDATA%\\com.trophydesk.desktop\\, %APPDATA%\\com.myconquist.desktop\\ ou %APPDATA%\\com.guiaconquistas.desktop\\backups\\ — ou um arquivo .json exportado antes.',
   'settings.backup.local.saved': 'Backup salvo em {path}',
   'settings.backup.external.saved': 'Pasta externa configurada',
 
@@ -231,6 +231,7 @@ export const pt = {
   'row.status.markCompleted': 'Marcar como concluída',
   'row.missable': 'Perdível',
   'row.globalRarity': 'Raridade global na Steam',
+  'row.progress': '{current} / {max}',
 
   'video.watch': 'Assistir',
   'video.openBrowser': 'Abrir no navegador',

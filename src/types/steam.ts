@@ -18,6 +18,8 @@ export interface SteamProgressAchievement {
   iconHash?: string | null
   statGroup: string
   bitIndex: number
+  progress?: number | null
+  progressMax?: number | null
 }
 
 export interface SteamProgress {

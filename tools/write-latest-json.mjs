@@ -3,7 +3,7 @@
  * Gera updates/latest.json a partir do instalador + .sig do último build.
  *
  * Uso (após tauri:build com assinatura):
- *   node tools/write-latest-json.mjs --version 0.1.1 --url "https://github.com/Cleber-Sanches/TrophyDesk/releases/download/v0.1.1/TrophyDesk_0.1.1_x64-setup.exe"
+ *   node tools/write-latest-json.mjs --version 0.1.1 --url "https://github.com/Cleber-Sanches/Questlog/releases/download/v0.1.1/Questlog_0.1.1_x64-setup.exe"
  */
 import fs from 'node:fs'
 import path from 'node:path'
@@ -18,7 +18,7 @@ function arg(name, fallback = '') {
 
 const version = arg('version')
 const url = arg('url')
-const notes = arg('notes', `TrophyDesk ${version}`)
+const notes = arg('notes', `Questlog ${version}`)
 const sigPath = arg(
   'sig',
   path.join(
@@ -28,7 +28,7 @@ const sigPath = arg(
     'release',
     'bundle',
     'nsis',
-    `TrophyDesk_${version}_x64-setup.exe.sig`,
+    `Questlog_${version}_x64-setup.exe.sig`,
   ),
 )
 
@@ -39,7 +39,7 @@ if (!version || !url) {
 
 if (!fs.existsSync(sigPath)) {
   console.error(`Assinatura não encontrada: ${sigPath}`)
-  console.error('Rode o build com TAURI_SIGNING_PRIVATE_KEY_PATH apontando para keys/trophydesk.key')
+  console.error('Rode o build com TAURI_SIGNING_PRIVATE_KEY_PATH apontando para keys/questlog.key')
   process.exit(1)
 }
 

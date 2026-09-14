@@ -283,7 +283,7 @@
   overflow: visible;
   display: flex;
   gap: 14px;
-  align-items: center;
+  align-items: flex-start;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -645,9 +645,72 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  gap: 14px;
+  gap: 12px;
   flex-shrink: 0;
-  padding-left: 8px;
+  align-self: flex-start;
+  min-height: 44px;
+  padding-left: 12px;
+}
+
+.achieveProgress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  max-width: 240px;
+}
+
+.achieveProgressTrack {
+  flex: 1;
+  min-width: 72px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--overlay-10);
+  overflow: hidden;
+}
+
+.achieveProgressFill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent-brand-bright);
+  transition: width 0.28s ease;
+}
+
+.achieveProgress.isDone .achieveProgressFill {
+  background: var(--color-success);
+}
+
+.achieveProgressText {
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  color: rgb(255 255 255 / 0.72);
+}
+
+.achievement.isCompact .actions {
+  min-height: 32px;
+  gap: 8px;
+  padding-left: 6px;
+}
+
+.achievement.isCompact .achieveProgress {
+  max-width: 160px;
+  margin-top: 4px;
+  gap: 6px;
+}
+
+.achievement.isCompact .achieveProgressTrack {
+  min-width: 48px;
+  height: 3px;
+}
+
+.achievement.isCompact .achieveProgressText {
+  font-size: 10px;
 }
 
 .globalStat {

@@ -16,6 +16,12 @@ import { TipsEditor } from './TipsEditor'
 import { Tooltip } from '@/components/ui/Tooltip'
 import { useT } from '@/app/providers/LocaleProvider'
 import type { MessageKey } from '@/i18n'
+import {
+  displayDlcInput,
+  displayGroupInput,
+  dlcKey,
+  groupKey,
+} from '@/features/achievements/utils/keys'
 
 type EditorTab = 'dados' | 'adicionais' | 'classificacao'
 type PhIcon = ComponentType<IconProps>
@@ -37,8 +43,8 @@ function normDifficulty(value: Achievement['difficulty']) {
 function isDraftDirty(draft: Achievement, base: Achievement) {
   return (
     normText(draft.title) !== normText(base.title) ||
-    normText(draft.group) !== normText(base.group) ||
-    normText(draft.dlc) !== normText(base.dlc) ||
+    groupKey(draft.group) !== groupKey(base.group) ||
+    dlcKey(draft.dlc) !== dlcKey(base.dlc) ||
     normText(draft.description) !== normText(base.description) ||
     normText(draft.videoUrl) !== normText(base.videoUrl) ||
     normText(draft.guideUrl) !== normText(base.guideUrl) ||
@@ -113,7 +119,11 @@ export function AchievementEditor({
 
   const handleSave = () => {
     if (!isDirty) return
-    onSave(draft)
+    onSave({
+      ...draft,
+      group: groupKey(draft.group),
+      dlc: dlcKey(draft.dlc),
+    })
     if (!isPanel) closeModal()
   }
 
@@ -193,7 +203,7 @@ export function AchievementEditor({
                   <input
                     type="text"
                     placeholder={t('editor.field.group.placeholder')}
-                    value={draft.group || ''}
+                    value={displayGroupInput(draft.group)}
                     onChange={(e) => setDraft({ ...draft, group: e.target.value })}
                   />
                 </label>
@@ -202,7 +212,7 @@ export function AchievementEditor({
                   <input
                     type="text"
                     placeholder={t('editor.field.dlc.placeholder')}
-                    value={draft.dlc || ''}
+                    value={displayDlcInput(draft.dlc)}
                     onChange={(e) => setDraft({ ...draft, dlc: e.target.value })}
                   />
                 </label>

@@ -1,6 +1,6 @@
 import type { Achievement } from '@/types/achievement'
 import type { Locale } from '@/i18n/locales'
-import { isPlaceholderGroup } from '@/features/achievements/utils/keys'
+import { isInternalAchKey, isPlaceholderGroup } from '@/features/achievements/utils/keys'
 
 export function achievementTitle(a: Achievement, locale: Locale): string {
   if (locale === 'en') {
@@ -19,11 +19,12 @@ export function achievementDescription(a: Achievement, locale: Locale): string {
 }
 
 export function achievementGroup(a: Achievement, locale: Locale): string {
-  if (isPlaceholderGroup(a.group)) return ''
+  if (isPlaceholderGroup(a.group) || isInternalAchKey(a.group)) return ''
   const group = a.group?.trim() || ''
   if (locale === 'en') {
     const en = a.groupEn?.trim()
-    if (en && !isPlaceholderGroup(en)) return en
+    if (en && !isPlaceholderGroup(en) && !isInternalAchKey(en)) return en
   }
+  if (isInternalAchKey(group)) return ''
   return group
 }

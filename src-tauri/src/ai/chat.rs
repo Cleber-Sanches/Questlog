@@ -449,7 +449,7 @@ fn build_chat_prompt(
 
     // Prompt curto estilo “tool call”: só o necessário
     format!(
-        r#"TrophyDesk. Saída: JSON único.
+        r#"Questlog. Saída: JSON único.
 Tool: {tool}
 {focus}
 {web}

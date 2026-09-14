@@ -1,6 +1,6 @@
 [[permission]]
 identifier = "allow-guia"
-description = "Comandos do TrophyDesk (DB, Steam, backup)"
+description = "Comandos do Questlog (DB, Steam, backup)"
 commands.allow = [
   "db_get_bootstrap",
   "db_upsert_game",

@@ -1,6 +1,6 @@
 import type { MouseEvent } from 'react'
 import type { Achievement, GroupBy } from '@/types/achievement'
-import { formatPercent } from '@/lib/format'
+import { formatPercent, formatProgressCount } from '@/lib/format'
 import { openExternal } from '@/lib/openExternal'
 import { resolveVideoAction } from '@/lib/url'
 import { useModal } from '@/app/providers/ModalProvider'
@@ -58,7 +58,7 @@ export function AchievementRow({
   const { openModal } = useModal()
   const { activeGame } = useAppData()
   const t = useT()
-  const { locale } = useLocale()
+  const { locale, bcp47 } = useLocale()
   const appId = activeGame?.appId || 'misc'
   const title = achievementTitle(achievement, locale)
   const description = achievementDescription(achievement, locale)
@@ -74,6 +74,29 @@ export function AchievementRow({
   const hasTips = !tipsIsEmpty(achievement.tips)
   const hasTipImages = tipsHasImage(achievement.tips)
   const reqLevel = achievement.reqLevel?.trim()
+  const progressMax =
+    typeof achievement.progressMax === 'number' && achievement.progressMax > 0
+      ? achievement.progressMax
+      : null
+  const progressCurrent =
+    progressMax == null
+      ? null
+      : Math.min(
+          progressMax,
+          Math.max(0, typeof achievement.progress === 'number' ? achievement.progress : 0),
+        )
+  const progressPct =
+    progressMax && progressCurrent != null
+      ? Math.round((progressCurrent / progressMax) * 100)
+      : 0
+  const progressLabel =
+    progressMax != null && progressCurrent != null
+      ? `${formatProgressCount(progressCurrent, bcp47)} / ${formatProgressCount(progressMax, bcp47)}`
+      : ''
+  const progressTitle =
+    progressMax != null && progressCurrent != null
+      ? `${progressCurrent.toLocaleString(bcp47)} / ${progressMax.toLocaleString(bcp47)}`
+      : ''
   const statusLabel = completed
     ? isManual
       ? t('row.status.manual')
@@ -150,7 +173,7 @@ export function AchievementRow({
         const t = e.target as HTMLElement
         // Só ignora controles reais (botões/links). cardMeta / helpLinks
         // não podem engolir o clique ou a faixa inferior fica "morta".
-        if (t.closest('.status, button, a, input, label, .globalStat, .titleMarks')) {
+        if (t.closest('.status, button, a, input, label, .globalStat, .titleMarks, .achieveProgress')) {
           return
         }
         openEditor()
@@ -195,6 +218,25 @@ export function AchievementRow({
         </div>
 
         <p>{description}</p>
+
+        {progressMax != null && progressCurrent != null ? (
+          <div
+            className={`achieveProgress${completed ? ' isDone' : ''}`}
+            title={progressTitle}
+          >
+            <div
+              className="achieveProgressTrack"
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={progressMax}
+              aria-valuenow={progressCurrent}
+              aria-label={progressTitle}
+            >
+              <div className="achieveProgressFill" style={{ width: `${progressPct}%` }} />
+            </div>
+            <span className="achieveProgressText">{progressLabel}</span>
+          </div>
+        ) : null}
 
         <div className="cardMeta">
           {showGroup ? (

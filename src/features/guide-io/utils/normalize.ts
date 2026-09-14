@@ -169,7 +169,7 @@ export function applyGuideEntries(
 
 export function buildGuidePack(game: { appId: string; name: string; links?: { label: string; url: string }[] }, achievements: Achievement[]) {
   return {
-    type: 'trophy-desk-pack' as const,
+    type: 'questlog-pack' as const,
     version: 2,
     exportedAt: new Date().toISOString(),
     note: 'Template de guia — progresso não é exportado',

@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "TrophyDesk",
+  "productName": "Questlog",
   "version": "0.1.0",
-  "identifier": "com.trophydesk.desktop",
+  "identifier": "com.questlog.desktop",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",
@@ -51,7 +51,7 @@
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDM1RjI0NURDRTQzNEI0OTUKUldTVnREVGszRVh5Tlp5czh3QVhFUDQ3K1BBOWxTUWJlYThkamwzaW8xeXlWQlVnODBRZzFRUisK",
       "endpoints": [
-        "https://github.com/Cleber-Sanches/TrophyDesk/releases/latest/download/latest.json"
+        "https://github.com/Cleber-Sanches/Questlog/releases/latest/download/latest.json"
       ],
       "windows": {
         "installMode": "passive"

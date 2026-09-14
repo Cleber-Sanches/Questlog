@@ -72,6 +72,10 @@ pub struct Achievement {
     pub completed_manual: bool,
     #[serde(default)]
     pub unlocked_at: Option<String>,
+    #[serde(default)]
+    pub progress: Option<i64>,
+    #[serde(default)]
+    pub progress_max: Option<i64>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -226,7 +230,8 @@ pub fn list_achievements(conn: &Connection, app_id: &str) -> AppResult<Vec<Achie
     let mut stmt = conn.prepare(
         "SELECT id, api_name, title, description, icon_url, global_percent, group_name, dlc,
                 tips, video_url, guide_url, difficulty, missable, req_level,
-                completed, completed_manual, unlocked_at, title_en, description_en, group_en
+                completed, completed_manual, unlocked_at, title_en, description_en, group_en,
+                progress, progress_max
          FROM achievements WHERE app_id = ?1 ORDER BY id",
     )?;
     let rows = stmt.query_map(params![app_id], |row| {
@@ -251,6 +256,8 @@ pub fn list_achievements(conn: &Connection, app_id: &str) -> AppResult<Vec<Achie
             title_en: row.get(17)?,
             description_en: row.get(18)?,
             group_en: row.get(19)?,
+            progress: row.get(20)?,
+            progress_max: row.get(21)?,
         })
     })?;
     Ok(rows.filter_map(|r| r.ok()).collect())
@@ -263,8 +270,9 @@ pub fn set_achievements(conn: &Connection, app_id: &str, items: &[Achievement]) 
             "INSERT INTO achievements(
                 id, app_id, api_name, title, description, icon_url, global_percent,
                 group_name, dlc, tips, video_url, guide_url, difficulty, missable, req_level,
-                completed, completed_manual, unlocked_at, title_en, description_en, group_en
-             ) VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21)",
+                completed, completed_manual, unlocked_at, title_en, description_en, group_en,
+                progress, progress_max
+             ) VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23)",
             params![
                 item.id,
                 app_id,
@@ -287,6 +295,8 @@ pub fn set_achievements(conn: &Connection, app_id: &str, items: &[Achievement]) 
                 item.title_en,
                 item.description_en,
                 item.group_en,
+                item.progress,
+                item.progress_max,
             ],
         )?;
     }
@@ -300,8 +310,8 @@ pub fn patch_achievement(conn: &Connection, app_id: &str, item: &Achievement) ->
             group_name = ?6, dlc = ?7, tips = ?8, video_url = ?9, guide_url = ?10,
             difficulty = ?11, missable = ?12, req_level = ?13, completed = ?14,
             completed_manual = ?15, unlocked_at = ?16, title_en = ?17, description_en = ?18,
-            group_en = ?19
-         WHERE app_id = ?20 AND id = ?21",
+            group_en = ?19, progress = ?20, progress_max = ?21
+         WHERE app_id = ?22 AND id = ?23",
         params![
             item.api_name,
             item.title,
@@ -322,6 +332,8 @@ pub fn patch_achievement(conn: &Connection, app_id: &str, item: &Achievement) ->
             item.title_en,
             item.description_en,
             item.group_en,
+            item.progress,
+            item.progress_max,
             app_id,
             item.id,
         ],
@@ -334,8 +346,9 @@ pub fn insert_achievement(conn: &Connection, app_id: &str, item: &Achievement) -
         "INSERT INTO achievements(
             id, app_id, api_name, title, description, icon_url, global_percent,
             group_name, dlc, tips, video_url, guide_url, difficulty, missable, req_level,
-            completed, completed_manual, unlocked_at, title_en, description_en, group_en
-         ) VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21)",
+            completed, completed_manual, unlocked_at, title_en, description_en, group_en,
+            progress, progress_max
+         ) VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23)",
         params![
             item.id,
             app_id,
@@ -358,6 +371,8 @@ pub fn insert_achievement(conn: &Connection, app_id: &str, item: &Achievement) -
             item.title_en,
             item.description_en,
             item.group_en,
+            item.progress,
+            item.progress_max,
         ],
     )?;
     Ok(())
@@ -498,7 +513,7 @@ pub fn import_profile(conn: &Connection, pack: &ProfilePack) -> AppResult<()> {
 pub fn export_profile(conn: &Connection) -> AppResult<Value> {
     let bootstrap = get_bootstrap(conn)?;
     Ok(serde_json::json!({
-        "type": "trophy-desk-profile",
+        "type": "questlog-profile",
         "version": 1,
         "exportedAt": chrono::Utc::now().to_rfc3339(),
         "activeGameAppId": bootstrap.active_game_app_id,

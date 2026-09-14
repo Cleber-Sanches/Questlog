@@ -58,7 +58,7 @@ export const en = {
   'settings.language.saveError': 'Could not save language',
 
   'settings.update.title': 'Updates',
-  'settings.update.subtitle': 'TrophyDesk can download and install new versions automatically.',
+  'settings.update.subtitle': 'Questlog can download and install new versions automatically.',
   'settings.update.current': 'Installed version',
   'settings.update.version': 'v{version}',
   'settings.update.check': 'Check now',
@@ -73,7 +73,7 @@ export const en = {
   'settings.update.checkError': 'Could not check for updates',
   'settings.update.installError': 'Failed to download or install the update',
   'settings.update.endpointHint':
-    'Publish a GitHub release (Cleber-Sanches/TrophyDesk) with latest.json or change the endpoint in tauri.conf.json.',
+    'Publish a GitHub release (Cleber-Sanches/Questlog) with latest.json or change the endpoint in tauri.conf.json.',
 
   'settings.backup.local.title': 'Local backup',
   'settings.backup.local.last': 'Last backup',
@@ -95,7 +95,7 @@ export const en = {
     'This replaces all your games and achievements with the backup data. Back up first if you are unsure.',
   'settings.backup.restore.success': 'Backup restored. Reloading…',
   'settings.backup.recovery.hint':
-    'Lost data after updating? Look for backups in %APPDATA%\\com.trophydesk.desktop\\, %APPDATA%\\com.myconquist.desktop\\ or %APPDATA%\\com.guiaconquistas.desktop\\backups\\ — or a .json file you exported earlier.',
+    'Lost data after updating? Look for backups in %APPDATA%\\com.questlog.desktop\\, %APPDATA%\\com.trophydesk.desktop\\, %APPDATA%\\com.myconquist.desktop\\ or %APPDATA%\\com.guiaconquistas.desktop\\backups\\ — or a .json file you exported earlier.',
   'settings.backup.local.saved': 'Backup saved to {path}',
   'settings.backup.external.saved': 'External folder configured',
 
@@ -221,6 +221,7 @@ export const en = {
   'row.status.markCompleted': 'Mark as completed',
   'row.missable': 'Missable',
   'row.globalRarity': 'Global rarity on Steam',
+  'row.progress': '{current} / {max}',
 
   'video.watch': 'Watch',
   'video.openBrowser': 'Open in browser',

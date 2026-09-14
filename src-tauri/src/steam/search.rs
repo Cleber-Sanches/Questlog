@@ -31,6 +31,11 @@ fn search_cache() -> &'static Mutex<HashMap<String, CacheEntry>> {
     CACHE.get_or_init(|| Mutex::new(HashMap::new()))
 }
 
+fn type_cache() -> &'static Mutex<HashMap<String, String>> {
+    static CACHE: OnceLock<Mutex<HashMap<String, String>>> = OnceLock::new();
+    CACHE.get_or_init(|| Mutex::new(HashMap::new()))
+}
+
 fn looks_like_non_game(name: &str) -> bool {
     let n = name.to_ascii_lowercase();
     [
@@ -44,27 +49,97 @@ fn looks_like_non_game(name: &str) -> bool {
         "dedicated server",
         "season pass",
         "expansion pass",
+        "expansion",
+        "expansão",
+        "expansao",
         "cosmetic",
         "bundle",
+        "pacote",
         "artbook",
         "art book",
         "digital extras",
         "digital deluxe upgrade",
         "theme pack",
         "prologue",
+        "wallpaper",
+        "original soundtrack",
     ]
     .iter()
     .any(|k| n.contains(k))
         || n.starts_with("atualização para")
         || n.starts_with("atualizacao para")
+        || n.starts_with("upgrade to")
 }
 
-fn store_item_type_ok(item: &Value) -> bool {
-    match item.get("type").and_then(|v| v.as_str()).map(|s| s.to_ascii_lowercase()) {
-        None => true,
-        Some(ref t) if t == "app" || t == "game" => true,
-        Some(_) => false,
+fn store_item_type_rejected(item: &Value) -> bool {
+    match item
+        .get("type")
+        .and_then(|v| v.as_str())
+        .map(|s| s.to_ascii_lowercase())
+    {
+        Some(ref t)
+            if matches!(
+                t.as_str(),
+                "dlc"
+                    | "music"
+                    | "video"
+                    | "bundle"
+                    | "hardware"
+                    | "mod"
+                    | "advertising"
+                    | "demo"
+                    | "episode"
+            ) =>
+        {
+            true
+        }
+        _ => false,
     }
+}
+
+/// Confirma via appdetails se o app é jogo base (`type == game`).
+fn steam_app_is_game(app_id: &str) -> bool {
+    if let Ok(cache) = type_cache().lock() {
+        if let Some(t) = cache.get(app_id) {
+            return t == "game";
+        }
+    }
+
+    let Ok(client) = http_client() else {
+        return true; // sem rede extra: não bloqueia resultado já filtrado
+    };
+    let url = format!(
+        "https://store.steampowered.com/api/appdetails?appids={app_id}&filters=basic"
+    );
+    let parsed: Value = match client
+        .get(&url)
+        .timeout(Duration::from_secs(4))
+        .send()
+        .and_then(|r| r.error_for_status())
+        .and_then(|r| r.json())
+    {
+        Ok(v) => v,
+        Err(_) => return false,
+    };
+
+    let app_type = parsed
+        .get(app_id)
+        .and_then(|v| v.get("data"))
+        .and_then(|v| v.get("type"))
+        .and_then(|v| v.as_str())
+        .unwrap_or("")
+        .to_ascii_lowercase();
+
+    if let Ok(mut cache) = type_cache().lock() {
+        if !app_type.is_empty() {
+            cache.insert(app_id.to_string(), app_type.clone());
+            if cache.len() > 512 {
+                cache.clear();
+            }
+        }
+    }
+
+    app_type == "game"
 }
 
 pub fn search_steam_games(query: &str) -> AppResult<SearchResult> {
@@ -73,7 +148,7 @@ pub fn search_steam_games(query: &str) -> AppResult<SearchResult> {
         return Ok(SearchResult { items: vec![] });
     }
 
-    let cache_key = q.to_ascii_lowercase();
+    let cache_key = format!("v2:{}", q.to_ascii_lowercase());
     if let Ok(cache) = search_cache().lock() {
         if let Some(entry) = cache.get(&cache_key) {
             if entry.at.elapsed() < Duration::from_secs(120) {
@@ -84,7 +159,7 @@ pub fn search_steam_games(query: &str) -> AppResult<SearchResult> {
         }
     }
 
-    // category1=998 = jogos. Uma única request — sem appdetails por item.
+    // category1=998 = jogos — ainda assim a Steam mistura DLC; validamos o type depois.
     let url = format!(
         "https://store.steampowered.com/api/storesearch/?term={}&l=brazilian&cc=BR&category1=998",
         urlencoding::encode(q)
@@ -105,8 +180,8 @@ pub fn search_steam_games(query: &str) -> AppResult<SearchResult> {
         .unwrap_or_default();
 
     let mut out = Vec::new();
-    for item in items.into_iter().take(20) {
-        if !store_item_type_ok(&item) {
+    for item in items.into_iter().take(24) {
+        if store_item_type_rejected(&item) {
             continue;
         }
         let id = item
@@ -121,6 +196,10 @@ pub fn search_steam_games(query: &str) -> AppResult<SearchResult> {
             .unwrap_or("")
             .to_string();
         if name.is_empty() || looks_like_non_game(&name) {
+            continue;
+        }
+        // Garante jogo base (exclui DLC/music/etc. que a storesearch às vezes devolve como "app").
+        if !steam_app_is_game(&app_id) {
             continue;
         }
         let image = item

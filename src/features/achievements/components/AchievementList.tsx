@@ -6,7 +6,7 @@ import { DifficultyIcon } from './DifficultyIcon'
 import { useLocale, useT } from '@/app/providers/LocaleProvider'
 import type { MessageKey } from '@/i18n'
 import { achievementGroup } from '@/features/achievements/utils/display'
-import { ACH_KEYS } from '@/features/achievements/utils/keys'
+import { ACH_KEYS, isInternalAchKey } from '@/features/achievements/utils/keys'
 
 const SECTION_LABEL_KEYS: Record<string, MessageKey> = {
   [ACH_KEYS.DLC_BASE]: 'guide.dlc.base',
@@ -87,7 +87,8 @@ export function AchievementList({
   const sectionLabel = (key: string, items: Achievement[]) => {
     const msgKey = SECTION_LABEL_KEYS[key]
     if (msgKey) return t(msgKey)
-    if (groupBy === 'group' && items[0]) return achievementGroup(items[0], locale)
+    if (isInternalAchKey(key)) return t('group.ungrouped')
+    if (groupBy === 'group' && items[0]) return achievementGroup(items[0], locale) || t('group.ungrouped')
     return key
   }
 

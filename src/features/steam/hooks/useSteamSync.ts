@@ -114,7 +114,11 @@ export function useSteamSync(appId?: string | null) {
         .filter(([, p]) => p.completed)
         .map(([api]) => api)
         .sort()
-      const fingerprint = `${progress.source || 'local'}:${unlockedApis.join('|')}`
+      const progressParts = Object.entries(progress.achievements || {})
+        .filter(([, p]) => typeof p.progressMax === 'number' && p.progressMax > 0)
+        .map(([api, p]) => `${api}:${p.progress ?? 0}/${p.progressMax}`)
+        .sort()
+      const fingerprint = `${progress.source || 'local'}:${unlockedApis.join('|')}#${progressParts.join('|')}`
 
       if (
         fingerprint === lastFingerprint.current &&
@@ -171,6 +175,15 @@ export function useSteamSync(appId?: string | null) {
             rowChanged = true
           } else if (!a.unlockedAt && hit.row.unlockedAt) {
             updated = { ...updated, unlockedAt: hit.row.unlockedAt }
+            rowChanged = true
+          }
+        }
+
+        const max = hit.row.progressMax
+        if (typeof max === 'number' && max > 0) {
+          const cur = typeof hit.row.progress === 'number' ? hit.row.progress : 0
+          if (a.progress !== cur || a.progressMax !== max) {
+            updated = { ...updated, progress: cur, progressMax: max }
             rowChanged = true
           }
         }

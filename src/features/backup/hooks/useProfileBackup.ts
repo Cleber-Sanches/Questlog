@@ -16,7 +16,7 @@ export function useProfileBackup() {
     try {
       const pack = await backupApi.exportProfile()
       const count = pack.games?.length ?? 0
-      const saved = await downloadJson(`trophydesk-perfil-${count}jogos.json`, pack)
+      const saved = await downloadJson(`questlog-perfil-${count}jogos.json`, pack)
       if (saved) toast(t('backup.profile.exported'), 'success')
     } catch (err) {
       toast(String(err), 'error')

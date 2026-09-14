@@ -1,9 +1,9 @@
 {
-  "name": "trophy-desk",
+  "name": "questlog",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "TrophyDesk — guia local de conquistas Steam (Tauri + React + SQLite)",
+  "description": "Questlog — guia local de conquistas Steam (Tauri + React + SQLite)",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -13,6 +13,7 @@
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build",
     "tauri:build:signed": "powershell -ExecutionPolicy Bypass -File tools/build-release.ps1",
+    "tauri:sign": "powershell -ExecutionPolicy Bypass -File tools/sign-installer.ps1",
     "update:manifest": "node tools/write-latest-json.mjs",
     "start:legacy": "node tools/server.js",
     "build:exe:legacy": "node tools/build-portable.js",
