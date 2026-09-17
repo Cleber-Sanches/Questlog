@@ -20,7 +20,7 @@ npm run tauri:build:signed
 ## Artefatos
 
 - Executável: `%USERPROFILE%\.cache\guia-conquistas-target\release\questlog.exe`
-- Instalador NSIS: `%USERPROFILE%\.cache\guia-conquistas-target\release\bundle\nsis\Questlog_0.1.0_x64-setup.exe`
+- Instalador NSIS: `%USERPROFILE%\.cache\guia-conquistas-target\release\bundle\nsis\Questlog_0.2.0_x64-setup.exe`
 
 ## Dados
 

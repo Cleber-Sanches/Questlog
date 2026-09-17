@@ -5,6 +5,9 @@ export const ACH_KEYS = {
   GROUP_OTHER: '__group_other__',
   LIST: '__list__',
   DIFF_MISSABLE: '__diff_missable__',
+  QUEUE_MISSABLE: '__queue_missable__',
+  QUEUE_EASY: '__queue_easy__',
+  QUEUE_REST: '__queue_rest__',
   LEVEL_NONE: '__level_none__',
 } as const
 

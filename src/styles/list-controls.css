@@ -52,6 +52,7 @@
 }
 
 .viewToggle.isCompact .groupByWrap.isOpen .listControlBtn,
+.viewToggle.isCompact .sortWrap.isOpen .listControlBtn,
 .viewToggle.isCompact .filtersWrap.isOpen .listControlBtn {
   background: var(--overlay-10);
   color: var(--fg);
@@ -69,6 +70,7 @@
 
 .viewToggle.isCompact .listControlBtn:hover .listControlLead,
 .viewToggle.isCompact .groupByWrap.isOpen .listControlLead,
+.viewToggle.isCompact .sortWrap.isOpen .listControlLead,
 .viewToggle.isCompact .filtersWrap.isOpen .listControlLead,
 .viewToggle.isCompact .listControlBtn.hasFilters .listControlLead {
   background: transparent;
@@ -107,6 +109,7 @@
 }
 
 .viewToggle.isCompact .groupByWrap.isOpen .listControlCaret,
+.viewToggle.isCompact .sortWrap.isOpen .listControlCaret,
 .viewToggle.isCompact .filtersWrap.isOpen .listControlCaret {
   color: rgb(255 255 255 / 0.65) !important;
 }
@@ -167,6 +170,7 @@
 }
 
 .groupByWrap,
+.sortWrap,
 .filtersWrap {
   position: relative;
   display: flex;
@@ -203,6 +207,7 @@
 }
 
 .groupByWrap.isOpen .listControlBtn,
+.sortWrap.isOpen .listControlBtn,
 .filtersWrap.isOpen .listControlBtn {
   background: var(--overlay-10);
   color: var(--fg);
@@ -227,6 +232,7 @@
 
 .listControlBtn:hover .listControlLead,
 .groupByWrap.isOpen .listControlLead,
+.sortWrap.isOpen .listControlLead,
 .filtersWrap.isOpen .listControlLead,
 .listControlBtn.hasFilters .listControlLead {
   background: #2a2a2e;
@@ -287,6 +293,7 @@
 }
 
 .groupByWrap.isOpen .listControlCaret,
+.sortWrap.isOpen .listControlCaret,
 .filtersWrap.isOpen .listControlCaret {
   transform: rotate(180deg);
   color: #8b8b93 !important;
@@ -310,16 +317,29 @@
 .listControlMenu,
 .filtersPanel {
   position: absolute;
+  isolation: isolate;
+  overflow: hidden;
   top: calc(100% + 8px);
   left: 0;
   z-index: 40;
-  background: var(--bg-surface);
-  border: 1px solid var(--overlay-10);
-  border-radius: 12px;
+  background: color-mix(in oklch, var(--card) 82%, transparent);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 20px;
   box-shadow:
-    0 0 0 1px var(--overlay-025),
-    0 18px 40px rgb(0 0 0 / 0.55);
+    inset 0 0 0 1px rgb(255 255 255 / 0.06),
+    0 16px 40px -12px rgb(0 0 0 / 0.55);
   animation: listControlPop 0.14s var(--ease);
+}
+
+.listControlMenu::before,
+.filtersPanel::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  border-radius: inherit;
+  backdrop-filter: blur(18px);
+  pointer-events: none;
 }
 
 @keyframes listControlPop {
@@ -335,7 +355,7 @@
 
 .listControlMenu {
   min-width: 208px;
-  padding: 6px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
   gap: 2px;

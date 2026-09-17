@@ -27,16 +27,46 @@ export interface Achievement {
 }
 
 export type StatusFilter = 'all' | 'completed' | 'pending'
-export type GroupBy = 'flat' | 'group' | 'dlc' | 'difficulty' | 'reqLevel'
+export type GroupBy = 'queue' | 'flat' | 'group' | 'dlc' | 'difficulty' | 'reqLevel'
+export type AchievementSort =
+  | 'steam'
+  | 'rarityCommon'
+  | 'rarityRare'
+  | 'progress'
+  | 'az'
+  | 'unlocked'
 
 export const GROUP_BY_OPTIONS: Array<{
   value: GroupBy
-  label: string
   icon: string
 }> = [
-  { value: 'flat', label: 'Lista', icon: 'ph-duotone ph-list-bullets' },
-  { value: 'group', label: 'Grupos', icon: 'ph-duotone ph-squares-four' },
-  { value: 'dlc', label: 'DLC', icon: 'ph-fill ph-puzzle-piece' },
-  { value: 'difficulty', label: 'Dificuldade', icon: 'ph-duotone ph-gauge' },
-  { value: 'reqLevel', label: 'Nível', icon: 'ph-duotone ph-stairs' },
+  { value: 'queue', icon: 'ph-fill ph-flag-banner' },
+  { value: 'flat', icon: 'ph-duotone ph-list-bullets' },
+  { value: 'group', icon: 'ph-duotone ph-squares-four' },
+  { value: 'dlc', icon: 'ph-fill ph-puzzle-piece' },
+  { value: 'difficulty', icon: 'ph-duotone ph-gauge' },
+  { value: 'reqLevel', icon: 'ph-duotone ph-stairs' },
 ]
+
+export const ACHIEVEMENT_SORT_OPTIONS: Array<{
+  value: AchievementSort
+  icon: string
+}> = [
+  { value: 'steam', icon: 'ph-fill ph-list-numbers' },
+  { value: 'rarityCommon', icon: 'ph-fill ph-chart-bar' },
+  { value: 'rarityRare', icon: 'ph-fill ph-star' },
+  { value: 'progress', icon: 'ph-fill ph-circle-half' },
+  { value: 'az', icon: 'ph-fill ph-text-aa' },
+  { value: 'unlocked', icon: 'ph-fill ph-clock-counter-clockwise' },
+]
+
+export function isAchievementSort(value: string | null | undefined): value is AchievementSort {
+  return (
+    value === 'steam' ||
+    value === 'rarityCommon' ||
+    value === 'rarityRare' ||
+    value === 'progress' ||
+    value === 'az' ||
+    value === 'unlocked'
+  )
+}

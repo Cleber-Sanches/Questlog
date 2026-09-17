@@ -109,6 +109,7 @@ function sortReqLevelLabels(a: string, b: string) {
 }
 
 export function groupAchievements(items: Achievement[], groupBy: GroupBy) {
+  if (groupBy === 'queue') return []
   if (groupBy === 'flat') {
     return [{ key: ACH_KEYS.LIST, items }]
   }

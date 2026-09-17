@@ -88,7 +88,9 @@ function AppShellInner({
   const t = useT()
   const counts = useMemo(() => countByStatus(achievements), [achievements])
   const archivedCount = useMemo(() => games.filter((g) => g.archived).length, [games])
+  const libraryCount = useMemo(() => games.filter((g) => !g.archived).length, [games])
   const { bind } = useWindowDrag()
+  const libraryActive = route === 'library'
   const archivedActive = route === 'archived'
   const settingsActive = route === 'settings'
   const onGuide = route === 'guide'
@@ -146,6 +148,28 @@ function AppShellInner({
             <div className="sidebar-sectionLabel">{t('nav.section.library')}</div>
           ) : null}
           <nav className="sidebar-nav" aria-label={t('nav.section.library')}>
+            <SidebarTip
+              collapsed={collapsed}
+              label={t('nav.library')}
+              detail={
+                libraryCount > 0
+                  ? `${libraryCount} ${libraryCount === 1 ? t('nav.count.game') : t('nav.count.games')}`
+                  : t('nav.library.empty')
+              }
+            >
+              <button
+                type="button"
+                className={`sidebar-navItem${libraryActive ? ' isActive' : ''}`}
+                aria-label={t('nav.library')}
+                onClick={() => navigate('library')}
+              >
+                <i className="ph-duotone ph-game-controller" aria-hidden />
+                <span className="sidebar-navLabel">{t('nav.library')}</span>
+                {libraryCount > 0 ? (
+                  <span className="sidebar-navCount">{libraryCount}</span>
+                ) : null}
+              </button>
+            </SidebarTip>
             <SidebarTip
               collapsed={collapsed}
               label={t('nav.archived')}

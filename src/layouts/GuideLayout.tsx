@@ -9,7 +9,7 @@ import { GuideAiChat } from '@/features/ai/components/GuideAiChat'
 import { WindowControls } from '@/components/WindowControls'
 import { useWindowDrag } from '@/hooks/useWindowDrag'
 import { SidebarCollapseToggle } from '@/features/sidebar/components/SidebarCollapseToggle'
-import type { Achievement, GroupBy } from '@/types/achievement'
+import type { Achievement, AchievementSort, GroupBy } from '@/types/achievement'
 import type { FacetFilters, FacetOption } from '@/features/achievements/utils/filter'
 
 export function GuideLayout({
@@ -18,6 +18,8 @@ export function GuideLayout({
   searchRef,
   groupBy,
   setGroupBy,
+  sort,
+  setSort,
   facets,
   setFacets,
   facetOptions,
@@ -31,6 +33,8 @@ export function GuideLayout({
   onNew?: () => void
   groupBy: GroupBy
   setGroupBy: (v: GroupBy) => void
+  sort: AchievementSort
+  setSort: (v: AchievementSort) => void
   facets: FacetFilters
   setFacets: (f: FacetFilters) => void
   facetOptions: {
@@ -70,6 +74,8 @@ export function GuideLayout({
               <ListControls
                 groupBy={groupBy}
                 setGroupBy={setGroupBy}
+                sort={sort}
+                setSort={setSort}
                 facets={facets}
                 setFacets={setFacets}
                 facetOptions={facetOptions}

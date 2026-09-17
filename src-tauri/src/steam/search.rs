@@ -97,6 +97,39 @@ fn store_item_type_rejected(item: &Value) -> bool {
     }
 }
 
+/// Confirma em paralelo quais candidatos são jogo base.
+fn confirm_base_games(candidates: Vec<SearchItem>) -> Vec<SearchItem> {
+    if candidates.is_empty() {
+        return candidates;
+    }
+    let mut out = Vec::new();
+    for chunk in candidates.chunks(4) {
+        let flags = std::thread::scope(|s| {
+            let handles: Vec<_> = chunk
+                .iter()
+                .map(|item| {
+                    let id = item.app_id.clone();
+                    s.spawn(move || steam_app_is_game(&id))
+                })
+                .collect();
+            handles
+                .into_iter()
+                .map(|h| h.join().unwrap_or(false))
+                .collect::<Vec<_>>()
+        });
+        for (item, ok) in chunk.iter().zip(flags) {
+            if !ok {
+                continue;
+            }
+            out.push(item.clone());
+            if out.len() >= 10 {
+                return out;
+            }
+        }
+    }
+    out
+}
+
 /// Confirma via appdetails se o app é jogo base (`type == game`).
 fn steam_app_is_game(app_id: &str) -> bool {
     if let Ok(cache) = type_cache().lock() {
@@ -179,7 +212,7 @@ pub fn search_steam_games(query: &str) -> AppResult<SearchResult> {
         .cloned()
         .unwrap_or_default();
 
-    let mut out = Vec::new();
+    let mut candidates = Vec::new();
     for item in items.into_iter().take(24) {
         if store_item_type_rejected(&item) {
             continue;
@@ -198,10 +231,6 @@ pub fn search_steam_games(query: &str) -> AppResult<SearchResult> {
         if name.is_empty() || looks_like_non_game(&name) {
             continue;
         }
-        // Garante jogo base (exclui DLC/music/etc. que a storesearch às vezes devolve como "app").
-        if !steam_app_is_game(&app_id) {
-            continue;
-        }
         let image = item
             .pointer("/tiny_image")
             .or_else(|| item.get("tiny_image"))
@@ -212,16 +241,18 @@ pub fn search_steam_games(query: &str) -> AppResult<SearchResult> {
                     "https://cdn.cloudflare.steamstatic.com/steam/apps/{app_id}/capsule_231x87.jpg"
                 )
             });
-        out.push(SearchItem {
+        candidates.push(SearchItem {
             steamdb_url: format!("https://steamdb.info/app/{app_id}/"),
             app_id,
             name,
             image,
         });
-        if out.len() >= 10 {
+        if candidates.len() >= 12 {
             break;
         }
     }
+
+    let out = confirm_base_games(candidates);
 
     if let Ok(mut cache) = search_cache().lock() {
         cache.insert(

@@ -18,6 +18,7 @@ import { Tooltip } from '@/components/ui/Tooltip'
 import { EASE_OUT } from '@/lib/motion/ease'
 import type { MessageKey } from '@/i18n'
 import type { Achievement } from '@/types/achievement'
+import { GUIDE_CHAT_OPEN_EVENT } from '@/features/ai/openChat'
 
 const SUGGESTIONS: Array<{ icon: string; color: string; titleKey: MessageKey; prompt: string }> = [
   {
@@ -179,6 +180,15 @@ export function GuideAiChat() {
   useEffect(() => {
     setMentionHi(0)
   }, [active?.start, active?.query])
+
+  useEffect(() => {
+    const onOpen = () => {
+      setClosing(false)
+      chat.setOpen(true)
+    }
+    window.addEventListener(GUIDE_CHAT_OPEN_EVENT, onOpen)
+    return () => window.removeEventListener(GUIDE_CHAT_OPEN_EVENT, onOpen)
+  }, [chat.setOpen])
 
   const pickMention = (a: Achievement, from: ActiveMention) => {
     const next = insertMentionAt(chat.input, cursor, from.start, a)

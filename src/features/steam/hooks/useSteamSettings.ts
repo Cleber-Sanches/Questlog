@@ -7,6 +7,7 @@ import { useToast } from '@/app/providers/ToastProvider'
 export function useSteamSettings() {
   const { toast } = useToast()
   const [status, setStatus] = useState<SteamSettingsStatus>({})
+  const [ready, setReady] = useState(false)
 
   const refreshStatus = useCallback(async () => {
     try {
@@ -17,7 +18,7 @@ export function useSteamSettings() {
   }, [])
 
   useEffect(() => {
-    void refreshStatus()
+    void refreshStatus().finally(() => setReady(true))
   }, [refreshStatus])
 
   const chooseInstallDir = useCallback(async () => {
@@ -41,5 +42,5 @@ export function useSteamSettings() {
     }
   }, [toast, refreshStatus])
 
-  return { status, chooseInstallDir, clearInstallDir, refreshStatus }
+  return { status, ready, chooseInstallDir, clearInstallDir, refreshStatus }
 }

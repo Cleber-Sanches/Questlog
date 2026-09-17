@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useAppData } from '@/app/providers/AppDataProvider'
 import { useModal } from '@/app/providers/ModalProvider'
 import { useT } from '@/app/providers/LocaleProvider'
@@ -10,51 +10,10 @@ import { SidebarCollapseToggle } from '@/features/sidebar/components/SidebarColl
 import { ConfirmDialog } from '@/components/overlay/ConfirmDialog'
 import { Tooltip } from '@/components/ui/Tooltip'
 import { useWindowDrag } from '@/hooks/useWindowDrag'
-import { initials } from '@/lib/format'
-import { gameCoverCandidates } from '@/lib/gameImages'
+import { GameCover } from '@/features/games/components/GameCover'
+import { gameHuntStats } from '@/features/games/utils/stats'
 import type { StatusFilter } from '@/types/achievement'
 import type { Game } from '@/types/game'
-import type { Achievement } from '@/types/achievement'
-
-function statsFor(items: Achievement[]) {
-  const total = items.length
-  const completed = items.filter((a) => a.completed).length
-  return {
-    total,
-    completed,
-    platinum: total > 0 && completed === total,
-  }
-}
-
-function ArchivedCover({ game, platinum }: { game: Game; platinum: boolean }) {
-  const candidates = useMemo(() => gameCoverCandidates(game), [game])
-  const [index, setIndex] = useState(0)
-  const src = index < candidates.length ? candidates[index] : ''
-  const showImg = !!src
-
-  useEffect(() => {
-    setIndex(0)
-  }, [game.appId])
-
-  return (
-    <div className="archivedGameMedia">
-      {platinum ? <span className="archivedPlatinumShine" aria-hidden /> : null}
-      {showImg ? (
-        <img
-          key={src}
-          src={src}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          onError={() => setIndex((i) => i + 1)}
-        />
-      ) : null}
-      <span className="archivedGameFallback" hidden={showImg}>
-        {initials(game.name || 'GC')}
-      </span>
-    </div>
-  )
-}
 
 export function ArchivedGamesPage() {
   const t = useT()
@@ -145,15 +104,13 @@ export function ArchivedGamesPage() {
               </div>
             ) : (
               archived.map((game) => {
-                const stats = statsFor(achievementsByAppId[game.appId] ?? [])
-                const pct =
-                  stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0
+                const stats = gameHuntStats(achievementsByAppId[game.appId] ?? [])
                 return (
                   <article
                     key={game.appId}
                     className={`archivedGameCard${stats.platinum ? ' isPlatinum' : ''}`}
                   >
-                    <ArchivedCover game={game} platinum={stats.platinum} />
+                    <GameCover game={game} platinum={stats.platinum} persist />
                     <div className="archivedGameBody">
                       <div className="archivedGameTitleRow">
                         <h2 className="archivedGameName">{game.name}</h2>
@@ -184,7 +141,10 @@ export function ArchivedGamesPage() {
                       </p>
                       {stats.total > 0 ? (
                         <div className="archivedProgressTrack" aria-hidden>
-                          <span className="archivedProgressFill" style={{ width: `${pct}%` }} />
+                          <span
+                            className="archivedProgressFill"
+                            style={{ width: `${stats.percent}%` }}
+                          />
                         </div>
                       ) : null}
                     </div>

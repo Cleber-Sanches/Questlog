@@ -82,6 +82,8 @@ export function GuidePage() {
           onNew={() => void handleNew()}
           groupBy={filters.groupBy}
           setGroupBy={filters.setGroupBy}
+          sort={filters.sort}
+          setSort={filters.setSort}
           facets={filters.facets}
           setFacets={filters.setFacets}
           facetOptions={filters.facetOptions}
@@ -90,6 +92,11 @@ export function GuidePage() {
           <AchievementList
             groups={filters.groups}
             groupBy={filters.groupBy}
+            hunt={filters.groupBy === 'queue' ? filters.hunt : undefined}
+            onShowAll={() => {
+              filters.setGroupBy('flat')
+              filters.setStatus('pending')
+            }}
             onToggle={(a) => void toggleCompleted(a)}
             onSave={handleSave}
             onDelete={(id) => handleDelete(id)}

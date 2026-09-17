@@ -30,6 +30,7 @@ export const steamApi = {
       clienticon?: string
       icon?: string
       image: string
+      cover?: string | null
       ico?: string
       fallback: boolean
     }>('get_steam_client_icon_cmd', { appId }),

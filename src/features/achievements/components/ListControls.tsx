@@ -2,8 +2,8 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { ArrowClockwiseIcon } from '@/components/icons/raycast'
 import { useT } from '@/app/providers/LocaleProvider'
 import type { MessageKey } from '@/i18n'
-import type { GroupBy } from '@/types/achievement'
-import { GROUP_BY_OPTIONS } from '@/types/achievement'
+import type { AchievementSort, GroupBy } from '@/types/achievement'
+import { ACHIEVEMENT_SORT_OPTIONS, GROUP_BY_OPTIONS } from '@/types/achievement'
 import {
   EMPTY_FACETS,
   countActiveFacets,
@@ -16,11 +16,21 @@ import { DifficultyIcon } from './DifficultyIcon'
 import { ACH_KEYS, isBaseDlc } from '@/features/achievements/utils/keys'
 
 const GROUP_BY_LABEL_KEYS: Record<GroupBy, MessageKey> = {
+  queue: 'guide.groupBy.queue',
   flat: 'guide.groupBy.flat',
   group: 'guide.groupBy.group',
   dlc: 'guide.filters.dlc',
   difficulty: 'guide.filters.difficulty',
   reqLevel: 'guide.filters.level',
+}
+
+const SORT_LABEL_KEYS: Record<AchievementSort, MessageKey> = {
+  steam: 'guide.sort.steam',
+  rarityCommon: 'guide.sort.rarityCommon',
+  rarityRare: 'guide.sort.rarityRare',
+  progress: 'guide.sort.progress',
+  az: 'guide.sort.az',
+  unlocked: 'guide.sort.unlocked',
 }
 
 function shortDlcLabel(label: string, baseLabel: string) {
@@ -135,6 +145,8 @@ function SectionTitle({ icon, children }: { icon: string; children: ReactNode })
 export function ListControls({
   groupBy,
   setGroupBy,
+  sort,
+  setSort,
   facets,
   setFacets,
   facetOptions,
@@ -143,6 +155,8 @@ export function ListControls({
 }: {
   groupBy: GroupBy
   setGroupBy: (v: GroupBy) => void
+  sort: AchievementSort
+  setSort: (v: AchievementSort) => void
   facets: FacetFilters
   setFacets: (f: FacetFilters) => void
   facetOptions: {
@@ -155,29 +169,26 @@ export function ListControls({
   compact?: boolean
 }) {
   const t = useT()
-  const [groupOpen, setGroupOpen] = useState(false)
-  const [filtersOpen, setFiltersOpen] = useState(false)
+  const [openMenu, setOpenMenu] = useState<'group' | 'sort' | 'filters' | null>(null)
   const shellRef = useRef<HTMLDivElement>(null)
   const activeCount = countActiveFacets(facets)
+  const groupOpen = openMenu === 'group'
+  const sortOpen = openMenu === 'sort'
+  const filtersOpen = openMenu === 'filters'
   const groupLabel = t(GROUP_BY_LABEL_KEYS[groupBy] ?? 'guide.groupBy.flat')
+  const sortLabel = t(SORT_LABEL_KEYS[sort] ?? 'guide.sort.steam')
   const emptyLabel = t('guide.filters.empty')
   const baseDlcLabel = t('guide.dlc.base')
   const labelFor = (opt: FacetOption, variant: 'levels' | 'dlc') =>
     facetLabel(opt, variant, baseDlcLabel, t)
 
   useEffect(() => {
-    if (!groupOpen && !filtersOpen) return
+    if (!openMenu) return
     const onDoc = (e: MouseEvent) => {
-      if (!shellRef.current?.contains(e.target as Node)) {
-        setGroupOpen(false)
-        setFiltersOpen(false)
-      }
+      if (!shellRef.current?.contains(e.target as Node)) setOpenMenu(null)
     }
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setGroupOpen(false)
-        setFiltersOpen(false)
-      }
+      if (e.key === 'Escape') setOpenMenu(null)
     }
     document.addEventListener('mousedown', onDoc)
     document.addEventListener('keydown', onKey)
@@ -185,7 +196,7 @@ export function ListControls({
       document.removeEventListener('mousedown', onDoc)
       document.removeEventListener('keydown', onKey)
     }
-  }, [groupOpen, filtersOpen])
+  }, [openMenu])
 
   return (
     <div className={`viewToggle${compact ? ' isCompact' : ''}`}>
@@ -198,13 +209,14 @@ export function ListControls({
               aria-haspopup="listbox"
               aria-expanded={groupOpen}
               aria-label={`${t('guide.groupBy.aria')} ${groupLabel}`}
-              onClick={() => {
-                setGroupOpen((v) => !v)
-                setFiltersOpen(false)
-              }}
+              onClick={() => setOpenMenu((v) => (v === 'group' ? null : 'group'))}
             >
               <span className="listControlLead" aria-hidden>
-                <i className="ph-duotone ph-rows" />
+                <i
+                  className={
+                    groupBy === 'queue' ? 'ph-fill ph-flag-banner' : 'ph-duotone ph-rows'
+                  }
+                />
               </span>
               <span className="listControlText">
                 {!compact ? <span className="listControlLabel">{t('guide.groupBy.label')}</span> : null}
@@ -223,7 +235,7 @@ export function ListControls({
                     aria-selected={groupBy === opt.value}
                     onClick={() => {
                       setGroupBy(opt.value)
-                      setGroupOpen(false)
+                      setOpenMenu(null)
                     }}
                   >
                     <span className="listControlOptionIcon" aria-hidden>
@@ -239,6 +251,55 @@ export function ListControls({
             ) : null}
           </div>
 
+          {groupBy !== 'queue' ? (
+            <>
+              <div className="listControlDivider" aria-hidden />
+
+              <div className={`sortWrap${sortOpen ? ' isOpen' : ''}`}>
+            <button
+              type="button"
+              className="listControlBtn"
+              aria-haspopup="listbox"
+              aria-expanded={sortOpen}
+              aria-label={`${t('guide.sort.aria')} ${sortLabel}`}
+              onClick={() => setOpenMenu((v) => (v === 'sort' ? null : 'sort'))}
+            >
+              <span className="listControlLead" aria-hidden>
+                <i className="ph-fill ph-arrows-down-up" />
+              </span>
+              <span className="listControlText">
+                {!compact ? <span className="listControlLabel">{t('guide.sort.label')}</span> : null}
+                <span className="listControlValue">{sortLabel}</span>
+              </span>
+              <i className="ph-bold ph-caret-down listControlCaret" aria-hidden />
+            </button>
+            {sortOpen ? (
+              <div className="listControlMenu" role="listbox" aria-label={t('guide.sort.aria')}>
+                {ACHIEVEMENT_SORT_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    className={`listControlOption${sort === opt.value ? ' is-active' : ''}`}
+                    role="option"
+                    aria-selected={sort === opt.value}
+                    onClick={() => {
+                      setSort(opt.value)
+                      setOpenMenu(null)
+                    }}
+                  >
+                    <span className="listControlOptionIcon" aria-hidden>
+                      <i className={opt.icon} />
+                    </span>
+                    <span className="listControlOptionLabel">{t(SORT_LABEL_KEYS[opt.value])}</span>
+                    <i className="ph-bold ph-check listControlOptionCheck" aria-hidden />
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
+            </>
+          ) : null}
+
           <div className="listControlDivider" aria-hidden />
 
           <div className={`filtersWrap${filtersOpen ? ' isOpen' : ''}`}>
@@ -247,10 +308,7 @@ export function ListControls({
               className={`listControlBtn${activeCount > 0 ? ' hasFilters' : ''}`}
               aria-haspopup="dialog"
               aria-expanded={filtersOpen}
-              onClick={() => {
-                setFiltersOpen((v) => !v)
-                setGroupOpen(false)
-              }}
+              onClick={() => setOpenMenu((v) => (v === 'filters' ? null : 'filters'))}
             >
               <span className="listControlLead" aria-hidden>
                 <i className="ph-duotone ph-funnel" />

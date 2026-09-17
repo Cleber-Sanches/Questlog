@@ -67,8 +67,8 @@ export function AchievementRow({
   const isManual = completed && !!achievement.completedManual
   const difficulty = diffKey(achievement.difficulty)
   const dlc = (achievement.dlc || '').trim()
-  const showDlc = groupBy === 'flat' && dlc && !isBaseDlc(dlc)
-  const showGroup = groupBy === 'flat' && !isPlaceholderGroup(achievement.group)
+  const showDlc = (groupBy === 'flat' || groupBy === 'queue') && dlc && !isBaseDlc(dlc)
+  const showGroup = (groupBy === 'flat' || groupBy === 'queue') && !isPlaceholderGroup(achievement.group)
   const hasVideo = !!achievement.videoUrl?.trim()
   const hasGuide = !!achievement.guideUrl?.trim()
   const hasTips = !tipsIsEmpty(achievement.tips)

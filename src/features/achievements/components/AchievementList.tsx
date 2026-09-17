@@ -2,17 +2,22 @@ import { useState } from 'react'
 import type { Achievement, GroupBy } from '@/types/achievement'
 import { AchievementRow } from './AchievementRow'
 import { EmptyState } from '@/components/feedback/EmptyState'
+import { Button } from '@/components/ui/Button'
 import { DifficultyIcon } from './DifficultyIcon'
 import { useLocale, useT } from '@/app/providers/LocaleProvider'
 import type { MessageKey } from '@/i18n'
 import { achievementGroup } from '@/features/achievements/utils/display'
 import { ACH_KEYS, isInternalAchKey } from '@/features/achievements/utils/keys'
+import { openGuideChat } from '@/features/ai/openChat'
 
 const SECTION_LABEL_KEYS: Record<string, MessageKey> = {
   [ACH_KEYS.DLC_BASE]: 'guide.dlc.base',
   [ACH_KEYS.GROUP_NONE]: 'group.ungrouped',
   [ACH_KEYS.GROUP_OTHER]: 'group.others',
   [ACH_KEYS.DIFF_MISSABLE]: 'group.missable',
+  [ACH_KEYS.QUEUE_MISSABLE]: 'guide.queue.missable',
+  [ACH_KEYS.QUEUE_EASY]: 'guide.queue.easy',
+  [ACH_KEYS.QUEUE_REST]: 'guide.queue.rest',
   [ACH_KEYS.LEVEL_NONE]: 'guide.level.none',
   easy: 'difficulty.easy',
   medium: 'difficulty.medium',
@@ -31,6 +36,11 @@ function sectionHeaderClass(groupBy: GroupBy, key: string) {
     else if (key === 'medium') parts.push('is-medium')
     else if (key === 'hard') parts.push('is-hard')
   }
+  if (groupBy === 'queue') {
+    parts.push('levelHeader')
+    if (key === ACH_KEYS.QUEUE_MISSABLE) parts.push('is-missable')
+    else if (key === ACH_KEYS.QUEUE_EASY) parts.push('is-easy')
+  }
   if (groupBy === 'reqLevel') parts.push('reqLevelHeader')
   return parts.join(' ')
 }
@@ -48,6 +58,11 @@ function SectionTitleIcon({ groupBy, sectionKey }: { groupBy: GroupBy; sectionKe
     if (sectionKey === 'medium') return <DifficultyIcon kind="medium" />
     if (sectionKey === 'hard') return <DifficultyIcon kind="hard" />
   }
+  if (groupBy === 'queue') {
+    if (sectionKey === ACH_KEYS.QUEUE_MISSABLE) return <DifficultyIcon kind="missable" />
+    if (sectionKey === ACH_KEYS.QUEUE_EASY) return <DifficultyIcon kind="easy" />
+    return <i className="ph-fill ph-chart-bar" aria-hidden />
+  }
   if (groupBy === 'reqLevel') {
     return <i className="ph-duotone ph-stairs" aria-hidden />
   }
@@ -60,6 +75,8 @@ export function AchievementList({
   selectedId,
   onSelect,
   compact = false,
+  hunt,
+  onShowAll,
   onToggle,
   onSave,
   onDelete,
@@ -69,6 +86,8 @@ export function AchievementList({
   selectedId?: number | null
   onSelect?: (a: Achievement) => void
   compact?: boolean
+  hunt?: { classified: boolean; hidden: number; totalPending: number }
+  onShowAll?: () => void
   onToggle: (a: Achievement) => void
   onSave: (a: Achievement) => void
   onDelete: (id: number) => void
@@ -76,6 +95,25 @@ export function AchievementList({
   const t = useT()
   const { locale } = useLocale()
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
+
+  if (groupBy === 'queue' && hunt && !hunt.classified) {
+    return (
+      <div className="huntQueueEmpty">
+        <p className="huntQueueEmptyTitle">{t('guide.queue.empty.title')}</p>
+        <p className="huntQueueEmptyHint">{t('guide.queue.empty.hint')}</p>
+        <div className="huntQueueEmptyActions">
+          <Button variant="primary" size="md" onClick={() => openGuideChat()}>
+            {t('guide.queue.empty.chat')}
+          </Button>
+          {onShowAll ? (
+            <Button variant="ghost" size="md" onClick={onShowAll}>
+              {t('guide.queue.empty.list')}
+            </Button>
+          ) : null}
+        </div>
+      </div>
+    )
+  }
 
   if (!groups.length || groups.every((g) => g.items.length === 0)) {
     return (
@@ -119,7 +157,7 @@ export function AchievementList({
                   {sectionLabel(group.key, group.items)}
                 </h3>
                 <span className="groupCount">
-                  {done}/{total}
+                  {groupBy === 'queue' ? total : `${done}/${total}`}
                 </span>
                 <i className="ph-bold ph-caret-down groupCollapseIcon" aria-hidden />
               </button>
@@ -145,6 +183,13 @@ export function AchievementList({
           </div>
         )
       })}
+      {groupBy === 'queue' && hunt && hunt.hidden > 0 && onShowAll ? (
+        <div className="huntQueueMore">
+          <Button variant="ghost" size="md" onClick={onShowAll}>
+            {t('guide.queue.more', { n: hunt.totalPending })}
+          </Button>
+        </div>
+      ) : null}
     </div>
   )
 }

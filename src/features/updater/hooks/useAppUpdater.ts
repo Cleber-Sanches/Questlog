@@ -22,7 +22,7 @@ export function useAppUpdater(options?: { autoCheck?: boolean }) {
   useEffect(() => {
     void getVersion()
       .then(setCurrentVersion)
-      .catch(() => setCurrentVersion('0.1.0'))
+      .catch(() => setCurrentVersion('0.2.0'))
   }, [])
 
   const checkForUpdates = useCallback(

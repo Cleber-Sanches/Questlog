@@ -1,4 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 40" fill="none" role="img" aria-label="OpenCode">
-  <path d="M24 32H8V16h16v16Z" fill="#4B4646"/>
-  <path d="M24 8H8v24h16V8Zm8 32H0V0h32v40Z" fill="#F1ECEC"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" role="img" aria-label="OpenCode">
+  <rect width="24" height="24" rx="6.2" fill="#111"/>
+  <g transform="translate(4.4 2.6) scale(0.48)">
+    <path fill="#3A3636" d="M24 32H8V16h16v16Z"/>
+    <path fill="#F1ECEC" fill-rule="evenodd" d="M24 8H8v24h16V8Zm8 32H0V0h32v40Z"/>
+  </g>
 </svg>

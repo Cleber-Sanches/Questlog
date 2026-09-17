@@ -7,14 +7,21 @@ import { RouterProvider, useRouter } from '@/app/router'
 import { AppRouteSync } from '@/app/AppRouteSync'
 import { AutoUpdateCheck } from '@/features/updater/components/AutoUpdateCheck'
 import { GuidePage } from '@/pages/GuidePage'
+import { LibraryPage } from '@/pages/LibraryPage'
 import { SettingsPage } from '@/pages/SettingsPage'
 import { ArchivedGamesPage } from '@/pages/ArchivedGamesPage'
 
+import { OnboardingFlow } from '@/features/onboarding/components/OnboardingFlow'
+import { useOnboarding } from '@/features/onboarding/hooks/useOnboarding'
+
 function Routes() {
   const { route } = useRouter()
+  const onboard = useOnboarding()
+  if (onboard.active) return <OnboardingFlow onComplete={onboard.complete} />
   if (route === 'settings') return <SettingsPage />
   if (route === 'archived') return <ArchivedGamesPage />
-  return <GuidePage />
+  if (route === 'guide') return <GuidePage />
+  return <LibraryPage />
 }
 
 export default function App() {

@@ -4,7 +4,7 @@ import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import type { SteamSearchItem } from '@/types/steam'
 
 export function useSteamSearch(query: string) {
-  const debounced = useDebouncedValue(query, 220)
+  const debounced = useDebouncedValue(query, 300)
   const [items, setItems] = useState<SteamSearchItem[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -41,5 +41,5 @@ export function useSteamSearch(query: string) {
       })
   }, [debounced])
 
-  return { items, loading, error }
+  return { items, loading, error, query: debounced }
 }

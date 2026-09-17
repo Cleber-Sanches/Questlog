@@ -1,0 +1,362 @@
+.onboard {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--bg-canvas);
+}
+
+.onboardTop {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 48px;
+  padding: 0 8px 0 0;
+}
+
+.onboardDrag {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+}
+
+.onboardMain {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  min-height: 0;
+  padding: min(14vh, 120px) 24px 48px;
+  overflow: auto;
+}
+
+.onboardCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(440px, 100%);
+}
+
+.onboardLogo {
+  display: block;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 20px;
+  border-radius: 18px;
+}
+
+.onboardDots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.onboardDot {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.18);
+  cursor: pointer;
+}
+
+.onboardDot.isDone {
+  background: rgb(255 255 255 / 0.38);
+}
+
+.onboardDot.isOn {
+  width: 16px;
+  border-radius: 99px;
+  background: var(--color-brand-bright);
+}
+
+.onboardPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+.onboardTitle {
+  margin: 0 0 8px;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.6px;
+  line-height: 1.15;
+  color: var(--fg);
+  text-align: center;
+}
+
+.onboardLead {
+  margin: 0 0 28px;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: -0.15px;
+  color: var(--fg-muted);
+  text-align: center;
+}
+
+.onboardHint {
+  margin: 0;
+  padding: 12px 8px 14px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--fg-faint);
+  text-align: center;
+}
+
+.onboardPanel > .btn {
+  width: 100%;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.onboardSearch .searchWrap {
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--overlay-075);
+  border-radius: 12px;
+  background: var(--bg-surface);
+}
+
+.onboardSearch .searchWrap:focus-within {
+  border-color: var(--overlay-10);
+}
+
+.onboardResults {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: min(42vh, 420px);
+  overflow: auto;
+  margin-top: 10px;
+}
+
+.onboardGame {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 8px 16px 8px 8px;
+  border: 1px solid var(--overlay-075);
+  border-radius: 14px;
+  background: var(--bg-surface);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.onboardGame:hover:not(:disabled) {
+  background: var(--overlay-05);
+  border-color: var(--overlay-10);
+}
+
+.onboardGame:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.onboardGameIcon {
+  width: 44px;
+  height: 66px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  border: 1px solid var(--overlay-075);
+  background: var(--bg-canvas);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.onboardGameIcon img {
+  display: block;
+  width: 44px;
+  height: 66px;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.onboardGameIconFallback {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--fg-muted);
+}
+
+.onboardGameIconFallback[hidden] {
+  display: none !important;
+}
+
+.onboardGameName {
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.onboardGameAdd {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-brand-bright);
+}
+
+.onboardFound {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--overlay-075);
+  border-radius: 12px;
+  background: var(--bg-surface);
+}
+
+.onboardFound i {
+  flex-shrink: 0;
+  font-size: 18px;
+  color: var(--color-success);
+}
+
+.onboardFoundPath {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 450;
+  letter-spacing: -0.15px;
+  color: var(--fg-muted);
+}
+
+.onboardProviders {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.onboardProvider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--overlay-075);
+  border-radius: 14px;
+  background: var(--bg-surface);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.onboardProvider:hover:not(:disabled) {
+  background: var(--overlay-05);
+  border-color: var(--overlay-10);
+}
+
+.onboardProviderLogo {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  border: 1px solid var(--overlay-075);
+  background: var(--bg-canvas);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.onboardProviderLogo img {
+  display: block;
+  object-fit: contain;
+}
+
+.onboardProviderLogo.brand-claude-code {
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+}
+
+.onboardProviderLogo.brand-claude-code img {
+  width: 40px;
+  height: 40px;
+}
+
+.onboardProviderLogo.brand-opencode {
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+}
+
+.onboardProviderLogo.brand-opencode img {
+  width: 40px;
+  height: 40px;
+}
+
+.onboardProviderCopy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.onboardProviderCopy strong {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  color: var(--fg);
+}
+
+.onboardProviderCopy span {
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--fg-muted);
+}
+
+.onboardProviderCta {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-brand-bright);
+}
+
+.onboardLater {
+  align-self: center;
+  margin-top: 20px;
+  padding: 8px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--fg-muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.15px;
+  cursor: pointer;
+}
+
+.onboardLater:hover {
+  color: var(--fg);
+}
+
+.onboardPanel > .btn + .onboardLater,
+.onboardSearch + .onboardLater,
+.onboardResults + .onboardLater {
+  margin-top: 16px;
+}
+
+.onboardProviders + .btn {
+  margin-top: 4px;
+}

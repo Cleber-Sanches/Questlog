@@ -545,22 +545,25 @@
 }
 
 .stIntegrationLogo.brand-claude-code {
-  background: #161210;
-  border-color: rgba(217, 119, 87, 0.28);
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
 }
 
 .stIntegrationLogo.brand-claude-code img {
-  width: 22px;
-  height: 22px;
+  width: 36px;
+  height: 36px;
 }
 
 .stIntegrationLogo.brand-opencode {
-  background: #121212;
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
 }
 
 .stIntegrationLogo.brand-opencode img {
-  width: 16px;
-  height: 19px;
+  width: 36px;
+  height: 36px;
 }
 
 .stIntegrationDesc {
@@ -785,23 +788,25 @@
 }
 
 .stItemIcon.brand-claude-code {
-  background: #161210;
-  border-color: rgba(217, 119, 87, 0.28);
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
 }
 
 .stItemIcon.brand-claude-code img {
-  width: 20px;
-  height: 20px;
+  width: 34px;
+  height: 34px;
 }
 
 .stItemIcon.brand-opencode {
-  background: #121212;
-  border-color: var(--overlay-075);
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
 }
 
 .stItemIcon.brand-opencode img {
-  width: 14px;
-  height: 17px;
+  width: 34px;
+  height: 34px;
 }
 
 .stItemBody {

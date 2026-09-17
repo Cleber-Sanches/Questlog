@@ -1,4 +1,4 @@
-use crate::error::AppResult;
+use crate::error::{AppError, AppResult};
 use crate::state::AppState;
 use crate::steam::achievements::{
     fetch_steam_english_texts, get_steam_achievements, AchievementsResult,
@@ -25,8 +25,10 @@ pub fn get_steam_progress_cmd(
 }
 
 #[tauri::command]
-pub fn search_steam_games_cmd(query: String) -> AppResult<SearchResult> {
-    search_steam_games(&query)
+pub async fn search_steam_games_cmd(query: String) -> AppResult<SearchResult> {
+    tauri::async_runtime::spawn_blocking(move || search_steam_games(&query))
+        .await
+        .map_err(|e| AppError::from(format!("busca Steam: {e}")))?
 }
 
 #[tauri::command]

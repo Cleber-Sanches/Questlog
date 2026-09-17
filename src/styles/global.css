@@ -11,6 +11,8 @@
 @import './list-controls.css';
 @import './game-switcher.css';
 @import './archived.css';
+@import './library.css';
+@import './onboarding.css';
 @import './settings.css';
 @import './ai-chat.css';
 @import './tips-editor.css';

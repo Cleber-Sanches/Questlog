@@ -8,6 +8,7 @@ import type { Game } from '@/types/game'
 import type { Achievement } from '@/types/achievement'
 import type { SteamSearchItem } from '@/types/steam'
 import { ACH_KEYS } from '@/features/achievements/utils/keys'
+import { isStoreCoverUrl } from '@/lib/gameImages'
 
 export function useAddGame() {
   const { upsertGameLocal, setAchievementsLocal, setActiveGame, refresh } = useAppData()
@@ -18,13 +19,14 @@ export function useAddGame() {
     async (item: SteamSearchItem) => {
       setBusy(true)
       try {
-        const icon = await steamApi.clientIcon(item.appId)
+        const art = await steamApi.clientIcon(item.appId)
+        const cover = art.cover || (isStoreCoverUrl(item.image) ? item.image : '') || art.image
         const game: Game = {
           appId: item.appId,
           name: item.name,
-          image: icon.image || item.image,
-          icon: icon.icon || null,
-          clienticon: icon.clienticon || null,
+          image: cover,
+          icon: art.icon || null,
+          clienticon: art.clienticon || null,
           archived: false,
           links: [],
         }
@@ -55,8 +57,10 @@ export function useAddGame() {
         await setActiveGame(item.appId)
         toast(`${item.name} adicionado`, 'success')
         await refresh()
+        return true
       } catch (err) {
         toast(String(err), 'error')
+        return false
       } finally {
         setBusy(false)
       }

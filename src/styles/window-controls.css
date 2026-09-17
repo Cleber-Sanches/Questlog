@@ -81,6 +81,7 @@ html.is-tauri .list-pane-toolbarDrag,
 html.is-tauri .archivedHeroDrag,
 html.is-tauri .settingsHeroDrag,
 html.is-tauri .sidebar-sectionLabel,
-html.is-tauri .gameSwitcherIdentity {
+html.is-tauri .gameSwitcherIdentity,
+html.is-tauri .onboardTop {
   cursor: default;
 }

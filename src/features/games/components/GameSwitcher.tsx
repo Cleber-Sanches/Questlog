@@ -129,7 +129,7 @@ function GameIcon({
 export function GameSwitcher({ collapsed = false }: { collapsed?: boolean }) {
   const t = useT()
   const { games, activeGame, setActiveGame, refresh } = useAppData()
-  const { navigate } = useRouter()
+  const { navigate, route } = useRouter()
   const rootRef = useRef<HTMLDivElement>(null)
   const [open, setOpen] = useState(false)
   const [rowMenuId, setRowMenuId] = useState<string | null>(null)
@@ -183,6 +183,7 @@ export function GameSwitcher({ collapsed = false }: { collapsed?: boolean }) {
     setOpen(false)
     setRowMenuId(null)
     setQuery('')
+    if (route !== 'guide') navigate('guide')
   }
 
   async function archiveGame(appId: string) {
@@ -349,9 +350,11 @@ export function GameSwitcher({ collapsed = false }: { collapsed?: boolean }) {
                               className={`gameSwitcherMenuItem${status.className.includes('isAdd') ? ' isAdd' : ''}`}
                               disabled={busy}
                               onClick={async () => {
-                                await addGame(item)
+                                const ok = await addGame(item)
+                                if (!ok) return
                                 setOpen(false)
                                 setQuery('')
+                                navigate('guide')
                               }}
                             >
                               <GameIcon image={item.image} name={item.name} size="xs" />
