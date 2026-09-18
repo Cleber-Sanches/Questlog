@@ -1,11 +1,11 @@
 {
-  "version": "0.2.0",
-  "notes": "Questlog 0.2.0 — biblioteca, ordenação, fila de caça e onboarding.",
-  "pub_date": "2026-09-17T23:37:15.012Z",
+  "version": "0.2.1",
+  "notes": "Questlog 0.2.1 — alerta de atualização.",
+  "pub_date": "2026-09-18T00:06:27.976Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTVnREVGszRVh5TlpiVE1TcUwrTXF6UkJzaHNZWm8rNXAvK2JPMTV2UHVHTVRNWmIwNjV6OGhQTzJXNG9BeHdqbEYzZy9NSGIvWDFocTZUM2NxcUZlUVEvOFVMYitiOFFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5Njg4MjE3CWZpbGU6UXVlc3Rsb2dfMC4yLjBfeDY0LXNldHVwLmV4ZQpxZC9lUnhBbnljYnU2VmdTa0RJT3l3UjJDWHVYM0hGR1hMMFdEUTh3aHhqTnV0R1ZTcW1DeFhvWlhKdDVwZlJoWUJ1bWI0cE9JNWhZQUgrSGhGcmVDUT09Cg==",
-      "url": "https://github.com/Cleber-Sanches/Questlog/releases/download/v0.2.0/Questlog_0.2.0_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTVnREVGszRVh5TlJWMlFMTmFjVkNMb0JUdjM3ZlcwdTJzdzc1cmdBV3dSeUVsU0JpRW0zVUEwWmNmd1JvSDRucnpoNjRLd210WnBIQ1R0SGxuS2lkMVExOXd2VWUzMkFvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5Njg5OTY4CWZpbGU6UXVlc3Rsb2dfMC4yLjFfeDY0LXNldHVwLmV4ZQpVMnRmdkdNQXljanhVMXNYRUFvTFFIdFE0VUtxaU1iMnRwUXp0RmtUeXVMQktXdStWTVpxQ1NuK3pGMk5wdUErdWFCR3hEMGJwOGFvWlN0c0MwRlBCdz09Cg==",
+      "url": "https://github.com/Cleber-Sanches/Questlog/releases/download/v0.2.1/Questlog_0.2.1_x64-setup.exe"
     }
   }
 }
