@@ -14,14 +14,30 @@ import { ArchivedGamesPage } from '@/pages/ArchivedGamesPage'
 import { OnboardingFlow } from '@/features/onboarding/components/OnboardingFlow'
 import { useOnboarding } from '@/features/onboarding/hooks/useOnboarding'
 
-function Routes() {
+function Routes({
+  onboard,
+}: {
+  onboard: ReturnType<typeof useOnboarding>
+}) {
   const { route } = useRouter()
-  const onboard = useOnboarding()
   if (onboard.active) return <OnboardingFlow onComplete={onboard.complete} />
   if (route === 'settings') return <SettingsPage />
   if (route === 'archived') return <ArchivedGamesPage />
   if (route === 'guide') return <GuidePage />
   return <LibraryPage />
+}
+
+function Shell() {
+  const onboard = useOnboarding()
+  return (
+    <>
+      <AppRouteSync />
+      {onboard.active ? null : <AutoUpdateCheck />}
+      <div className="app-frame">
+        <Routes onboard={onboard} />
+      </div>
+    </>
+  )
 }
 
 export default function App() {
@@ -34,11 +50,7 @@ export default function App() {
           <LocaleProvider>
             <ModalProvider>
               <RouterProvider>
-                <AppRouteSync />
-                <AutoUpdateCheck />
-                <div className="app-frame">
-                  <Routes />
-                </div>
+                <Shell />
               </RouterProvider>
             </ModalProvider>
           </LocaleProvider>

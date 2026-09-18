@@ -1,0 +1,83 @@
+.updateAlertBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgb(0 0 0 / 0.5);
+  backdrop-filter: blur(8px);
+}
+
+.updateAlert {
+  width: min(360px, 100%);
+  padding: 22px 22px 20px;
+  border-radius: 16px;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  background: var(--bg-surface);
+  box-shadow: 0 16px 40px -12px rgb(0 0 0 / 0.55);
+}
+
+.updateAlertTop {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.updateAlertIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-top: 1px;
+  flex-shrink: 0;
+  color: var(--accent-brand-bright);
+}
+
+.updateAlertIcon svg {
+  display: block;
+}
+
+.updateAlertCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding-top: 1px;
+}
+
+.updateAlert h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  line-height: 1.3;
+  color: var(--fg);
+}
+
+.updateAlertVer {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--fg-muted);
+}
+
+.updateAlert p {
+  margin: 16px 0 0;
+  font-size: 13px;
+  font-weight: 450;
+  line-height: 1.5;
+  color: var(--fg-muted);
+}
+
+.updateAlertActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.updateAlertActions .btn {
+  width: 100%;
+}

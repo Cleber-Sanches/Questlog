@@ -22,7 +22,7 @@ export function useAppUpdater(options?: { autoCheck?: boolean }) {
   useEffect(() => {
     void getVersion()
       .then(setCurrentVersion)
-      .catch(() => setCurrentVersion('0.2.0'))
+      .catch(() => setCurrentVersion('0.2.1'))
   }, [])
 
   const checkForUpdates = useCallback(
@@ -41,7 +41,7 @@ export function useAppUpdater(options?: { autoCheck?: boolean }) {
           setAvailableVersion(update.version)
           setNotes(update.body ?? null)
           setPhase('available')
-          toast(t('settings.update.availableToast', { version: update.version }), 'info')
+          if (!silent) toast(t('settings.update.availableToast', { version: update.version }), 'info')
           return update
         }
         updateRef.current = null
