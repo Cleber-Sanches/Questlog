@@ -90,11 +90,16 @@ export const pt = {
   // Updates
   'settings.update.title': 'Atualizações',
   'settings.update.subtitle': 'O Questlog pode baixar e instalar novas versões sozinho.',
-  'settings.update.current': 'Versão instalada',
+  'settings.update.searchDesc': 'O app também procura quando abre',
   'settings.update.version': 'v{version}',
+  'settings.update.lastJustNow': 'Verificado agora há pouco',
   'settings.update.check': 'Verificar agora',
   'settings.update.checking': 'Verificando…',
   'settings.update.upToDate': 'Você já está na versão mais recente',
+  'settings.update.upToDateShort': 'Em dia',
+  'settings.update.resultOk': 'Esta é a versão mais recente',
+  'settings.update.availableShort': 'Nova versão {version}',
+  'settings.update.checkErrorHint': 'Tente de novo daqui a pouco.',
   'settings.update.available': 'Nova versão disponível: v{version}',
   'settings.update.availableToast': 'Atualização v{version} disponível',
   'settings.update.alertTitle': 'Atualização disponível',
@@ -117,30 +122,31 @@ export const pt = {
   'settings.backup.local.last': 'Último backup',
   'settings.backup.local.none': 'Nenhum backup registrado ainda',
   'settings.backup.local.action': 'Backup agora',
-  'settings.backup.external.title': 'Pasta externa',
+  'settings.backup.section.save': 'Salvar',
+  'settings.backup.section.restore': 'Trazer de volta',
+  'settings.backup.external.title': 'Pasta extra',
   'settings.backup.external.desc':
-    'Salva uma cópia extra em outro disco ou pasta sincronizada',
-  'settings.backup.external.none': 'Nenhuma pasta configurada',
-  'settings.backup.profile.title': 'Perfil (JSON)',
-  'settings.backup.profile.desc':
-    'Exporte ou importe jogos e conquistas em um arquivo .json',
+    'Cópia extra em outro disco ou pasta sincronizada',
+  'settings.backup.external.none': 'Nenhuma pasta ainda',
+  'settings.backup.profile.title': 'Cópia para outro PC',
+  'settings.backup.profile.desc': 'Leva os dados embora, ou traz de outro computador',
   'settings.backup.restore.title': 'Restaurar backup',
-  'settings.backup.restore.desc':
-    'Substitui todos os dados atuais por um arquivo .sqlite de backup',
-  'settings.backup.restore.action': 'Restaurar arquivo',
+  'settings.backup.restore.desc': 'Devolve a cópia do Backup agora ou da pasta extra',
+  'settings.backup.restore.action': 'Restaurar',
   'settings.backup.restore.confirmTitle': 'Restaurar backup?',
   'settings.backup.restore.confirmBody':
     'Isso substitui todos os seus jogos e conquistas pelos dados do backup. Faça um backup antes se não tiver certeza.',
   'settings.backup.restore.success': 'Backup restaurado. Recarregando…',
   'settings.backup.recovery.hint':
-    'Perdeu dados após atualizar? Procure backups em %APPDATA%\\com.questlog.desktop\\, %APPDATA%\\com.trophydesk.desktop\\, %APPDATA%\\com.myconquist.desktop\\ ou %APPDATA%\\com.guiaconquistas.desktop\\backups\\ — ou um arquivo .json exportado antes.',
+    'Guarde uma cópia dos jogos e conquistas, e traga de volta se precisar.',
   'settings.backup.local.saved': 'Backup salvo em {path}',
   'settings.backup.external.saved': 'Pasta externa configurada',
 
   // AI settings
   'settings.ai.enable.title': 'Ativar assistente',
   'settings.ai.enable.desc': 'Chat de IA na barra do guia',
-  'settings.ai.providers': 'Provedores',
+  'settings.ai.enable.hint': 'Quando desligado, o chat some do guia',
+  'settings.ai.providers': 'Quem responde',
   'settings.ai.status.active': 'Ativo no chat',
   'settings.ai.status.connected': 'Conectado',
   'settings.ai.connectFirst': 'Conecte primeiro',
@@ -156,10 +162,8 @@ export const pt = {
     'Autentique no terminal do OpenCode, se necessário, e use Detectar.',
   'settings.ai.modelHint': 'O modelo pode ser alterado no chat depois de conectar.',
   'settings.ai.saveConnection': 'Salvar conexão',
-  'settings.ai.provider.claude.blurb':
-    'Assistente Anthropic com login no navegador e modelos Sonnet.',
-  'settings.ai.provider.opencode.blurb':
-    'CLI local com vários modelos. Detecta o binário no PATH.',
+  'settings.ai.provider.claude.blurb': 'Login no navegador, modelos da Anthropic.',
+  'settings.ai.provider.opencode.blurb': 'Roda no computador, com vários modelos.',
   'settings.ai.auth.openLogin': 'Abrir login',
   'settings.ai.saving': 'Salvando…',
 

@@ -1,111 +1,149 @@
+import { useEffect, useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Button } from '@/components/ui/Button'
 import { SegmentedFill } from '@/components/ui/SegmentedBar'
 import { useT } from '@/app/providers/LocaleProvider'
 import { useUpdater } from '@/app/providers/UpdaterProvider'
+import { SPRING_JUMP } from '@/lib/motion/ease'
 
 export function UpdateSettingsPanel() {
   const t = useT()
+  const reduce = useReducedMotion()
   const {
     phase,
     currentVersion,
     availableVersion,
     notes,
     progress,
-    error,
+    lastCheckedAt,
     checkForUpdates,
     installUpdate,
   } = useUpdater()
 
   const busy = phase === 'checking' || phase === 'downloading' || phase === 'installing'
+  const upToDate = phase === 'upToDate'
+  const hasUpdate = Boolean(availableVersion) && phase !== 'upToDate'
+  const failed = phase === 'error'
+  const transferring = phase === 'downloading' || phase === 'installing'
+  const [expanded, setExpanded] = useState(false)
+
+  useEffect(() => {
+    if (hasUpdate || transferring || failed) setExpanded(true)
+  }, [failed, hasUpdate, transferring])
+
+  const onCheck = () => {
+    setExpanded(true)
+    void checkForUpdates({ silent: true })
+  }
 
   return (
-    <div className="stStack">
+    <div className="stStack stUpdate">
       <div className="stPanelHead">
         <h2 className="stPanelTitle">{t('settings.update.title')}</h2>
         <p className="stPanelSubtitle">{t('settings.update.subtitle')}</p>
       </div>
 
-      <div className="stPanel">
-        <div className="stRow">
-          <div className="stRowLead">
-            <span className="stRowIcon" aria-hidden>
-              <i className="ph-fill ph-arrows-clockwise" />
-            </span>
-            <div className="stRowCopy">
-              <div className="stRowTitle">{t('settings.update.current')}</div>
-              <p className="stRowDesc">
-                {t('settings.update.version', { version: currentVersion || '…' })}
-              </p>
+      <div className="stPanel stUpdateCard">
+        <div className="stUpdateHero">
+          <div className="stUpdateLead">
+            <img
+              className="stUpdateMark"
+              src="/questlog-mark.png"
+              width={64}
+              height={64}
+              alt=""
+              draggable={false}
+            />
+            <div className="stUpdateCopy">
+              <div className="stUpdateName">Questlog</div>
+              <div className="stUpdateVer">{currentVersion || '…'}</div>
+              {!expanded && upToDate ? (
+                <p className="stUpdateStatus">{t('settings.update.upToDateShort')}</p>
+              ) : null}
+              {!expanded && hasUpdate ? (
+                <p className="stUpdateStatus is-new">
+                  {t('settings.update.availableShort', { version: availableVersion ?? '' })}
+                </p>
+              ) : null}
             </div>
           </div>
-          <Button
-            variant="secondary"
-            size="md"
-            disabled={busy}
-            onClick={() => void checkForUpdates()}
-          >
-            {phase === 'checking' ? t('settings.update.checking') : t('settings.update.check')}
-          </Button>
+          {hasUpdate ? (
+            <Button variant="primary" size="md" disabled={busy} onClick={() => void installUpdate()}>
+              {phase === 'installing'
+                ? t('settings.update.installingShort')
+                : phase === 'downloading'
+                  ? t('settings.update.downloadingShort')
+                  : t('settings.update.installShort')}
+            </Button>
+          ) : (
+            <Button variant="secondary" size="md" disabled={busy} onClick={onCheck}>
+              {phase === 'checking' ? t('settings.update.checking') : t('settings.update.check')}
+            </Button>
+          )}
         </div>
 
-        {phase === 'upToDate' ? (
-          <>
-            <div className="stPanelDivider" role="separator" />
-            <p className="stNote is-ok">{t('settings.update.upToDate')}</p>
-          </>
-        ) : null}
+        <AnimatePresence initial={false}>
+          {expanded ? (
+            <motion.div
+              className="stUpdateReveal"
+              initial={reduce ? false : { height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={reduce ? undefined : { height: 0, opacity: 0 }}
+              transition={reduce ? { duration: 0 } : SPRING_JUMP}
+            >
+              <div className="stUpdateRevealInner">
+                {phase === 'checking' ? (
+                  <>
+                    <p className="stUpdateRevealTitle">{t('settings.update.checking')}</p>
+                    <div className="stUpdateBar is-wait">
+                      <SegmentedFill percent={28} brand />
+                    </div>
+                  </>
+                ) : null}
 
-        {availableVersion && phase !== 'upToDate' ? (
-          <>
-            <div className="stPanelDivider" role="separator" />
-            <div className="stRow">
-              <div className="stRowLead">
-                <span className="stRowIcon" aria-hidden>
-                  <i className="ph-fill ph-download-simple" />
-                </span>
-                <div className="stRowCopy">
-                  <div className="stRowTitle">
-                    {t('settings.update.available', { version: availableVersion })}
-                  </div>
-                  {notes ? <p className="stRowDesc">{notes}</p> : null}
-                  {phase === 'downloading' || phase === 'installing' ? (
-                    <p className="stRowDesc">
-                      {phase === 'installing'
-                        ? t('settings.update.installing')
-                        : t('settings.update.downloading', { progress: String(progress) })}
+                {upToDate ? (
+                  <>
+                    <p className="stUpdateRevealTitle">{t('settings.update.resultOk')}</p>
+                    <p className="stUpdateRevealHint">
+                      {lastCheckedAt ? t('settings.update.lastJustNow') : t('settings.update.searchDesc')}
                     </p>
-                  ) : null}
-                </div>
-              </div>
-              <Button
-                variant="primary"
-                size="md"
-                disabled={busy}
-                onClick={() => void installUpdate()}
-              >
-                {busy ? t('common.saving') : t('settings.update.install')}
-              </Button>
-            </div>
-            {(phase === 'downloading' || phase === 'installing') && (
-              <div className="stUpdateBarWrap">
-                <SegmentedFill
-                  percent={phase === 'installing' ? 100 : progress}
-                  brand
-                  done={phase === 'installing'}
-                />
-              </div>
-            )}
-          </>
-        ) : null}
+                  </>
+                ) : null}
 
-        {phase === 'error' ? (
-          <>
-            <div className="stPanelDivider" role="separator" />
-            <p className="stNote is-err">{t('settings.update.checkError')}</p>
-            {error ? <p className="stNote">{error}</p> : null}
-            <p className="stNote">{t('settings.update.endpointHint')}</p>
-          </>
-        ) : null}
+                {hasUpdate ? (
+                  <>
+                    <p className="stUpdateRevealTitle">
+                      {t('settings.update.availableShort', { version: availableVersion ?? '' })}
+                    </p>
+                    {notes ? <p className="stUpdateRevealHint">{notes}</p> : null}
+                    <p className="stUpdateRevealHint">{t('settings.update.availableAlert')}</p>
+                    {transferring ? (
+                      <div className="stUpdateBar">
+                        <p className="stUpdateRevealHint">
+                          {phase === 'installing'
+                            ? t('settings.update.installing')
+                            : t('settings.update.downloading', { progress: String(progress) })}
+                        </p>
+                        <SegmentedFill
+                          percent={phase === 'installing' ? 100 : progress}
+                          brand
+                          done={phase === 'installing'}
+                        />
+                      </div>
+                    ) : null}
+                  </>
+                ) : null}
+
+                {failed ? (
+                  <>
+                    <p className="stUpdateRevealTitle is-err">{t('settings.update.checkError')}</p>
+                    <p className="stUpdateRevealHint">{t('settings.update.checkErrorHint')}</p>
+                  </>
+                ) : null}
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </div>
     </div>
   )

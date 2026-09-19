@@ -29,37 +29,36 @@ export function LanguageSettingsPanel() {
         <p className="stPanelSubtitle">{t('settings.language.subtitle')}</p>
       </div>
 
-      <div className="stPanel">
-        <div className="stLangGrid" role="radiogroup" aria-label={t('settings.language.title')}>
-          {LOCALES.map((id) => {
-            const meta = LOCALE_META[id]
-            const active = locale === id
-            const hint =
-              id === 'pt' ? t('settings.language.pt.hint') : t('settings.language.en.hint')
-            return (
+      <div className="stPanel" role="radiogroup" aria-label={t('settings.language.title')}>
+        {LOCALES.map((id, index) => {
+          const meta = LOCALE_META[id]
+          const active = locale === id
+          const hint = id === 'pt' ? t('settings.language.pt.hint') : t('settings.language.en.hint')
+          return (
+            <div key={id}>
+              {index > 0 ? <div className="stPanelDivider" role="separator" /> : null}
               <button
-                key={id}
                 type="button"
                 role="radio"
                 aria-checked={active}
-                className={`stLangCard${active ? ' is-active' : ''}`}
+                className={`stRow stLangRow${active ? ' is-active' : ''}`}
                 disabled={saving}
                 onClick={() => void pick(id)}
               >
-                <span className="stLangFlagWrap" aria-hidden>
+                <div className="stRowLead">
                   <LocaleFlag locale={id} className="stLangFlag" title={meta.nativeName} />
-                </span>
-                <span className="stLangCopy">
-                  <span className="stLangName">{meta.nativeName}</span>
-                  <span className="stLangHint">{hint}</span>
-                </span>
+                  <div className="stRowCopy">
+                    <div className="stRowTitle">{meta.nativeName}</div>
+                    <p className="stRowDesc">{hint}</p>
+                  </div>
+                </div>
                 <span className={`stLangCheck${active ? ' is-on' : ''}`} aria-hidden>
                   <i className="ph-bold ph-check" />
                 </span>
               </button>
-            )
-          })}
-        </div>
+            </div>
+          )
+        })}
       </div>
     </div>
   )

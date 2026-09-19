@@ -1,9 +1,26 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { check, type Update } from '@tauri-apps/plugin-updater'
 import { relaunch } from '@tauri-apps/plugin-process'
 import { getVersion } from '@tauri-apps/api/app'
 import { useToast } from '@/app/providers/ToastProvider'
 import { useT } from '@/app/providers/LocaleProvider'
+
+function waitMs(ms: number) {
+  return new Promise<void>((resolve) => {
+    window.setTimeout(resolve, ms)
+  })
+}
+
+function waitForPaint() {
+  return new Promise<void>((resolve) => {
+    requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+  })
+}
+
+function easeOut(t: number) {
+  return 1 - (1 - t) * (1 - t)
+}
 
 export type UpdatePhase = 'idle' | 'checking' | 'available' | 'downloading' | 'installing' | 'upToDate' | 'error'
 
@@ -16,6 +33,7 @@ export function useAppUpdater(options?: { autoCheck?: boolean }) {
   const [notes, setNotes] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
+  const [lastCheckedAt, setLastCheckedAt] = useState<number | null>(null)
   const updateRef = useRef<Update | null>(null)
   const autoChecked = useRef(false)
 
@@ -41,6 +59,7 @@ export function useAppUpdater(options?: { autoCheck?: boolean }) {
           setAvailableVersion(update.version)
           setNotes(update.body ?? null)
           setPhase('available')
+          setLastCheckedAt(Date.now())
           if (!silent) toast(t('settings.update.availableToast', { version: update.version }), 'info')
           return update
         }
@@ -48,6 +67,7 @@ export function useAppUpdater(options?: { autoCheck?: boolean }) {
         setAvailableVersion(null)
         setNotes(null)
         setPhase('upToDate')
+        setLastCheckedAt(Date.now())
         if (!silent) toast(t('settings.update.upToDate'), 'success')
         return null
       } catch (err) {
@@ -55,6 +75,7 @@ export function useAppUpdater(options?: { autoCheck?: boolean }) {
         const msg = String(err)
         setError(msg)
         setPhase('error')
+        setLastCheckedAt(Date.now())
         if (!silent) toast(t('settings.update.checkError'), 'error')
         return null
       }
@@ -69,23 +90,64 @@ export function useAppUpdater(options?: { autoCheck?: boolean }) {
     }
     if (!target) return
 
-    setPhase('downloading')
-    setProgress(0)
-    setError(null)
+    flushSync(() => {
+      setPhase('downloading')
+      setProgress(6)
+      setError(null)
+    })
+    await waitForPaint()
+
+    const startedAt = performance.now()
+    const MIN_BAR_MS = 900
+    let downloaded = 0
+    let total = 0
+    let actual = 6
+
+    const paintProgress = (value: number) => {
+      actual = Math.min(100, Math.max(actual, value))
+      setProgress(Math.round(actual))
+    }
+
     try {
-      let downloaded = 0
-      let total = 0
-      await target.downloadAndInstall((event) => {
+      await target.download((event) => {
         if (event.event === 'Started') {
           total = event.data.contentLength ?? 0
         } else if (event.event === 'Progress') {
           downloaded += event.data.chunkLength
-          if (total > 0) setProgress(Math.min(100, Math.round((downloaded / total) * 100)))
+          if (total > 0) {
+            paintProgress(Math.min(99, (downloaded / total) * 100))
+          } else {
+            paintProgress(Math.min(90, actual + 4))
+          }
         } else if (event.event === 'Finished') {
-          setProgress(100)
-          setPhase('installing')
+          paintProgress(100)
         }
       })
+
+      const elapsed = performance.now() - startedAt
+      if (elapsed < MIN_BAR_MS || actual < 100) {
+        const from = actual
+        const duration = Math.max(280, MIN_BAR_MS - elapsed)
+        await new Promise<void>((resolve) => {
+          const begin = performance.now()
+          const step = (now: number) => {
+            const t = Math.min(1, (now - begin) / duration)
+            paintProgress(from + (100 - from) * easeOut(t))
+            if (t < 1) requestAnimationFrame(step)
+            else resolve()
+          }
+          requestAnimationFrame(step)
+        })
+      }
+
+      flushSync(() => {
+        setProgress(100)
+        setPhase('installing')
+      })
+      await waitForPaint()
+      await waitMs(360)
+
+      await target.install()
       toast(t('settings.update.installed'), 'success')
       await relaunch()
     } catch (err) {
@@ -111,6 +173,7 @@ export function useAppUpdater(options?: { autoCheck?: boolean }) {
     notes,
     progress,
     error,
+    lastCheckedAt,
     checkForUpdates,
     installUpdate,
   }

@@ -3,7 +3,10 @@ import { useT } from '@/app/providers/LocaleProvider'
 import { Button } from '@/components/ui/Button'
 import { AiConnectModal } from '@/features/ai/components/AiConnectModal'
 import { useAiSettings } from '@/features/ai/hooks/useAiSettings'
-import { AI_PROVIDERS, type ProviderCatalogItem } from '@/features/ai/providers'
+import {
+  AI_PROVIDERS,
+  type ProviderCatalogItem,
+} from '@/features/ai/providers'
 import type { AiProvider } from '@/types/ai'
 
 export function AiSettingsPanel() {
@@ -41,69 +44,71 @@ export function AiSettingsPanel() {
 
   return (
     <div className="stStack">
-      <div className="stPanel">
-        <div className="stRow">
-          <div className="stRowLead">
-            <span className="stRowIcon" aria-hidden>
-              <i className="ph-fill ph-robot" />
-            </span>
-            <div className="stRowCopy">
-              <div className="stRowTitle">{t('settings.ai.enable.title')}</div>
-              <p className="stRowDesc">{t('settings.ai.enable.desc')}</p>
-            </div>
-          </div>
-          <label className="settingsSwitch">
-            <input
-              type="checkbox"
-              checked={ai.settings.enabled}
-              onChange={(e) => setEnabled(e.target.checked)}
-              aria-label={t('settings.ai.enable.title')}
-            />
-            <span className="settingsSwitchUi" aria-hidden />
-          </label>
-        </div>
+      <div className="stPanelHead">
+        <h2 className="stPanelTitle">{t('settings.nav.ai')}</h2>
+        <p className="stPanelSubtitle">{t('settings.ai.enable.desc')}</p>
+      </div>
 
-        {ai.settings.enabled ? (
-          <>
-            <div className="stPanelDivider" role="separator" />
-
-            <div className="stBlock">
-              <div className="stIntegrationsGrid" role="list" aria-label={t('settings.ai.providers')}>
-                {AI_PROVIDERS.map((p) => {
-                  const cfg = ai.settings.providers[p.id]
-                  return (
-                    <IntegrationCard
-                      key={p.id}
-                      provider={p}
-                      connected={cfg.connected}
-                      enabled={cfg.enabled}
-                      model={cfg.model}
-                      isActive={ai.settings.activeProvider === p.id}
-                      busy={ai.saving}
-                      onConnect={() => openConnectModal(p.id)}
-                      onDisconnect={() => void ai.disconnectProvider(p.id)}
-                      onToggle={(on) => {
-                        if (!cfg.connected || ai.saving) return
-                        void ai.setProviderEnabled(p.id, on)
-                      }}
-                    />
-                  )
-                })}
+      <section className="stSection">
+        <div className="stPanel">
+          <div className="stRow">
+            <div className="stRowLead">
+              <span className="stRowIcon" aria-hidden>
+                <i className="ph-fill ph-robot" />
+              </span>
+              <div className="stRowCopy">
+                <div className="stRowTitle">{t('settings.ai.enable.title')}</div>
+                <p className="stRowDesc">{t('settings.ai.enable.hint')}</p>
               </div>
             </div>
-          </>
-        ) : null}
-      </div>
+            <label className="settingsSwitch">
+              <input
+                type="checkbox"
+                checked={ai.settings.enabled}
+                onChange={(e) => setEnabled(e.target.checked)}
+                aria-label={t('settings.ai.enable.title')}
+              />
+              <span className="settingsSwitchUi" aria-hidden />
+            </label>
+          </div>
+        </div>
+      </section>
+
+      {ai.settings.enabled ? (
+        <section className="stSection">
+          <h3 className="stSectionTitle">{t('settings.ai.providers')}</h3>
+          <div className="stPanel">
+            {AI_PROVIDERS.map((p, index) => {
+              const cfg = ai.settings.providers[p.id]
+              return (
+                <div key={p.id}>
+                  {index > 0 ? <div className="stPanelDivider" role="separator" /> : null}
+                  <ProviderRow
+                    provider={p}
+                    connected={cfg.connected}
+                    enabled={cfg.enabled}
+                    busy={ai.saving}
+                    onConnect={() => openConnectModal(p.id)}
+                    onDisconnect={() => void ai.disconnectProvider(p.id)}
+                    onToggle={(on) => {
+                      if (!cfg.connected || ai.saving) return
+                      void ai.setProviderEnabled(p.id, on)
+                    }}
+                  />
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      ) : null}
     </div>
   )
 }
 
-function IntegrationCard({
+function ProviderRow({
   provider,
   connected,
   enabled,
-  model,
-  isActive,
   busy,
   onConnect,
   onDisconnect,
@@ -112,8 +117,6 @@ function IntegrationCard({
   provider: ProviderCatalogItem
   connected: boolean
   enabled: boolean
-  model: string
-  isActive: boolean
   busy: boolean
   onConnect: () => void
   onDisconnect: () => void
@@ -121,45 +124,19 @@ function IntegrationCard({
 }) {
   const t = useT()
   const live = connected && enabled
-  const modelLabel = model.trim() || provider.modelPlaceholder
+  const desc = connected ? t('settings.ai.status.connected') : t(provider.blurbKey)
 
   return (
-    <article
-      className={[
-        'stIntegrationCard',
-        connected ? 'is-connected' : '',
-        live ? 'is-active' : '',
-      ]
-        .filter(Boolean)
-        .join(' ')}
-      role="listitem"
-    >
-      <div className="stIntegrationCardTop">
+    <div className="stRow stAiProvider">
+      <div className="stRowLead">
         <span className={`stIntegrationLogo brand-${provider.id}`} aria-hidden>
           <img src={provider.logo} alt="" width={22} height={22} draggable={false} />
         </span>
-        <span className="stIntegrationName">{provider.name}</span>
-        {connected ? (
-          <span className="stIntegrationStatus">
-            {live && isActive ? t('settings.ai.status.active') : t('settings.ai.status.connected')}
-          </span>
-        ) : null}
-      </div>
-
-      <p className="stIntegrationDesc" title={connected ? `${t(provider.blurbKey)} · ${modelLabel}` : t(provider.blurbKey)}>
-        <span className="stIntegrationBlurb">{t(provider.blurbKey)}</span>
-        {connected ? (
-          <>
-            {' '}
-            <span className="stIntegrationMeta">· {modelLabel}</span>
-          </>
-        ) : null}
-      </p>
-
-      <div className="stIntegrationFooter">
-        {connected ? (
-          <>
-            <div className="stIntegrationActions">
+        <div className="stRowCopy">
+          <div className="stRowTitle">{provider.name}</div>
+          <p className="stRowDesc">{desc}</p>
+          {connected ? (
+            <div className="stAiActions">
               <Button variant="secondary" size="sm" onClick={onConnect} disabled={busy}>
                 {t('common.configure')}
               </Button>
@@ -172,30 +149,28 @@ function IntegrationCard({
                 {t('common.disconnect')}
               </button>
             </div>
-
-            <label
-              className="stIntegrationToggle"
-              title={connected ? undefined : t('settings.ai.connectFirst')}
-            >
-              <span className="stIntegrationToggleLabel">{t('settings.ai.inChat')}</span>
-              <span className="settingsSwitch is-sm">
-                <input
-                  type="checkbox"
-                  checked={live}
-                  disabled={!connected || busy}
-                  onChange={(e) => onToggle(e.target.checked)}
-                  aria-label={t('settings.ai.useInChat', { name: provider.name })}
-                />
-                <span className="settingsSwitchUi" aria-hidden />
-              </span>
-            </label>
-          </>
-        ) : (
-          <Button variant="primary" size="sm" onClick={onConnect} disabled={busy}>
-            {t('common.connect')}
-          </Button>
-        )}
+          ) : null}
+        </div>
       </div>
-    </article>
+      {connected ? (
+        <label className="stAiToggle">
+          <span className="stAiToggleLabel">{t('settings.ai.inChat')}</span>
+          <span className="settingsSwitch is-sm">
+            <input
+              type="checkbox"
+              checked={live}
+              disabled={busy}
+              onChange={(e) => onToggle(e.target.checked)}
+              aria-label={t('settings.ai.useInChat', { name: provider.name })}
+            />
+            <span className="settingsSwitchUi" aria-hidden />
+          </span>
+        </label>
+      ) : (
+        <Button variant="secondary" size="md" onClick={onConnect} disabled={busy}>
+          {t('common.connect')}
+        </Button>
+      )}
+    </div>
   )
 }

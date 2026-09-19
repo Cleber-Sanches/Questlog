@@ -179,6 +179,125 @@
   max-width: none;
 }
 
+.stUpdate {
+  max-width: none;
+}
+
+.stUpdateHero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px;
+}
+
+.stUpdateLead {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+}
+
+.stUpdateMark {
+  display: block;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border-radius: 16px;
+}
+
+.stUpdateCopy {
+  min-width: 0;
+}
+
+.stUpdateName {
+  font-size: 13px;
+  font-weight: 450;
+  letter-spacing: -0.15px;
+  color: var(--fg-muted);
+}
+
+.stUpdateVer {
+  margin: 2px 0 0;
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+}
+
+.stUpdateStatus {
+  margin: 8px 0 0;
+  font-size: 13px;
+  font-weight: 450;
+  letter-spacing: -0.15px;
+  line-height: 1.3;
+  color: var(--fg-muted);
+}
+
+.stUpdateStatus.is-new {
+  color: var(--accent-brand-bright);
+}
+
+.stUpdateReveal {
+  overflow: hidden;
+}
+
+.stUpdateRevealInner {
+  padding: 4px 28px 26px;
+  border-top: 1px solid var(--overlay-05);
+}
+
+.stUpdateRevealTitle {
+  margin: 16px 0 0;
+  font-size: 15px;
+  font-weight: 550;
+  letter-spacing: -0.2px;
+  line-height: 1.35;
+  color: var(--fg);
+}
+
+.stUpdateRevealTitle.is-err {
+  color: #f87171;
+}
+
+.stUpdateRevealHint {
+  margin: 6px 0 0;
+  max-width: 62ch;
+  font-size: 13px;
+  font-weight: 450;
+  line-height: 1.45;
+  letter-spacing: -0.15px;
+  color: var(--fg-muted);
+}
+
+.stUpdateBar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.stUpdateBar .segmentedBar {
+  height: 8px;
+  gap: 3px;
+}
+
+.stUpdateBar .segmentedBarTip {
+  transition: flex-grow 0.28s ease-out;
+}
+
+.stUpdateBar.is-wait .segmentedBarSeg.isOn {
+  animation: stUpdateWait 1s ease-in-out infinite;
+}
+
+@keyframes stUpdateWait {
+  50% {
+    opacity: 0.45;
+  }
+}
+
 .stPanelHead {
   display: flex;
   flex-direction: column;
@@ -202,95 +321,48 @@
   color: var(--fg-muted);
 }
 
-.stLangGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 4px;
-}
-
-.stLangCard {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+.stLangRow {
   width: 100%;
-  padding: 14px 16px;
-  border: 1px solid var(--overlay-08);
-  border-radius: 10px;
+  border: none;
   background: transparent;
   color: inherit;
-  text-align: left;
+  font: inherit;
   cursor: pointer;
-  transition:
-    background 140ms ease,
-    border-color 140ms ease;
+  text-align: left;
 }
 
-.stLangCard:hover:not(:disabled) {
+.stLangRow:hover:not(:disabled) {
   background: var(--overlay-05);
-  border-color: var(--overlay-12);
 }
 
-.stLangCard.is-active {
-  background: color-mix(in srgb, var(--accent-brand) 12%, transparent);
-  border-color: color-mix(in srgb, var(--accent-brand) 45%, transparent);
-}
-
-.stLangCard:disabled {
+.stLangRow:disabled {
   opacity: 0.6;
   cursor: wait;
 }
 
-.stLangFlagWrap {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 28px;
-  flex-shrink: 0;
-  border: none;
-  border-radius: 4px;
-  overflow: hidden;
-  background: transparent;
-  box-shadow: none;
+.stLangRow:focus {
   outline: none;
 }
 
-.stLangFlagWrap .stLangFlag,
-.stLangFlagWrap svg {
+.stLangRow:focus-visible {
+  background: var(--overlay-05);
+  box-shadow: inset 0 0 0 1px var(--overlay-10);
+}
+
+.stLangFlag {
   display: block;
-  width: 42px;
-  height: 30px;
-  margin: -1px;
-  border: none;
-  outline: none;
-  box-shadow: none;
+  width: 48px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  line-height: 0;
 }
 
-.stLangCard.is-active .stLangFlagWrap {
-  box-shadow: none;
-  border: none;
-}
-
-.stLangCopy {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-  flex: 1;
-}
-
-.stLangName {
-  font-size: 14px;
-  font-weight: 550;
-  letter-spacing: -0.15px;
-  color: var(--fg);
-}
-
-.stLangHint {
-  font-size: 12px;
-  color: var(--fg-muted);
-  letter-spacing: -0.1px;
+.stLangFlag svg {
+  display: block;
+  width: 48px;
+  height: 32px;
 }
 
 .stLangCheck {
@@ -402,130 +474,6 @@
   border-top: 1px solid var(--overlay-05);
 }
 
-.stIntegrationsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 380px));
-  justify-content: start;
-  gap: 12px;
-  width: 100%;
-}
-
-.stIntegrationCard {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-height: 168px;
-  padding: 16px 16px 18px;
-  border-radius: 12px;
-  border: 1px solid var(--overlay-05);
-  background: var(--bg-canvas);
-  box-sizing: border-box;
-}
-
-.stIntegrationCard.is-connected,
-.stIntegrationCard.is-active {
-  border-color: var(--overlay-10);
-  background: var(--overlay-025);
-}
-
-.stIntegrationCardTop {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-}
-
-.stIntegrationName {
-  min-width: 0;
-  flex: 1 1 auto;
-  font-size: 14px;
-  font-weight: 550;
-  line-height: 1.2;
-  letter-spacing: -0.2px;
-  color: var(--fg);
-}
-
-.stIntegrationStatus {
-  margin-left: auto;
-  flex-shrink: 0;
-  font-size: 12px;
-  letter-spacing: -0.1px;
-  color: var(--fg-muted);
-}
-
-.stIntegrationCard.is-active .stIntegrationStatus {
-  color: var(--fg);
-}
-
-.stIntegrationMeta {
-  color: var(--fg-subtle);
-}
-
-.stIntegrationActions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-  flex-wrap: wrap;
-}
-
-.stIntegrationLink {
-  padding: 2px 4px;
-  border: none;
-  background: transparent;
-  color: var(--fg-muted);
-  font-size: 12px;
-  line-height: 1.25;
-  letter-spacing: -0.1px;
-  cursor: pointer;
-}
-
-.stIntegrationLink:hover:not(:disabled) {
-  color: var(--fg);
-}
-
-.stIntegrationLink:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-.stIntegrationToggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-
-.stIntegrationToggleLabel {
-  font-size: 12px;
-  line-height: 1;
-  color: var(--fg-muted);
-  letter-spacing: -0.1px;
-  user-select: none;
-}
-
-.stIntegrationToggle .settingsSwitch.is-sm {
-  height: 18px;
-}
-
-.stIntegrationFooter {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
-  gap: 8px 10px;
-  margin-top: auto;
-  padding-top: 6px;
-}
-
-.stModalIntro {
-  margin: 0 0 16px;
-  font-size: 13px;
-  line-height: 1.45;
-  color: var(--fg-muted);
-}
-
 .stIntegrationLogo {
   width: 36px;
   height: 36px;
@@ -566,39 +514,64 @@
   height: 36px;
 }
 
-.stIntegrationDesc {
-  flex: 1;
-  margin: 0;
-  min-width: 0;
+.stRow.stAiProvider {
+  align-items: flex-start;
+}
+
+.stRow.stAiProvider .stRowLead {
+  align-items: flex-start;
+}
+
+.stAiActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.stAiToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding-top: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.stAiToggleLabel {
+  font-size: 12px;
+  line-height: 1;
+  color: var(--fg-muted);
+  letter-spacing: -0.1px;
+  user-select: none;
+}
+
+.stIntegrationLink {
+  padding: 2px 4px;
+  border: none;
+  background: transparent;
+  color: var(--fg-muted);
+  font-size: 12px;
+  line-height: 1.25;
+  letter-spacing: -0.1px;
+  cursor: pointer;
+}
+
+.stIntegrationLink:hover:not(:disabled) {
+  color: var(--fg);
+}
+
+.stIntegrationLink:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.stModalIntro {
+  margin: 0 0 16px;
   font-size: 13px;
   line-height: 1.45;
-  letter-spacing: -0.2px;
   color: var(--fg-muted);
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
-
-.stIntegrationBlurb {
-  display: inline;
-}
-
-.stIntegrationMeta {
-  display: inline;
-  color: var(--fg-subtle);
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
-
-.stIntegrationFooter .btn-primary {
-  min-width: 96px;
-}
-
-.stIntegrationFooter .btn-secondary {
-  min-width: auto;
-  padding-inline: 12px;
-  background: var(--overlay-075);
-  border-color: var(--overlay-075);
-  color: var(--fg);
 }
 
 .stPathRow .input {
@@ -727,6 +700,12 @@
   line-height: 1.4;
   letter-spacing: -0.2px;
   color: var(--fg-muted);
+}
+
+.stRowPath {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .stInlineAction {
@@ -1129,6 +1108,10 @@
   gap: 3px;
 }
 
+.stUpdateBarWrap .segmentedBarTip {
+  transition: flex-grow 0.28s ease-out;
+}
+
 .stUpdateBarWrap .segmentedBarSeg {
   min-width: 4px;
   border-radius: 4px;
@@ -1254,30 +1237,30 @@
 }
 
 .settingsSwitch.is-sm {
-  width: 30px;
-  height: 18px;
+  width: 32px;
+  height: 20px;
 }
 
 .settingsSwitch.is-sm .settingsSwitchUi {
-  width: 30px;
-  height: 18px;
+  width: 32px;
+  height: 20px;
   border-radius: 6px;
 }
 
 .settingsSwitch.is-sm .settingsSwitchUi::before {
   top: 2px;
   left: 2px;
-  width: 14px;
-  height: 14px;
-  border-radius: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
 }
 
 .settingsSwitch.is-sm .settingsSwitchUi::after {
-  top: 5.5px;
-  left: 5.5px;
-  width: 7px;
-  height: 7px;
-  border-radius: 2px;
+  top: 6px;
+  left: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 2.5px;
 }
 
 .settingsSwitch.is-sm input:checked + .settingsSwitchUi::before,
@@ -1344,15 +1327,6 @@
 
   .stRow {
     flex-wrap: wrap;
-  }
-
-  .stIntegrationFooter {
-    flex-wrap: wrap;
-  }
-
-  .stIntegrationsGrid {
-    grid-template-columns: minmax(0, 1fr);
-    justify-content: stretch;
   }
 }
 

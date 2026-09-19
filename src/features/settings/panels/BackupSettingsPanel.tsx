@@ -58,51 +58,59 @@ export function BackupSettingsPanel() {
 
   return (
     <div className="stStack">
-      <p className="stNote">{t('settings.backup.recovery.hint')}</p>
+      <div className="stPanelHead">
+        <h2 className="stPanelTitle">{t('settings.nav.backup')}</h2>
+        <p className="stPanelSubtitle">{t('settings.backup.recovery.hint')}</p>
+      </div>
 
-      <div className="stPanel">
-        <div className="stRow">
-          <div className="stRowLead">
-            <span className="stRowIcon" aria-hidden>
-              <i className="ph-fill ph-cloud-arrow-down" />
-            </span>
-            <div className="stRowCopy">
-              <div className="stRowTitle">{t('settings.backup.local.title')}</div>
-              <p className="stRowDesc">
-                {last ? (
-                  <>
-                    {t('settings.backup.local.last')}{' '}
-                    <time className="stRowTime" dateTime={status.lastBackupAt ?? undefined}>
-                      {last}
-                    </time>
-                  </>
+      <section className="stSection">
+        <h3 className="stSectionTitle">{t('settings.backup.section.save')}</h3>
+        <div className="stPanel">
+          <div className="stRow">
+            <div className="stRowLead">
+              <span className="stRowIcon" aria-hidden>
+                <i className="ph-fill ph-cloud-arrow-down" />
+              </span>
+              <div className="stRowCopy">
+                <div className="stRowTitle">{t('settings.backup.local.title')}</div>
+                <p className="stRowDesc">
+                  {last ? (
+                    <>
+                      {t('settings.backup.local.last')}{' '}
+                      <time className="stRowTime" dateTime={status.lastBackupAt ?? undefined}>
+                        {last}
+                      </time>
+                    </>
+                  ) : (
+                    t('settings.backup.local.none')
+                  )}
+                </p>
+              </div>
+            </div>
+            <Button variant="primary" size="md" onClick={() => void onBackup()} disabled={busy}>
+              {busy ? t('common.saving') : t('settings.backup.local.action')}
+            </Button>
+          </div>
+
+          <div className="stPanelDivider" role="separator" />
+
+          <div className="stRow">
+            <div className="stRowLead">
+              <span className="stRowIcon" aria-hidden>
+                <i className="ph-fill ph-folder-open" />
+              </span>
+              <div className="stRowCopy">
+                <div className="stRowTitle">{t('settings.backup.external.title')}</div>
+                {external ? (
+                  <p className="stRowDesc stRowPath" title={external}>
+                    {external}
+                  </p>
                 ) : (
-                  t('settings.backup.local.none')
+                  <p className="stRowDesc">{t('settings.backup.external.desc')}</p>
                 )}
-              </p>
+              </div>
             </div>
-          </div>
-          <Button variant="primary" size="md" onClick={() => void onBackup()} disabled={busy}>
-            {busy ? t('common.saving') : t('settings.backup.local.action')}
-          </Button>
-        </div>
-
-        <div className="stPanelDivider" role="separator" />
-
-        <div className="stBlock">
-          <div className="stBlockHead">
-            <span className="stRowIcon" aria-hidden>
-              <i className="ph-fill ph-folder-open" />
-            </span>
-            <div className="stRowCopy">
-              <div className="stRowTitle">{t('settings.backup.external.title')}</div>
-              <p className="stRowDesc">{t('settings.backup.external.desc')}</p>
-            </div>
-          </div>
-
-          {external ? (
-            <div className="stPathRow">
-              <code className="stPath">{external}</code>
+            {external ? (
               <div className="stPathActions">
                 <Button variant="secondary" size="sm" onClick={() => void chooseExternalDir()}>
                   {t('common.change')}
@@ -111,72 +119,72 @@ export function BackupSettingsPanel() {
                   {t('common.remove')}
                 </Button>
               </div>
-            </div>
-          ) : (
-            <div className="stEmptyRow">
-              <p className="stNote">{t('settings.backup.external.none')}</p>
-              <Button variant="secondary" size="sm" onClick={() => void chooseExternalDir()}>
+            ) : (
+              <Button variant="secondary" size="md" onClick={() => void chooseExternalDir()}>
                 {t('common.chooseFolder')}
               </Button>
-            </div>
-          )}
-        </div>
-
-        <div className="stPanelDivider" role="separator" />
-
-        <div className="stRow">
-          <div className="stRowLead">
-            <span className="stRowIcon" aria-hidden>
-              <i className="ph-fill ph-export" />
-            </span>
-            <div className="stRowCopy">
-              <div className="stRowTitle">{t('settings.backup.profile.title')}</div>
-              <p className="stRowDesc">{t('settings.backup.profile.desc')}</p>
-            </div>
+            )}
           </div>
-          <div className="stPathActions">
-            <Button variant="secondary" size="sm" onClick={() => void exportProfile()} disabled={busy}>
-              {t('backup.profile.export')}
+        </div>
+      </section>
+
+      <section className="stSection">
+        <h3 className="stSectionTitle">{t('settings.backup.section.restore')}</h3>
+        <div className="stPanel">
+          <div className="stRow">
+            <div className="stRowLead">
+              <span className="stRowIcon" aria-hidden>
+                <i className="ph-fill ph-export" />
+              </span>
+              <div className="stRowCopy">
+                <div className="stRowTitle">{t('settings.backup.profile.title')}</div>
+                <p className="stRowDesc">{t('settings.backup.profile.desc')}</p>
+              </div>
+            </div>
+            <div className="stPathActions">
+              <Button variant="secondary" size="sm" onClick={() => void exportProfile()} disabled={busy}>
+                {t('backup.profile.export')}
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => fileRef.current?.click()}
+                disabled={busy}
+              >
+                {t('backup.profile.import')}
+              </Button>
+            </div>
+            <input
+              ref={fileRef}
+              type="file"
+              accept=".json,application/json"
+              hidden
+              onChange={(e) => {
+                const file = e.target.files?.[0]
+                if (file) void importProfile(file)
+                e.target.value = ''
+              }}
+            />
+          </div>
+
+          <div className="stPanelDivider" role="separator" />
+
+          <div className="stRow">
+            <div className="stRowLead">
+              <span className="stRowIcon" aria-hidden>
+                <i className="ph-fill ph-database" />
+              </span>
+              <div className="stRowCopy">
+                <div className="stRowTitle">{t('settings.backup.restore.title')}</div>
+                <p className="stRowDesc">{t('settings.backup.restore.desc')}</p>
+              </div>
+            </div>
+            <Button variant="secondary" size="md" onClick={onRestore} disabled={busy}>
+              {t('settings.backup.restore.action')}
             </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => fileRef.current?.click()}
-              disabled={busy}
-            >
-              {t('backup.profile.import')}
-            </Button>
           </div>
-          <input
-            ref={fileRef}
-            type="file"
-            accept=".json,application/json"
-            hidden
-            onChange={(e) => {
-              const file = e.target.files?.[0]
-              if (file) void importProfile(file)
-              e.target.value = ''
-            }}
-          />
         </div>
-
-        <div className="stPanelDivider" role="separator" />
-
-        <div className="stRow">
-          <div className="stRowLead">
-            <span className="stRowIcon" aria-hidden>
-              <i className="ph-fill ph-database" />
-            </span>
-            <div className="stRowCopy">
-              <div className="stRowTitle">{t('settings.backup.restore.title')}</div>
-              <p className="stRowDesc">{t('settings.backup.restore.desc')}</p>
-            </div>
-          </div>
-          <Button variant="secondary" size="md" onClick={onRestore} disabled={busy}>
-            {t('settings.backup.restore.action')}
-          </Button>
-        </div>
-      </div>
+      </section>
     </div>
   )
 }

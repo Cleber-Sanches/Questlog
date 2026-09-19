@@ -17,3 +17,11 @@ export const SPRING_SWAP = {
   damping: 30,
   mass: 0.55,
 } as const
+
+/** Pulo do card de atualização ao expandir. */
+export const SPRING_JUMP = {
+  type: 'spring',
+  stiffness: 420,
+  damping: 16,
+  mass: 0.72,
+} as const

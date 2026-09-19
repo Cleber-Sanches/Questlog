@@ -101,6 +101,10 @@
   gap: 3px;
 }
 
+.updateAlertProgress .segmentedBarTip {
+  transition: flex-grow 0.28s ease-out;
+}
+
 .updateAlertProgress .segmentedBarSeg {
   min-width: 4px;
   border-radius: 4px;
