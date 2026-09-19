@@ -7,6 +7,7 @@ import { useAchievements } from '@/features/achievements/hooks/useAchievements'
 import { useAchievementFilters } from '@/features/achievements/hooks/useAchievementFilters'
 import { AchievementList } from '@/features/achievements/components/AchievementList'
 import { AchievementEditor } from '@/features/achievements/components/AchievementEditor'
+import { showHiddenAchievements } from '@/features/achievements/utils/hidden'
 import { useSteamLocaleTexts } from '@/features/steam/hooks/useSteamLocaleTexts'
 import { useKeyboardShortcut } from '@/hooks/useKeyboardShortcut'
 import { EmptyState } from '@/components/feedback/EmptyState'
@@ -16,9 +17,9 @@ import type { Achievement } from '@/types/achievement'
 
 export function GuidePage() {
   const t = useT()
-  const { activeGame, loading } = useAppData()
+  const { activeGame, loading, settings } = useAppData()
   const { achievements, toggleCompleted, patch, create, remove } = useAchievements(activeGame?.appId)
-  const filters = useAchievementFilters(achievements)
+  const filters = useAchievementFilters(achievements, showHiddenAchievements(settings))
   useSteamLocaleTexts(activeGame?.appId)
   const { openModal } = useModal()
   const searchRef = useRef<HTMLInputElement>(null)

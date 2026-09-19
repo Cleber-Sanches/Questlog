@@ -24,6 +24,8 @@ export interface Achievement {
   /** Progresso parcial Steam (ex.: 14/20). Só existe em conquistas com barra. */
   progress?: number | null
   progressMax?: number | null
+  /** Oculta na Steam até desbloquear. */
+  hidden?: boolean
 }
 
 export type StatusFilter = 'all' | 'completed' | 'pending'

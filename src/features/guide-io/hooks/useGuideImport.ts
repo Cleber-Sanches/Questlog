@@ -73,6 +73,7 @@ export function useGuideImport() {
             videoUrl: a.videoUrl,
             guideUrl: a.guideUrl,
             completed: false,
+            hidden: Boolean(a.hidden),
           }))
         }
 

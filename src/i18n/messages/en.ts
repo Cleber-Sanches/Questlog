@@ -62,6 +62,8 @@ export const en = {
   'settings.help.sync.p2':
     'You can mark by hand to get ahead. That mark stays. When Steam really unlocks it, the app marks it too.',
   'settings.help.sync.p3': 'Steam does not fill in tips, groups, or difficulty. That is guide work.',
+  'settings.help.sync.p4':
+    'A hidden achievement shows the name and covers the description. In Steam settings, turn on Show hidden to see the text.',
   'settings.help.guide.title': 'Import and export a guide',
   'settings.help.guide.p1':
     'The file carries tips, groups, difficulty, missables, videos, and links. It does not carry what you already did or how far an achievement has gone.',
@@ -169,6 +171,9 @@ export const en = {
   'settings.steam.sync.title': 'Automatic sync',
   'settings.steam.sync.desc': 'Saves unlocked achievements and shows them in the bell',
   'settings.steam.sync.badge': 'Automatic',
+  'settings.steam.hidden.title': 'Show hidden',
+  'settings.steam.hidden.desc':
+    'Shows what you need to do. Off, the description stays covered',
   'settings.steam.folder.title': 'Steam folder',
   'settings.steam.folder.custom': 'Path you set',
   'settings.steam.folder.detected': 'Detected automatically',
@@ -363,6 +368,11 @@ export const en = {
   'time.hoursAgo': '{n} h ago',
   'time.daysAgo': '{n} d ago',
   'achievement.fallback': 'Achievement',
+  'achievement.hidden': 'Hidden achievement',
+  'achievement.hidden.lead': 'Hidden achievement:',
+  'achievement.hidden.desc': 'Unlock it to see what to do',
+  'achievement.hidden.badge': 'Hidden',
+  'achievement.hidden.tip': 'Hidden on Steam until it unlocks',
   'achievement.new': 'New achievement',
 
   'editor.new': 'New achievement',

@@ -52,6 +52,7 @@ export function useAddGame() {
           guideUrl: a.guideUrl || '',
           completed: false,
           missable: false,
+          hidden: Boolean(a.hidden),
         }))
         await achievementsApi.setAll(item.appId, achievements)
         setAchievementsLocal(item.appId, achievements)

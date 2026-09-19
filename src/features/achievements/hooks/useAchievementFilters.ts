@@ -33,7 +33,7 @@ function readSort(): AchievementSort {
   return 'steam'
 }
 
-export function useAchievementFilters(items: Achievement[]) {
+export function useAchievementFilters(items: Achievement[], revealHidden = false) {
   const { locale, bcp47 } = useLocale()
   const [status, setStatus] = useState<StatusFilter>('all')
   const [search, setSearch] = useState('')
@@ -50,14 +50,14 @@ export function useAchievementFilters(items: Achievement[]) {
   }, [sort])
 
   const filtered = useMemo(
-    () => filterAchievements(items, status, search, facets),
-    [items, status, search, facets],
+    () => filterAchievements(items, status, search, facets, revealHidden),
+    [items, status, search, facets, revealHidden],
   )
   const hunt = useMemo(() => {
     if (groupBy !== 'queue') return EMPTY_HUNT
-    const pending = filterAchievements(items, 'pending', search, facets)
+    const pending = filterAchievements(items, 'pending', search, facets, revealHidden)
     return buildHuntQueue(pending, HUNT_QUEUE_LIMIT)
-  }, [groupBy, items, search, facets])
+  }, [groupBy, items, search, facets, revealHidden])
   const sorted = useMemo(
     () => (groupBy === 'queue' ? filtered : sortAchievements(filtered, sort, locale, bcp47)),
     [filtered, groupBy, sort, locale, bcp47],

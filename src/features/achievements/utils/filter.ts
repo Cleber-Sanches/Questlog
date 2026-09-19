@@ -1,5 +1,6 @@
 import type { Achievement, GroupBy, StatusFilter } from '@/types/achievement'
 import { ACH_KEYS, dlcKey, groupKey } from './keys'
+import { isAchievementSpoilered } from './hidden'
 
 export interface FacetFilters {
   difficulties: string[]
@@ -55,6 +56,7 @@ export function filterAchievements(
   status: StatusFilter,
   search: string,
   facets: FacetFilters,
+  revealHidden = true,
 ) {
   const q = search.trim().toLowerCase()
   return items.filter((a) => {
@@ -74,13 +76,13 @@ export function filterAchievements(
     const hay = [
       a.title,
       a.titleEn,
-      a.description,
-      a.descriptionEn,
+      ...(isAchievementSpoilered(a, revealHidden)
+        ? []
+        : [a.description, a.descriptionEn, a.tips]),
       a.apiName,
       a.group,
       a.groupEn,
       a.dlc,
-      a.tips,
       a.reqLevel,
     ]
       .filter(Boolean)

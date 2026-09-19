@@ -20,6 +20,9 @@ export interface SteamProgressAchievement {
   bitIndex: number
   progress?: number | null
   progressMax?: number | null
+  hidden?: boolean
+  description?: string | null
+  descriptionEn?: string | null
 }
 
 export interface SteamProgress {
@@ -52,4 +55,5 @@ export interface SteamAchievementImport {
   guideUrl: string
   tips: string
   globalPercent?: number | null
+  hidden?: boolean
 }

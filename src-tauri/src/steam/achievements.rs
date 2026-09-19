@@ -7,6 +7,7 @@ use crate::steam::paths::{
 };
 use crate::steam::search::validate_app_id;
 use serde::Serialize;
+use serde_json::Value;
 use std::collections::HashMap;
 use std::fs;
 
@@ -34,6 +35,8 @@ pub struct SteamAchievement {
     pub stat_group: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub bit_index: Option<i64>,
+    #[serde(default)]
+    pub hidden: bool,
 }
 
 #[derive(Debug, Serialize)]
@@ -74,6 +77,58 @@ struct LocalEntry {
     icon_hash: Option<String>,
     stat_group: String,
     bit_index: i64,
+    hidden: bool,
+    description: String,
+    description_en: String,
+}
+
+pub fn bit_is_hidden(bit: &Value) -> bool {
+    fn flag(value: Option<&Value>) -> bool {
+        match value {
+            Some(Value::Bool(on)) => *on,
+            Some(Value::Number(n)) => n.as_i64().unwrap_or(0) != 0,
+            Some(Value::String(raw)) => {
+                let text = raw.trim();
+                !text.is_empty() && text != "0" && !text.eq_ignore_ascii_case("false")
+            }
+            _ => false,
+        }
+    }
+    flag(bit.get("hidden")) || flag(bit.pointer("/display/hidden"))
+}
+
+fn display_text(bit: &Value, field: &str, prefer: &str) -> String {
+    let prefer_path = format!("/display/{field}/{prefer}");
+    let english_path = format!("/display/{field}/english");
+    let brazilian_path = format!("/display/{field}/brazilian");
+    bit.pointer(&prefer_path)
+        .or_else(|| bit.pointer(&english_path))
+        .or_else(|| bit.pointer(&brazilian_path))
+        .or_else(|| bit.pointer(&format!("/display/{field}")))
+        .and_then(|v| v.as_str())
+        .unwrap_or("")
+        .trim()
+        .to_string()
+}
+
+pub fn bit_description(bit: &Value, prefer: &str) -> String {
+    let desc = display_text(bit, "desc", prefer);
+    if !desc.is_empty() {
+        return desc;
+    }
+    display_text(bit, "description", prefer)
+}
+
+fn looks_like_hidden_placeholder(title: &str, description: &str) -> bool {
+    let title = title.trim().to_ascii_lowercase();
+    let description = description.trim().to_ascii_lowercase();
+    matches!(
+        title.as_str(),
+        "hidden achievement" | "hidden achievements" | "conquista oculta" | "hidden"
+    ) || title.contains("hidden achievement")
+        || description.contains("hidden achievement")
+        || description.contains("conquista oculta")
+        || description.contains("continue playing to unlock this hidden")
 }
 
 fn decode_html(text: &str) -> String {
@@ -181,6 +236,8 @@ fn read_local_schema(
                 .and_then(|v| v.as_str())
                 .unwrap_or(&api_name)
                 .to_string();
+            let description = bit_description(bit, "brazilian");
+            let description_en = bit_description(bit, "english");
             let entry = LocalEntry {
                 api_name: api_name.clone(),
                 title,
@@ -189,6 +246,9 @@ fn read_local_schema(
                 icon_hash: icon_hash.clone(),
                 stat_group: group_id.clone(),
                 bit_index: bit_index_str.parse().unwrap_or(0),
+                hidden: bit_is_hidden(bit),
+                description,
+                description_en,
             };
             by_api.insert(api_name, entry.clone());
             if let Some(h) = icon_hash {
@@ -413,22 +473,46 @@ fn fetch_achievements_inner(app_id: &str, custom_install_dir: Option<&str>) -> A
 
         let dlc_label = assign_dlc(Some(&api_name), &row.description, &dlc.by_api_name);
 
-        let (title_en, description_en) = english_by_index
+        let schema = local
+            .as_ref()
+            .and_then(|(_, by_api)| by_api.get(&api_name));
+        let schema_hidden = schema.map(|entry| entry.hidden).unwrap_or(false);
+        let hidden = schema_hidden || looks_like_hidden_placeholder(&row.title, &row.description);
+
+        let mut description = row.description;
+        if description.trim().is_empty() || looks_like_hidden_placeholder("", &description) {
+            if let Some(entry) = schema {
+                if !entry.description.is_empty() {
+                    description = entry.description.clone();
+                }
+            }
+        }
+
+        let (mut title_en, mut description_en) = english_by_index
             .get(idx)
             .cloned()
             .or_else(|| {
-                local
-                    .as_ref()
-                    .and_then(|(_, by_api)| by_api.get(&api_name))
-                    .map(|e| (e.title_en.clone(), String::new()))
+                schema.map(|e| (e.title_en.clone(), e.description_en.clone()))
             })
             .unwrap_or_default();
+        if description_en.trim().is_empty() || looks_like_hidden_placeholder("", &description_en) {
+            if let Some(entry) = schema {
+                if !entry.description_en.is_empty() {
+                    description_en = entry.description_en.clone();
+                }
+            }
+        }
+        if title_en.trim().is_empty() {
+            if let Some(entry) = schema {
+                title_en = entry.title_en.clone();
+            }
+        }
 
         achievements.push(SteamAchievement {
             id: (idx as i64) + 1,
             api_name,
             title: row.title,
-            description: row.description,
+            description,
             title_en,
             description_en,
             icon: row.icon,
@@ -442,6 +526,7 @@ fn fetch_achievements_inner(app_id: &str, custom_install_dir: Option<&str>) -> A
             global_percent,
             stat_group,
             bit_index,
+            hidden,
         });
     }
 

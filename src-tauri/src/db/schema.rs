@@ -84,6 +84,7 @@ pub fn migrate(conn: &Connection) -> AppResult<()> {
         "ALTER TABLE achievements ADD COLUMN group_en TEXT",
         "ALTER TABLE achievements ADD COLUMN progress INTEGER",
         "ALTER TABLE achievements ADD COLUMN progress_max INTEGER",
+        "ALTER TABLE achievements ADD COLUMN hidden INTEGER NOT NULL DEFAULT 0",
     ] {
         let _ = conn.execute(sql, []);
     }

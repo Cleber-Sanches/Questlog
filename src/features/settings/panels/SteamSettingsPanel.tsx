@@ -14,6 +14,7 @@ import {
   type OverlayChime,
   type UnlockOverlayPayload,
 } from '@/features/overlay/types'
+import { SHOW_HIDDEN_SETTING_KEY, showHiddenAchievements } from '@/features/achievements/utils/hidden'
 
 export function SteamSettingsPanel() {
   const t = useT()
@@ -30,6 +31,7 @@ export function SteamSettingsPanel() {
     false,
   )
   const trayOn = settingEnabled(settings, TRAY_SETTING_KEY, true)
+  const showHidden = showHiddenAchievements(settings)
   const extrasLocked = !overlayOn
   const soundProgressLocked = extrasLocked || !overlaySoundOn || !overlayProgressOn
 
@@ -101,6 +103,29 @@ export function SteamSettingsPanel() {
               </div>
             </div>
             <span className="stStatusPill">{t('settings.steam.sync.badge')}</span>
+          </div>
+
+          <div className="stPanelDivider" role="separator" />
+
+          <div className="stRow">
+            <div className="stRowLead">
+              <span className="stRowIcon" aria-hidden>
+                <i className="ph-fill ph-eye-slash" />
+              </span>
+              <div className="stRowCopy">
+                <div className="stRowTitle">{t('settings.steam.hidden.title')}</div>
+                <p className="stRowDesc">{t('settings.steam.hidden.desc')}</p>
+              </div>
+            </div>
+            <label className="settingsSwitch">
+              <input
+                type="checkbox"
+                checked={showHidden}
+                onChange={(e) => toggle(SHOW_HIDDEN_SETTING_KEY, e.target.checked)}
+                aria-label={t('settings.steam.hidden.title')}
+              />
+              <span className="settingsSwitchUi" aria-hidden />
+            </label>
           </div>
         </div>
       </section>

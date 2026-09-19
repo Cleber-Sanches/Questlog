@@ -63,6 +63,8 @@ export const pt = {
   'settings.help.sync.p2':
     'Pode marcar na mão se quiser adiantar. Essa marca não some. Quando a Steam destrava de verdade, o app também marca.',
   'settings.help.sync.p3': 'Dicas, grupos e dificuldade a Steam não preenche. Isso é do guia.',
+  'settings.help.sync.p4':
+    'Conquista oculta mostra o nome e cobre a descrição. Em Steam, ligue Mostrar ocultas para ver o texto.',
   'settings.help.guide.title': 'Importar e exportar guia',
   'settings.help.guide.p1':
     'O arquivo leva dicas, grupos, dificuldade, perdíveis, vídeos e links. Não leva o que você já fez nem o andamento da conquista.',
@@ -175,6 +177,9 @@ export const pt = {
   'settings.steam.sync.title': 'Sincronização automática',
   'settings.steam.sync.desc': 'Salva conquistas liberadas e mostra no sino',
   'settings.steam.sync.badge': 'Automática',
+  'settings.steam.hidden.title': 'Mostrar ocultas',
+  'settings.steam.hidden.desc':
+    'Mostra o que precisa fazer. Desligado, a descrição fica coberta',
   'settings.steam.folder.title': 'Pasta da Steam',
   'settings.steam.folder.custom': 'Caminho definido por você',
   'settings.steam.folder.detected': 'Detectada automaticamente',
@@ -376,6 +381,11 @@ export const pt = {
   'time.hoursAgo': '{n} h atrás',
   'time.daysAgo': '{n} d atrás',
   'achievement.fallback': 'Conquista',
+  'achievement.hidden': 'Conquista oculta',
+  'achievement.hidden.lead': 'Conquista oculta:',
+  'achievement.hidden.desc': 'Desbloqueie para ver o que precisa fazer',
+  'achievement.hidden.badge': 'Oculta',
+  'achievement.hidden.tip': 'Oculta na Steam até desbloquear',
   'achievement.new': 'Nova conquista',
 
   // Editor

@@ -76,6 +76,8 @@ pub struct Achievement {
     pub progress: Option<i64>,
     #[serde(default)]
     pub progress_max: Option<i64>,
+    #[serde(default)]
+    pub hidden: bool,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -231,7 +233,7 @@ pub fn list_achievements(conn: &Connection, app_id: &str) -> AppResult<Vec<Achie
         "SELECT id, api_name, title, description, icon_url, global_percent, group_name, dlc,
                 tips, video_url, guide_url, difficulty, missable, req_level,
                 completed, completed_manual, unlocked_at, title_en, description_en, group_en,
-                progress, progress_max
+                progress, progress_max, hidden
          FROM achievements WHERE app_id = ?1 ORDER BY id",
     )?;
     let rows = stmt.query_map(params![app_id], |row| {
@@ -258,6 +260,7 @@ pub fn list_achievements(conn: &Connection, app_id: &str) -> AppResult<Vec<Achie
             group_en: row.get(19)?,
             progress: row.get(20)?,
             progress_max: row.get(21)?,
+            hidden: row.get::<_, i64>(22).unwrap_or(0) != 0,
         })
     })?;
     Ok(rows.filter_map(|r| r.ok()).collect())
@@ -271,8 +274,8 @@ pub fn set_achievements(conn: &Connection, app_id: &str, items: &[Achievement]) 
                 id, app_id, api_name, title, description, icon_url, global_percent,
                 group_name, dlc, tips, video_url, guide_url, difficulty, missable, req_level,
                 completed, completed_manual, unlocked_at, title_en, description_en, group_en,
-                progress, progress_max
-             ) VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23)",
+                progress, progress_max, hidden
+             ) VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24)",
             params![
                 item.id,
                 app_id,
@@ -297,6 +300,7 @@ pub fn set_achievements(conn: &Connection, app_id: &str, items: &[Achievement]) 
                 item.group_en,
                 item.progress,
                 item.progress_max,
+                if item.hidden { 1 } else { 0 },
             ],
         )?;
     }
@@ -310,8 +314,8 @@ pub fn patch_achievement(conn: &Connection, app_id: &str, item: &Achievement) ->
             group_name = ?6, dlc = ?7, tips = ?8, video_url = ?9, guide_url = ?10,
             difficulty = ?11, missable = ?12, req_level = ?13, completed = ?14,
             completed_manual = ?15, unlocked_at = ?16, title_en = ?17, description_en = ?18,
-            group_en = ?19, progress = ?20, progress_max = ?21
-         WHERE app_id = ?22 AND id = ?23",
+            group_en = ?19, progress = ?20, progress_max = ?21, hidden = ?22
+         WHERE app_id = ?23 AND id = ?24",
         params![
             item.api_name,
             item.title,
@@ -334,6 +338,7 @@ pub fn patch_achievement(conn: &Connection, app_id: &str, item: &Achievement) ->
             item.group_en,
             item.progress,
             item.progress_max,
+            if item.hidden { 1 } else { 0 },
             app_id,
             item.id,
         ],
@@ -347,8 +352,8 @@ pub fn insert_achievement(conn: &Connection, app_id: &str, item: &Achievement) -
             id, app_id, api_name, title, description, icon_url, global_percent,
             group_name, dlc, tips, video_url, guide_url, difficulty, missable, req_level,
             completed, completed_manual, unlocked_at, title_en, description_en, group_en,
-            progress, progress_max
-         ) VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23)",
+            progress, progress_max, hidden
+         ) VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24)",
         params![
             item.id,
             app_id,
@@ -373,6 +378,7 @@ pub fn insert_achievement(conn: &Connection, app_id: &str, item: &Achievement) -
             item.group_en,
             item.progress,
             item.progress_max,
+            if item.hidden { 1 } else { 0 },
         ],
     )?;
     Ok(())

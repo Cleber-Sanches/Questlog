@@ -11,11 +11,10 @@ export function achievementTitle(a: Achievement, locale: Locale): string {
 }
 
 export function achievementDescription(a: Achievement, locale: Locale): string {
-  if (locale === 'en') {
-    const en = a.descriptionEn?.trim()
-    if (en) return en
-  }
-  return a.description || ''
+  const pt = a.description?.trim() || ''
+  const en = a.descriptionEn?.trim() || ''
+  if (locale === 'en') return en || pt
+  return pt || en
 }
 
 export function achievementGroup(a: Achievement, locale: Locale): string {

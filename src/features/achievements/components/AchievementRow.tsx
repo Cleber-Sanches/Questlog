@@ -8,6 +8,7 @@ import { useAppData } from '@/app/providers/AppDataProvider'
 import { useT, useLocale } from '@/app/providers/LocaleProvider'
 import type { MessageKey } from '@/i18n'
 import { achievementDescription, achievementGroup, achievementTitle } from '@/features/achievements/utils/display'
+import { isAchievementSpoilered, showHiddenAchievements } from '@/features/achievements/utils/hidden'
 import { isBaseDlc, isPlaceholderGroup } from '@/features/achievements/utils/keys'
 import { AchievementEditor } from './AchievementEditor'
 import { VideoModal } from '@/components/overlay/VideoModal'
@@ -17,6 +18,7 @@ import { DifficultyIcon } from './DifficultyIcon'
 import { TipsHtml } from './TipsHtml'
 import { tipsHasImage } from '@/features/media/tipsHtml'
 import { Tooltip } from '@/components/ui/Tooltip'
+import { SegmentedFill } from '@/components/ui/SegmentedBar'
 
 const DIFF_LABEL_KEYS: Record<'easy' | 'medium' | 'hard', MessageKey> = {
   easy: 'difficulty.easy',
@@ -56,10 +58,12 @@ export function AchievementRow({
   onDelete: () => void
 }) {
   const { openModal } = useModal()
-  const { activeGame } = useAppData()
+  const { activeGame, settings } = useAppData()
   const t = useT()
   const { locale, bcp47 } = useLocale()
   const appId = activeGame?.appId || 'misc'
+  const revealHidden = showHiddenAchievements(settings)
+  const spoilered = isAchievementSpoilered(achievement, revealHidden)
   const title = achievementTitle(achievement, locale)
   const description = achievementDescription(achievement, locale)
   const groupLabel = achievementGroup(achievement, locale)
@@ -69,10 +73,10 @@ export function AchievementRow({
   const dlc = (achievement.dlc || '').trim()
   const showDlc = (groupBy === 'flat' || groupBy === 'queue') && dlc && !isBaseDlc(dlc)
   const showGroup = (groupBy === 'flat' || groupBy === 'queue') && !isPlaceholderGroup(achievement.group)
-  const hasVideo = !!achievement.videoUrl?.trim()
-  const hasGuide = !!achievement.guideUrl?.trim()
-  const hasTips = !tipsIsEmpty(achievement.tips)
-  const hasTipImages = tipsHasImage(achievement.tips)
+  const hasVideo = !spoilered && !!achievement.videoUrl?.trim()
+  const hasGuide = !spoilered && !!achievement.guideUrl?.trim()
+  const hasTips = !spoilered && !tipsIsEmpty(achievement.tips)
+  const hasTipImages = !spoilered && tipsHasImage(achievement.tips)
   const reqLevel = achievement.reqLevel?.trim()
   const progressMax =
     typeof achievement.progressMax === 'number' && achievement.progressMax > 0
@@ -168,7 +172,7 @@ export function AchievementRow({
 
   return (
     <article
-      className={`achievement isClickable${compact ? ' isCompact' : ''}${selected ? ' isSelected' : ''}${completed ? ' isCompleted' : ''}${isManual ? ' isManual' : ''}`}
+      className={`achievement isClickable${compact ? ' isCompact' : ''}${selected ? ' isSelected' : ''}${completed ? ' isCompleted' : ''}${isManual ? ' isManual' : ''}${spoilered ? ' isSpoiler' : ''}`}
       onClick={(e) => {
         const t = e.target as HTMLElement
         // Só ignora controles reais (botões/links). cardMeta / helpLinks
@@ -217,23 +221,25 @@ export function AchievementRow({
           )}
         </div>
 
-        <p>{description}</p>
+        {spoilered ? (
+          <p className="hiddenDesc">
+            <span className="hiddenDescLead">{t('achievement.hidden.lead')}</span>
+            {description ? <span className="hiddenDescText">{description}</span> : null}
+          </p>
+        ) : (
+          <p>{description}</p>
+        )}
 
         {progressMax != null && progressCurrent != null ? (
           <div
             className={`achieveProgress${completed ? ' isDone' : ''}`}
             title={progressTitle}
           >
-            <div
-              className="achieveProgressTrack"
-              role="progressbar"
-              aria-valuemin={0}
-              aria-valuemax={progressMax}
-              aria-valuenow={progressCurrent}
-              aria-label={progressTitle}
-            >
-              <div className="achieveProgressFill" style={{ width: `${progressPct}%` }} />
-            </div>
+            <SegmentedFill
+              percent={progressPct}
+              brand
+              done={completed || progressCurrent >= progressMax}
+            />
             <span className="achieveProgressText">{progressLabel}</span>
           </div>
         ) : null}

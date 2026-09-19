@@ -1,10 +1,13 @@
 .notifBell {
   position: relative;
   display: inline-flex;
+  overflow: visible;
 }
 
-.notifBell .btn-icon {
-  position: relative;
+.notifBell .uiTooltipWrap,
+.notifBell .btn-icon,
+.list-pane-toolbarRight .notifBell .btn-icon,
+.chromeActions .notifBell .btn-icon {
   overflow: visible;
 }
 
@@ -13,12 +16,13 @@
   align-items: center;
   gap: 6px;
   flex-shrink: 0;
+  overflow: visible;
 }
 
 .notifBellBadge {
   position: absolute;
-  top: -3px;
-  right: -3px;
+  top: -2px;
+  right: -2px;
   z-index: 1;
   box-sizing: border-box;
   display: inline-flex;

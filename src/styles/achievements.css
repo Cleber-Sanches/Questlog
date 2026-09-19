@@ -199,6 +199,12 @@
   line-clamp: 1;
 }
 
+.achievement.isCompact .hiddenDesc {
+  display: flex;
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+}
+
 .achievement.isCompact .cardMeta,
 .achievement.isCompact .titleMarks,
 .achievement.isCompact .manualBadge {
@@ -341,6 +347,45 @@
   border-color: var(--border);
 }
 
+.achievementIcon.isHidden {
+  display: grid;
+  place-items: center;
+  color: var(--color-text-muted);
+  background: var(--color-row-hover);
+}
+
+.achievementIcon.isHidden i {
+  font-size: 18px;
+}
+
+.hiddenDesc {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.hiddenDescLead {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.hiddenDescText {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  filter: blur(2px);
+  user-select: none;
+  transition: filter 0.12s ease;
+}
+
+.hiddenDesc:hover .hiddenDescText {
+  filter: none;
+  user-select: text;
+}
+
 .info {
   flex: 1;
   min-width: 0;
@@ -383,6 +428,14 @@
   max-width: 100%;
 }
 
+.info p.hiddenDesc {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  text-overflow: clip;
+}
+
 @media (min-width: 1200px) {
   .info p {
     white-space: normal;
@@ -391,6 +444,13 @@
     -webkit-line-clamp: 2;
     line-clamp: 2;
     overflow: hidden;
+  }
+
+  .info p.hiddenDesc {
+    display: flex;
+    white-space: nowrap;
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
   }
 }
 
@@ -450,6 +510,23 @@
   line-height: 1;
   text-transform: uppercase;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+
+.hiddenTag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 16px;
+  padding: 0 5px;
+  border-radius: 2px;
+  background: #3f3f46;
+  color: var(--color-text-muted);
+  border: 1px solid var(--icon-muted);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .levelTag {
@@ -636,7 +713,8 @@
   color: rgb(255 255 255 / 0.42);
 }
 
-.achievement.isCompleted .steamDlcTag {
+.achievement.isCompleted .steamDlcTag,
+.achievement.isCompleted .hiddenTag {
   opacity: 0.7;
 }
 
@@ -660,24 +738,20 @@
   max-width: 240px;
 }
 
-.achieveProgressTrack {
+.achieveProgress .segmentedBar {
   flex: 1;
   min-width: 72px;
-  height: 4px;
-  border-radius: 999px;
-  background: var(--overlay-10);
-  overflow: hidden;
+  height: 6px;
+  gap: 2px;
 }
 
-.achieveProgressFill {
-  height: 100%;
-  border-radius: inherit;
-  background: var(--accent-brand-bright);
-  transition: width 0.28s ease;
+.achieveProgress .segmentedBarTip {
+  transition: flex-grow 0.28s ease-out;
 }
 
-.achieveProgress.isDone .achieveProgressFill {
-  background: var(--color-success);
+.achieveProgress .segmentedBarSeg {
+  min-width: 4px;
+  border-radius: 4px;
 }
 
 .achieveProgressText {
@@ -704,9 +778,10 @@
   gap: 6px;
 }
 
-.achievement.isCompact .achieveProgressTrack {
+.achievement.isCompact .achieveProgress .segmentedBar {
   min-width: 48px;
-  height: 3px;
+  height: 5px;
+  gap: 2px;
 }
 
 .achievement.isCompact .achieveProgressText {
@@ -716,10 +791,10 @@
 .globalStat {
   display: inline-flex;
   align-items: center;
-  color: #d4d4d8;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
+  color: var(--fg-muted);
+  font-family: var(--font-sans);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
   line-height: 1.25;

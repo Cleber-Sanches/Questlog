@@ -5,7 +5,7 @@ const BLOCKS: Array<{ icon: string; titleKey: MessageKey; bodyKeys: MessageKey[]
   {
     icon: 'ph-fill ph-arrows-clockwise',
     titleKey: 'settings.help.sync.title',
-    bodyKeys: ['settings.help.sync.p1', 'settings.help.sync.p2', 'settings.help.sync.p3'],
+    bodyKeys: ['settings.help.sync.p1', 'settings.help.sync.p2', 'settings.help.sync.p3', 'settings.help.sync.p4'],
   },
   {
     icon: 'ph-fill ph-book-open',

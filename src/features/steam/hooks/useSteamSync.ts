@@ -17,6 +17,7 @@ import {
   settingEnabled,
   type OverlayChime,
 } from '@/features/overlay/types'
+import { looksLikeHiddenPlaceholder } from '@/features/achievements/utils/hidden'
 import type { MessageKey } from '@/i18n'
 import type { Achievement } from '@/types/achievement'
 import type { SteamProgressAchievement } from '@/types/steam'
@@ -238,7 +239,10 @@ export function useSteamSync(appId?: string | null) {
         .filter(([, p]) => typeof p.progressMax === 'number' && p.progressMax > 0)
         .map(([api, p]) => `${api}:${p.progress ?? 0}/${p.progressMax}`)
         .sort()
-      const fingerprint = `${progress.source || 'local'}:${unlockedApis.join('|')}#${progressParts.join('|')}`
+      const descCount = Object.values(progress.achievements || {}).filter(
+        (p) => (p.description || p.descriptionEn || '').trim(),
+      ).length
+      const fingerprint = `${progress.source || 'local'}:${unlockedApis.join('|')}#${progressParts.join('|')}#d${descCount}`
 
       if (
         fingerprint === lastFingerprint.current &&
@@ -280,6 +284,24 @@ export function useSteamSync(appId?: string | null) {
           hit.api
         ) {
           updated = { ...updated, apiName: hit.api }
+          rowChanged = true
+        }
+
+        if (typeof hit.row.hidden === 'boolean' && Boolean(a.hidden) !== hit.row.hidden) {
+          updated = { ...updated, hidden: hit.row.hidden }
+          rowChanged = true
+        }
+
+        const steamDesc = hit.row.description?.trim() || ''
+        const steamDescEn = hit.row.descriptionEn?.trim() || ''
+        const currentDesc = (updated.description || '').trim()
+        if (steamDesc && (!currentDesc || looksLikeHiddenPlaceholder(currentDesc))) {
+          updated = { ...updated, description: steamDesc }
+          rowChanged = true
+        }
+        const currentDescEn = (updated.descriptionEn || '').trim()
+        if (steamDescEn && (!currentDescEn || looksLikeHiddenPlaceholder(currentDescEn))) {
+          updated = { ...updated, descriptionEn: steamDescEn }
           rowChanged = true
         }
 

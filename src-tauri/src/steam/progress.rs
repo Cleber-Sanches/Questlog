@@ -1,4 +1,5 @@
 use crate::error::{AppError, AppResult};
+use crate::steam::achievements::{bit_description, bit_is_hidden};
 use crate::steam::bvdf;
 use crate::steam::paths::{
     extract_icon_hash, fetch_text, find_steam_path, pick_active_user, SteamUser,
@@ -25,6 +26,12 @@ pub struct ProgressAchievement {
     pub progress: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub progress_max: Option<i64>,
+    #[serde(default)]
+    pub hidden: bool,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    pub description: String,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    pub description_en: String,
 }
 
 #[derive(Debug, Serialize)]
@@ -142,6 +149,8 @@ pub fn get_steam_progress(app_id: &str, custom_install_dir: Option<&str>) -> App
                 .and_then(|v| v.as_str())
                 .unwrap_or(&name)
                 .to_string();
+            let description = bit_description(bit, "brazilian");
+            let description_en = bit_description(bit, "english");
 
             let icon = bit
                 .pointer("/display/icon")
@@ -164,6 +173,9 @@ pub fn get_steam_progress(app_id: &str, custom_install_dir: Option<&str>) -> App
                     bit_index,
                     progress,
                     progress_max,
+                    hidden: bit_is_hidden(bit),
+                    description,
+                    description_en,
                 },
             );
         }
@@ -209,6 +221,9 @@ pub fn get_steam_progress(app_id: &str, custom_install_dir: Option<&str>) -> App
                         bit_index: -1,
                         progress: None,
                         progress_max: None,
+                        hidden: false,
+                        description: String::new(),
+                        description_en: String::new(),
                     },
                 );
                 applied += 1;

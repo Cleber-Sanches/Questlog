@@ -66,10 +66,22 @@ export function sortAchievements(
   sort: AchievementSort,
   locale: Locale,
   bcp47: string,
+  spoilered?: (item: Achievement) => boolean,
 ) {
   if (sort === 'steam' || items.length < 2) return items
+  const maskedTitle = (item: Achievement) =>
+    spoilered?.(item) ? '\uFFFF' : achievementTitle(item, locale)
+  const compare = (a: Achievement, b: Achievement) => {
+    if (sort === 'az') {
+      return maskedTitle(a).localeCompare(maskedTitle(b), bcp47, {
+        sensitivity: 'base',
+        numeric: true,
+      })
+    }
+    return compareBySort(a, b, sort, locale, bcp47)
+  }
   return items
     .map((item, index) => ({ item, index }))
-    .sort((a, b) => compareBySort(a.item, b.item, sort, locale, bcp47) || a.index - b.index)
+    .sort((a, b) => compare(a.item, b.item) || a.index - b.index)
     .map((entry) => entry.item)
 }
