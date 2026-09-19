@@ -40,7 +40,7 @@ type NotificationContextValue = {
 }
 
 const STORAGE_KEY = 'guia.notifications.v1'
-const MAX_ITEMS = 80
+const MAX_ITEMS = 200
 
 const NotificationContext = createContext<NotificationContextValue | null>(null)
 

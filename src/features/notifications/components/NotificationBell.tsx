@@ -1,10 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import { BellIcon } from '@/components/icons/raycast'
 import { Button } from '@/components/ui/Button'
+import { useAppData } from '@/app/providers/AppDataProvider'
 import { useLocale, useT } from '@/app/providers/LocaleProvider'
 import { useNotifications } from '@/app/providers/NotificationProvider'
+import { useRouter } from '@/app/router'
 import type { MessageKey } from '@/i18n'
 import type { Achievement } from '@/types/achievement'
+import type { Game } from '@/types/game'
 
 type HistoryItem = {
   id: string
@@ -13,9 +16,24 @@ type HistoryItem = {
   icon?: string | null
   createdAt: number
   read: boolean
+  appId?: string
+  gameName?: string
 }
 
 type Translate = (key: MessageKey, vars?: Record<string, string | number>) => string
+type Scope = 'all' | 'game'
+
+const SESSION_START = Date.now()
+
+function sameDay(a: Date, b: Date) {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
+}
+
+function startOfDay(ts: number) {
+  const d = new Date(ts)
+  d.setHours(0, 0, 0, 0)
+  return d.getTime()
+}
 
 function formatWhen(ts: number, t: Translate, bcp47: string) {
   if (!ts || Number.isNaN(ts)) return ''
@@ -40,33 +58,57 @@ function formatWhen(ts: number, t: Translate, bcp47: string) {
   }
 }
 
+function dayLabel(ts: number, t: Translate, bcp47: string) {
+  const now = new Date()
+  const day = new Date(ts)
+  if (sameDay(now, day)) return t('notif.group.today')
+  const yesterday = new Date(now)
+  yesterday.setDate(yesterday.getDate() - 1)
+  if (sameDay(yesterday, day)) return t('notif.group.yesterday')
+  try {
+    return new Intl.DateTimeFormat(bcp47, { day: 'numeric', month: 'long' }).format(day)
+  } catch {
+    return day.toLocaleDateString(bcp47)
+  }
+}
+
 function buildUnlockHistory(
-  achievements: Achievement[],
+  games: Game[],
+  byAppId: Record<string, Achievement[]>,
   unreadIds: Set<string>,
   t: Translate,
 ): HistoryItem[] {
-  return achievements
-    .filter((a) => a.completed)
-    .map((a) => {
-      const parsed = a.unlockedAt ? Date.parse(a.unlockedAt) : NaN
-      const id = `unlock-${a.id}`
-      return {
+  const gameById = new Map(games.map((game) => [game.appId, game]))
+  const out: HistoryItem[] = []
+  for (const [appId, list] of Object.entries(byAppId)) {
+    const game = gameById.get(appId)
+    for (const achievement of list) {
+      if (!achievement.completed) continue
+      const parsed = achievement.unlockedAt ? Date.parse(achievement.unlockedAt) : NaN
+      const id = `unlock-${achievement.id}`
+      out.push({
         id,
-        title: a.title || t('achievement.fallback'),
-        body: a.completedManual ? t('notif.manualComplete') : undefined,
-        icon: a.icon,
-        createdAt: Number.isFinite(parsed) ? parsed : a.id,
+        title: achievement.title || t('achievement.fallback'),
+        body: achievement.completedManual ? t('notif.manualComplete') : undefined,
+        icon: achievement.icon,
+        createdAt: Number.isFinite(parsed) ? parsed : achievement.id,
         read: !unreadIds.has(id),
-      }
-    })
-    .sort((a, b) => b.createdAt - a.createdAt)
+        appId,
+        gameName: game?.name,
+      })
+    }
+  }
+  return out.sort((a, b) => b.createdAt - a.createdAt)
 }
 
-export function NotificationBell({ achievements = [] }: { achievements?: Achievement[] }) {
+export function NotificationBell() {
   const t = useT()
   const { bcp47 } = useLocale()
+  const { navigate } = useRouter()
+  const { games, achievementsByAppId, activeGame, setActiveGame } = useAppData()
   const { items, mergeUnlockHistory, markAllRead } = useNotifications()
   const [open, setOpen] = useState(false)
+  const [scope, setScope] = useState<Scope>('all')
   const rootRef = useRef<HTMLDivElement>(null)
 
   const unreadKey = useMemo(
@@ -84,8 +126,39 @@ export function NotificationBell({ achievements = [] }: { achievements?: Achieve
   )
 
   const history = useMemo(
-    () => buildUnlockHistory(achievements, unreadIds, t),
-    [achievements, unreadIds, t],
+    () => buildUnlockHistory(games, achievementsByAppId, unreadIds, t),
+    [games, achievementsByAppId, unreadIds, t],
+  )
+
+  const scoped = useMemo(() => {
+    if (scope !== 'game' || !activeGame) return history
+    return history.filter((item) => item.appId === activeGame.appId)
+  }, [history, scope, activeGame])
+
+  const groups = useMemo(() => {
+    const buckets: { key: number; label: string; items: HistoryItem[] }[] = []
+    const index = new Map<number, number>()
+    for (const item of scoped) {
+      const key = startOfDay(item.createdAt)
+      const existing = index.get(key)
+      if (existing == null) {
+        index.set(key, buckets.length)
+        buckets.push({ key, label: dayLabel(item.createdAt, t, bcp47), items: [item] })
+      } else {
+        buckets[existing].items.push(item)
+      }
+    }
+    return buckets
+  }, [scoped, t, bcp47])
+
+  const todayCount = useMemo(() => {
+    const start = startOfDay(Date.now())
+    return scoped.filter((item) => item.createdAt >= start).length
+  }, [scoped])
+
+  const sessionCount = useMemo(
+    () => scoped.filter((item) => item.createdAt >= SESSION_START).length,
+    [scoped],
   )
 
   const badgeCount = useMemo(() => history.filter((h) => !h.read).length, [history])
@@ -119,6 +192,17 @@ export function NotificationBell({ achievements = [] }: { achievements?: Achieve
     }
   }, [open, markAllRead])
 
+  useEffect(() => {
+    if (!activeGame && scope === 'game') setScope('all')
+  }, [activeGame, scope])
+
+  async function openItem(item: HistoryItem) {
+    setOpen(false)
+    if (!item.appId) return
+    if (activeGame?.appId !== item.appId) await setActiveGame(item.appId)
+    navigate('guide')
+  }
+
   return (
     <div className="notifBell" ref={rootRef}>
       <Button
@@ -147,29 +231,68 @@ export function NotificationBell({ achievements = [] }: { achievements?: Achieve
         <div className="notifPanel" role="dialog" aria-label={t('notif.title')}>
           <div className="notifPanelHead">
             <span className="notifPanelTitle">{t('notif.heading')}</span>
-            {history.length > 0 ? (
-              <span className="notifPanelCount">{history.length}</span>
+            {scoped.length > 0 ? (
+              <span className="notifPanelCount">{scoped.length}</span>
             ) : null}
           </div>
-          {history.length === 0 ? (
+          {activeGame ? (
+            <div className="notifFilters" role="tablist" aria-label={t('notif.filter.aria')}>
+              <button
+                type="button"
+                className={scope === 'all' ? 'isActive' : undefined}
+                onClick={() => setScope('all')}
+              >
+                {t('notif.filter.all')}
+              </button>
+              <button
+                type="button"
+                className={scope === 'game' ? 'isActive' : undefined}
+                onClick={() => setScope('game')}
+              >
+                {t('notif.filter.game')}
+              </button>
+            </div>
+          ) : null}
+          {scope === 'game' && scoped.length > 0 ? (
+            <p className="notifScope">
+              {t('notif.scope.today', { n: todayCount })}
+              {' · '}
+              {t('notif.scope.session', { n: sessionCount })}
+            </p>
+          ) : null}
+          {scoped.length === 0 ? (
             <p className="notifEmpty">{t('notif.empty')}</p>
           ) : (
             <ul className="notifList">
-              {history.map((n) => (
-                <li key={n.id} className={n.read ? 'notifItem' : 'notifItem is-unread'}>
-                  {n.icon ? (
-                    <img className="notifItemIcon" src={n.icon} alt="" width={28} height={28} />
-                  ) : (
-                    <span className="notifItemIconFallback" aria-hidden>
-                      <BellIcon width={14} height={14} />
-                    </span>
-                  )}
-                  <div className="notifItemBody">
-                    <p className="notifItemTitle">{n.title}</p>
-                    {n.body ? <p className="notifItemText">{n.body}</p> : null}
-                    <p className="notifItemWhen">{formatWhen(n.createdAt, t, bcp47)}</p>
-                  </div>
-                </li>
+              {groups.map((group) => (
+                <Fragment key={group.key}>
+                  <li className="notifGroupLabel">{group.label}</li>
+                  {group.items.map((n) => (
+                    <li key={n.id}>
+                      <button
+                        type="button"
+                        className={n.read ? 'notifItem' : 'notifItem is-unread'}
+                        onClick={() => void openItem(n)}
+                      >
+                        {n.icon ? (
+                          <img className="notifItemIcon" src={n.icon} alt="" width={28} height={28} />
+                        ) : (
+                          <span className="notifItemIconFallback" aria-hidden>
+                            <BellIcon width={14} height={14} />
+                          </span>
+                        )}
+                        <div className="notifItemBody">
+                          <p className="notifItemTitle">{n.title}</p>
+                          {n.gameName && scope === 'all' ? (
+                            <p className="notifItemText">{n.gameName}</p>
+                          ) : null}
+                          {n.body ? <p className="notifItemText">{n.body}</p> : null}
+                          <p className="notifItemWhen">{formatWhen(n.createdAt, t, bcp47)}</p>
+                        </div>
+                      </button>
+                    </li>
+                  ))}
+                </Fragment>
               ))}
             </ul>
           )}

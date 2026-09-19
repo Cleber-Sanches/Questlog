@@ -1,29 +1,32 @@
 import { useEffect, useRef, useState } from 'react'
-import { useAppUpdater } from '@/features/updater/hooks/useAppUpdater'
+import { useUpdater } from '@/app/providers/UpdaterProvider'
 import { UpdateAlertDialog } from './UpdateAlertDialog'
 
-/** Verifica atualizações após abrir e mostra um alerta se houver versão nova. */
+/** Mostra o alerta quando o check automático acha versão nova. */
 export function AutoUpdateCheck() {
-  const { phase, availableVersion, installUpdate } = useAppUpdater({ autoCheck: true })
-  const [alertVersion, setAlertVersion] = useState<string | null>(null)
+  const { phase, availableVersion, progress, installUpdate } = useUpdater()
+  const [open, setOpen] = useState(false)
   const shown = useRef(false)
+  const busy = phase === 'downloading' || phase === 'installing'
 
   useEffect(() => {
     if (phase !== 'available' || !availableVersion || shown.current) return
     shown.current = true
-    setAlertVersion(availableVersion)
+    setOpen(true)
   }, [phase, availableVersion])
 
-  if (!alertVersion) return null
+  if (!open || !availableVersion) return null
 
   return (
     <UpdateAlertDialog
-      version={alertVersion}
-      onDismiss={() => setAlertVersion(null)}
-      onInstall={() => {
-        void installUpdate()
-        setAlertVersion(null)
+      version={availableVersion}
+      phase={phase}
+      progress={progress}
+      onDismiss={() => {
+        if (busy) return
+        setOpen(false)
       }}
+      onInstall={() => void installUpdate()}
     />
   )
 }

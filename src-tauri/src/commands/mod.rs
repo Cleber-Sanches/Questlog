@@ -1,5 +1,6 @@
 pub mod backup;
 pub mod db;
+pub mod desktop;
 pub mod steam;
 pub mod system;
 pub mod ai;

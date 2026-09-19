@@ -65,6 +65,7 @@
   height: 32px;
   padding: 0;
   gap: 0;
+  overflow: hidden;
 }
 
 .btn-has-ripple {

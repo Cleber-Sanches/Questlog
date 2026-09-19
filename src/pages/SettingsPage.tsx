@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from '@/app/router'
 import { useT } from '@/app/providers/LocaleProvider'
 import { AppShell } from '@/layouts/AppShell'
-import { WindowControls } from '@/components/WindowControls'
+import { ChromeActions } from '@/layouts/ChromeActions'
 import { SidebarCollapseToggle } from '@/features/sidebar/components/SidebarCollapseToggle'
 import { useWindowDrag } from '@/hooks/useWindowDrag'
 import {
@@ -15,6 +15,7 @@ import { AiSettingsPanel } from '@/features/settings/panels/AiSettingsPanel'
 import { SteamSettingsPanel } from '@/features/settings/panels/SteamSettingsPanel'
 import { LanguageSettingsPanel } from '@/features/settings/panels/LanguageSettingsPanel'
 import { UpdateSettingsPanel } from '@/features/settings/panels/UpdateSettingsPanel'
+import { HelpSettingsPanel } from '@/features/settings/panels/HelpSettingsPanel'
 import type { StatusFilter } from '@/types/achievement'
 
 function renderPanel(id: SettingsSectionId) {
@@ -29,6 +30,8 @@ function renderPanel(id: SettingsSectionId) {
       return <SteamSettingsPanel />
     case 'language':
       return <LanguageSettingsPanel />
+    case 'help':
+      return <HelpSettingsPanel />
     default:
       return null
   }
@@ -37,10 +40,9 @@ function renderPanel(id: SettingsSectionId) {
 const groups = groupSettingsItems(SETTINGS_ITEMS)
 
 export function SettingsPage() {
-  const { navigate } = useRouter()
+  const { navigate, settingsSection, setSettingsSection } = useRouter()
   const { bind } = useWindowDrag()
   const t = useT()
-  const [section, setSection] = useState<SettingsSectionId>('ai')
   const [status, setStatus] = useState<StatusFilter>('all')
 
   useEffect(() => {
@@ -60,26 +62,26 @@ export function SettingsPage() {
       }}
     >
       <div className="settings-layout">
-        <section className="settings-pane" aria-label={t('settings.nav.language')}>
+        <section className="settings-pane" aria-label={t('settings.nav.aria')}>
           <header className="settingsHero">
             <SidebarCollapseToggle variant="toolbar" />
             <div {...bind({ className: 'settingsHeroDrag' })} aria-hidden />
-            <WindowControls inline />
+            <ChromeActions />
           </header>
 
           <div className="settingsBody">
-            <nav className="settingsNav" aria-label="Seções">
+            <nav className="settingsNav" aria-label={t('settings.nav.aria')}>
               {groups.map((group) => (
                 <div key={group.groupKey} className="settingsNavGroup">
                   <div className="settingsNavGroupLabel">{t(group.groupKey)}</div>
                   {group.items.map((item) => {
-                    const active = section === item.id
+                    const active = settingsSection === item.id
                     return (
                       <button
                         key={item.id}
                         type="button"
                         className={`settingsNavItem${active ? ' is-active' : ''}`}
-                        onClick={() => setSection(item.id)}
+                        onClick={() => setSettingsSection(item.id)}
                         aria-current={active ? 'page' : undefined}
                       >
                         <i className={item.icon} aria-hidden />
@@ -91,8 +93,8 @@ export function SettingsPage() {
               ))}
             </nav>
 
-            <div className="settingsMain" key={section}>
-              {renderPanel(section)}
+            <div className="settingsMain" key={settingsSection}>
+              {renderPanel(settingsSection)}
             </div>
           </div>
         </section>

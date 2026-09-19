@@ -64,7 +64,7 @@ export function BackupSettingsPanel() {
         <div className="stRow">
           <div className="stRowLead">
             <span className="stRowIcon" aria-hidden>
-              <i className="ph ph-cloud-arrow-down" />
+              <i className="ph-fill ph-cloud-arrow-down" />
             </span>
             <div className="stRowCopy">
               <div className="stRowTitle">{t('settings.backup.local.title')}</div>
@@ -92,7 +92,7 @@ export function BackupSettingsPanel() {
         <div className="stBlock">
           <div className="stBlockHead">
             <span className="stRowIcon" aria-hidden>
-              <i className="ph ph-folder-open" />
+              <i className="ph-fill ph-folder-open" />
             </span>
             <div className="stRowCopy">
               <div className="stRowTitle">{t('settings.backup.external.title')}</div>
@@ -127,7 +127,7 @@ export function BackupSettingsPanel() {
         <div className="stRow">
           <div className="stRowLead">
             <span className="stRowIcon" aria-hidden>
-              <i className="ph ph-export" />
+              <i className="ph-fill ph-export" />
             </span>
             <div className="stRowCopy">
               <div className="stRowTitle">{t('settings.backup.profile.title')}</div>
@@ -165,7 +165,7 @@ export function BackupSettingsPanel() {
         <div className="stRow">
           <div className="stRowLead">
             <span className="stRowIcon" aria-hidden>
-              <i className="ph ph-database" />
+              <i className="ph-fill ph-database" />
             </span>
             <div className="stRowCopy">
               <div className="stRowTitle">{t('settings.backup.restore.title')}</div>

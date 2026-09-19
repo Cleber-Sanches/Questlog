@@ -3,7 +3,7 @@ import { useAppData } from '@/app/providers/AppDataProvider'
 import { useT, useLocale } from '@/app/providers/LocaleProvider'
 import { useRouter } from '@/app/router'
 import { AppShell } from '@/layouts/AppShell'
-import { WindowControls } from '@/components/WindowControls'
+import { ChromeActions } from '@/layouts/ChromeActions'
 import { SidebarCollapseToggle } from '@/features/sidebar/components/SidebarCollapseToggle'
 import { Tooltip } from '@/components/ui/Tooltip'
 import { useWindowDrag } from '@/hooks/useWindowDrag'
@@ -119,7 +119,7 @@ export function LibraryPage() {
                 autoFocus={emptyLibrary}
               />
             </label>
-            <WindowControls inline />
+            <ChromeActions />
           </header>
 
           <div className="archivedGamesGrid">

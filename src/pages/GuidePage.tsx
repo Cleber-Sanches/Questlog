@@ -7,7 +7,6 @@ import { useAchievements } from '@/features/achievements/hooks/useAchievements'
 import { useAchievementFilters } from '@/features/achievements/hooks/useAchievementFilters'
 import { AchievementList } from '@/features/achievements/components/AchievementList'
 import { AchievementEditor } from '@/features/achievements/components/AchievementEditor'
-import { useSteamSync } from '@/features/steam/hooks/useSteamSync'
 import { useSteamLocaleTexts } from '@/features/steam/hooks/useSteamLocaleTexts'
 import { useKeyboardShortcut } from '@/hooks/useKeyboardShortcut'
 import { EmptyState } from '@/components/feedback/EmptyState'
@@ -20,7 +19,6 @@ export function GuidePage() {
   const { activeGame, loading } = useAppData()
   const { achievements, toggleCompleted, patch, create, remove } = useAchievements(activeGame?.appId)
   const filters = useAchievementFilters(achievements)
-  useSteamSync(activeGame?.appId)
   useSteamLocaleTexts(activeGame?.appId)
   const { openModal } = useModal()
   const searchRef = useRef<HTMLInputElement>(null)
@@ -87,7 +85,6 @@ export function GuidePage() {
           facets={filters.facets}
           setFacets={filters.setFacets}
           facetOptions={filters.facetOptions}
-          achievements={achievements}
         >
           <AchievementList
             groups={filters.groups}

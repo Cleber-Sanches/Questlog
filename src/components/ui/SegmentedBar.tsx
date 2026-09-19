@@ -100,3 +100,39 @@ export function SegmentedBar({
     </div>
   )
 }
+
+/** Faixa do overlay/update: mesmos blocos, sem tooltip. */
+export function SegmentedFill({
+  percent,
+  brand = false,
+  done = false,
+  className,
+}: {
+  percent: number
+  brand?: boolean
+  done?: boolean
+  className?: string
+}) {
+  const safe = Math.min(100, Math.max(0, percent))
+
+  return (
+    <div
+      className={['segmentedBar', brand ? 'is-brand' : '', className].filter(Boolean).join(' ')}
+      role="progressbar"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={safe}
+    >
+      {safe > 0 ? (
+        <span className="segmentedBarTip" style={{ flexGrow: Math.max(safe, 2) }}>
+          <span className={`segmentedBarSeg isOn${done ? ' is-done' : ''}`} />
+        </span>
+      ) : null}
+      {safe < 100 ? (
+        <span className="segmentedBarTip" style={{ flexGrow: Math.max(100 - safe, 2) }}>
+          <span className="segmentedBarSeg" />
+        </span>
+      ) : null}
+    </div>
+  )
+}

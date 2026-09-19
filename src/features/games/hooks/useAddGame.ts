@@ -9,6 +9,7 @@ import type { Achievement } from '@/types/achievement'
 import type { SteamSearchItem } from '@/types/steam'
 import { ACH_KEYS } from '@/features/achievements/utils/keys'
 import { isStoreCoverUrl } from '@/lib/gameImages'
+import { defaultGameLinks } from '@/features/games/utils/links'
 
 export function useAddGame() {
   const { upsertGameLocal, setAchievementsLocal, setActiveGame, refresh } = useAppData()
@@ -28,7 +29,7 @@ export function useAddGame() {
           icon: art.icon || null,
           clienticon: art.clienticon || null,
           archived: false,
-          links: [],
+          links: defaultGameLinks(item.appId),
         }
         await gamesApi.upsert(game)
         upsertGameLocal(game)

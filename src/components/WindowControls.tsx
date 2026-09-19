@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState, type MouseEvent as ReactMouseEvent } from 'react'
 import { getCurrentWindow } from '@tauri-apps/api/window'
+import { invoke } from '@/lib/invoke'
 import { useTauriDesktop } from '@/hooks/useTauriDesktop'
 
 function stopWindowAction(e: ReactMouseEvent) {
@@ -33,7 +34,7 @@ export function WindowControls({ inline = false }: { inline?: boolean }) {
 
   const minimize = useCallback((e: ReactMouseEvent) => {
     stopWindowAction(e)
-    void getCurrentWindow().minimize()
+    void invoke('app_minimize_or_tray')
   }, [])
 
   const toggleMaximize = useCallback((e: ReactMouseEvent) => {
@@ -43,7 +44,7 @@ export function WindowControls({ inline = false }: { inline?: boolean }) {
 
   const close = useCallback((e: ReactMouseEvent) => {
     stopWindowAction(e)
-    void getCurrentWindow().close()
+    void invoke('app_close_or_tray')
   }, [])
 
   if (!desktop) return null

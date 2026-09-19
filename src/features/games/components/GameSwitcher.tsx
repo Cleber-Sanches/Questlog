@@ -6,6 +6,8 @@ import { useAddGame } from '@/features/games/hooks/useAddGame'
 import { gamesApi } from '@/features/games/api'
 import { initials } from '@/lib/format'
 import { useRouter } from '@/app/router'
+import { useModal } from '@/app/providers/ModalProvider'
+import { GameLinksEditor } from './GameLinksEditor'
 import type { Game } from '@/types/game'
 
 function GameRowMenu({
@@ -13,6 +15,7 @@ function GameRowMenu({
   isOpen,
   onToggle,
   onClose,
+  onLinks,
   onArchive,
   onDelete,
 }: {
@@ -20,6 +23,7 @@ function GameRowMenu({
   isOpen: boolean
   onToggle: () => void
   onClose: () => void
+  onLinks: (game: Game) => void
   onArchive: (appId: string) => void
   onDelete: (game: Game) => void
 }) {
@@ -58,6 +62,19 @@ function GameRowMenu({
       </button>
       {isOpen ? (
         <div className="gameSwitcherRowMenu" role="menu">
+          <button
+            type="button"
+            className="gameSwitcherRowMenuItem"
+            role="menuitem"
+            onClick={(e) => {
+              e.stopPropagation()
+              onLinks(game)
+              onClose()
+            }}
+          >
+            <i className="ph ph-link" aria-hidden />
+            <span>{t('game.links.title')}</span>
+          </button>
           <button
             type="button"
             className="gameSwitcherRowMenuItem"
@@ -130,6 +147,7 @@ export function GameSwitcher({ collapsed = false }: { collapsed?: boolean }) {
   const t = useT()
   const { games, activeGame, setActiveGame, refresh } = useAppData()
   const { navigate, route } = useRouter()
+  const { openModal } = useModal()
   const rootRef = useRef<HTMLDivElement>(null)
   const [open, setOpen] = useState(false)
   const [rowMenuId, setRowMenuId] = useState<string | null>(null)
@@ -197,6 +215,12 @@ export function GameSwitcher({ collapsed = false }: { collapsed?: boolean }) {
     }
     await gamesApi.delete(game.appId)
     await refresh()
+  }
+
+  function openLinks(game: Game) {
+    setOpen(false)
+    setRowMenuId(null)
+    openModal(<GameLinksEditor game={game} />)
   }
 
   function steamStatus(appId: string) {
@@ -319,6 +343,7 @@ export function GameSwitcher({ collapsed = false }: { collapsed?: boolean }) {
                                 setRowMenuId((id) => (id === g.appId ? null : g.appId))
                               }
                               onClose={() => setRowMenuId(null)}
+                              onLinks={openLinks}
                               onArchive={(appId) => void archiveGame(appId)}
                               onDelete={(game) => void deleteGame(game)}
                             />

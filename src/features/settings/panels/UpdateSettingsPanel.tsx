@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/Button'
+import { SegmentedFill } from '@/components/ui/SegmentedBar'
 import { useT } from '@/app/providers/LocaleProvider'
-import { useAppUpdater } from '@/features/updater/hooks/useAppUpdater'
+import { useUpdater } from '@/app/providers/UpdaterProvider'
 
 export function UpdateSettingsPanel() {
   const t = useT()
@@ -13,7 +14,7 @@ export function UpdateSettingsPanel() {
     error,
     checkForUpdates,
     installUpdate,
-  } = useAppUpdater()
+  } = useUpdater()
 
   const busy = phase === 'checking' || phase === 'downloading' || phase === 'installing'
 
@@ -28,7 +29,7 @@ export function UpdateSettingsPanel() {
         <div className="stRow">
           <div className="stRowLead">
             <span className="stRowIcon" aria-hidden>
-              <i className="ph ph-arrows-clockwise" />
+              <i className="ph-fill ph-arrows-clockwise" />
             </span>
             <div className="stRowCopy">
               <div className="stRowTitle">{t('settings.update.current')}</div>
@@ -60,7 +61,7 @@ export function UpdateSettingsPanel() {
             <div className="stRow">
               <div className="stRowLead">
                 <span className="stRowIcon" aria-hidden>
-                  <i className="ph ph-download-simple" />
+                  <i className="ph-fill ph-download-simple" />
                 </span>
                 <div className="stRowCopy">
                   <div className="stRowTitle">
@@ -86,14 +87,12 @@ export function UpdateSettingsPanel() {
               </Button>
             </div>
             {(phase === 'downloading' || phase === 'installing') && (
-              <div
-                className="stUpdateBar"
-                role="progressbar"
-                aria-valuenow={progress}
-                aria-valuemin={0}
-                aria-valuemax={100}
-              >
-                <div className="stUpdateBarFill" style={{ width: `${progress}%` }} />
+              <div className="stUpdateBarWrap">
+                <SegmentedFill
+                  percent={phase === 'installing' ? 100 : progress}
+                  brand
+                  done={phase === 'installing'}
+                />
               </div>
             )}
           </>

@@ -1,6 +1,6 @@
 import type { MessageKey } from '@/i18n'
 
-export type SettingsSectionId = 'backup' | 'ai' | 'steam' | 'language' | 'update'
+export type SettingsSectionId = 'backup' | 'ai' | 'steam' | 'language' | 'update' | 'help'
 
 export type SettingsNavItem = {
   id: SettingsSectionId
@@ -46,6 +46,13 @@ export const SETTINGS_ITEMS: SettingsNavItem[] = [
     descriptionKey: 'settings.nav.update.desc',
     groupKey: 'settings.group.interface',
     icon: 'ph-duotone ph-arrows-clockwise',
+  },
+  {
+    id: 'help',
+    labelKey: 'settings.nav.help',
+    descriptionKey: 'settings.nav.help.desc',
+    groupKey: 'settings.group.interface',
+    icon: 'ph-duotone ph-question',
   },
 ]
 

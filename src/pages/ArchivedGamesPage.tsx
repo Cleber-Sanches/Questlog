@@ -5,7 +5,7 @@ import { useT } from '@/app/providers/LocaleProvider'
 import { gamesApi } from '@/features/games/api'
 import { useRouter } from '@/app/router'
 import { AppShell } from '@/layouts/AppShell'
-import { WindowControls } from '@/components/WindowControls'
+import { ChromeActions } from '@/layouts/ChromeActions'
 import { SidebarCollapseToggle } from '@/features/sidebar/components/SidebarCollapseToggle'
 import { ConfirmDialog } from '@/components/overlay/ConfirmDialog'
 import { Tooltip } from '@/components/ui/Tooltip'
@@ -86,7 +86,7 @@ export function ArchivedGamesPage() {
                 autoComplete="off"
               />
             </label>
-            <WindowControls inline />
+            <ChromeActions />
           </header>
 
           <div className="archivedGamesGrid">

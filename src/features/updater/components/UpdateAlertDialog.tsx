@@ -1,7 +1,10 @@
+import { createPortal } from 'react-dom'
 import { motion, useReducedMotion } from 'motion/react'
 import { useT } from '@/app/providers/LocaleProvider'
 import { Button } from '@/components/ui/Button'
+import { SegmentedFill } from '@/components/ui/SegmentedBar'
 import { EASE_OUT } from '@/lib/motion/ease'
+import type { UpdatePhase } from '@/features/updater/hooks/useAppUpdater'
 
 function UpdateSealIcon() {
   return (
@@ -24,18 +27,39 @@ function UpdateSealIcon() {
 
 export function UpdateAlertDialog({
   version,
+  phase,
+  progress,
   onInstall,
   onDismiss,
+  dismissable,
 }: {
   version: string
+  phase: UpdatePhase
+  progress: number
   onInstall: () => void
   onDismiss: () => void
+  dismissable?: boolean
 }) {
   const t = useT()
   const reduce = useReducedMotion()
+  const downloading = phase === 'downloading'
+  const installing = phase === 'installing'
+  const busy = downloading || installing
+  const failed = phase === 'error'
+  const canDismiss = dismissable ?? !busy
 
-  return (
-    <div className="updateAlertBackdrop" role="presentation" onClick={onDismiss}>
+  const installLabel = installing
+    ? t('settings.update.installingShort')
+    : downloading
+      ? t('settings.update.downloadingShort')
+      : t('settings.update.installShort')
+
+  return createPortal(
+    <div
+      className="updateAlertBackdrop"
+      role="presentation"
+      onClick={canDismiss ? onDismiss : undefined}
+    >
       <motion.aside
         className="updateAlert"
         role="dialog"
@@ -55,16 +79,35 @@ export function UpdateAlertDialog({
             <span className="updateAlertVer">{t('settings.update.version', { version })}</span>
           </div>
         </div>
-        <p>{t('settings.update.availableAlert')}</p>
+        <p>
+          {failed
+            ? t('settings.update.installError')
+            : installing
+              ? t('settings.update.installing')
+              : t('settings.update.availableAlert')}
+        </p>
+        {downloading || installing ? (
+          <div className="updateAlertProgress">
+            <span className="updateAlertProgressText">
+              {Math.min(100, installing ? 100 : progress)}%
+            </span>
+            <SegmentedFill
+              percent={installing ? 100 : progress}
+              brand
+              done={installing}
+            />
+          </div>
+        ) : null}
         <div className="updateAlertActions">
-          <Button variant="secondary" size="md" onClick={onDismiss}>
+          <Button variant="secondary" size="md" disabled={!canDismiss} onClick={onDismiss}>
             {t('settings.update.later')}
           </Button>
-          <Button variant="primary" size="md" onClick={onInstall}>
-            {t('settings.update.installShort')}
+          <Button variant="primary" size="md" disabled={busy} onClick={onInstall}>
+            {installLabel}
           </Button>
         </div>
       </motion.aside>
-    </div>
+    </div>,
+    document.querySelector('.app-frame') ?? document.body,
   )
 }

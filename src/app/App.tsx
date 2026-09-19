@@ -1,9 +1,11 @@
+import { useEffect } from 'react'
 import { ToastProvider } from '@/app/providers/ToastProvider'
 import { NotificationProvider } from '@/app/providers/NotificationProvider'
 import { ModalProvider } from '@/app/providers/ModalProvider'
-import { AppDataProvider } from '@/app/providers/AppDataProvider'
+import { AppDataProvider, useAppData } from '@/app/providers/AppDataProvider'
 import { LocaleProvider } from '@/app/providers/LocaleProvider'
 import { RouterProvider, useRouter } from '@/app/router'
+import { UpdaterProvider } from '@/app/providers/UpdaterProvider'
 import { AppRouteSync } from '@/app/AppRouteSync'
 import { AutoUpdateCheck } from '@/features/updater/components/AutoUpdateCheck'
 import { GuidePage } from '@/pages/GuidePage'
@@ -13,6 +15,15 @@ import { ArchivedGamesPage } from '@/pages/ArchivedGamesPage'
 
 import { OnboardingFlow } from '@/features/onboarding/components/OnboardingFlow'
 import { useOnboarding } from '@/features/onboarding/hooks/useOnboarding'
+import { useSteamSync } from '@/features/steam/hooks/useSteamSync'
+import { useHelpShortcut } from '@/features/settings/hooks/useHelpShortcut'
+import { warmUnlockAudio } from '@/features/overlay/playUnlockChime'
+
+function HuntCompanion() {
+  const { activeGame } = useAppData()
+  useSteamSync(activeGame?.appId)
+  return null
+}
 
 function Routes({
   onboard,
@@ -29,10 +40,17 @@ function Routes({
 
 function Shell() {
   const onboard = useOnboarding()
+  useHelpShortcut(!onboard.active)
+  useEffect(() => {
+    const warm = () => warmUnlockAudio()
+    window.addEventListener('pointerdown', warm, { once: true })
+    return () => window.removeEventListener('pointerdown', warm)
+  }, [])
   return (
     <>
       <AppRouteSync />
       {onboard.active ? null : <AutoUpdateCheck />}
+      {onboard.active ? null : <HuntCompanion />}
       <div className="app-frame">
         <Routes onboard={onboard} />
       </div>
@@ -50,7 +68,9 @@ export default function App() {
           <LocaleProvider>
             <ModalProvider>
               <RouterProvider>
-                <Shell />
+                <UpdaterProvider>
+                  <Shell />
+                </UpdaterProvider>
               </RouterProvider>
             </ModalProvider>
           </LocaleProvider>

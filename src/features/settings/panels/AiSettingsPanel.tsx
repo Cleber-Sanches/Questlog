@@ -45,7 +45,7 @@ export function AiSettingsPanel() {
         <div className="stRow">
           <div className="stRowLead">
             <span className="stRowIcon" aria-hidden>
-              <i className="ph ph-robot" />
+              <i className="ph-fill ph-robot" />
             </span>
             <div className="stRowCopy">
               <div className="stRowTitle">{t('settings.ai.enable.title')}</div>

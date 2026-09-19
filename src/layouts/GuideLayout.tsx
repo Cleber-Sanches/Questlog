@@ -4,12 +4,14 @@ import { SearchField } from '@/components/ui/SearchField'
 import { Button } from '@/components/ui/Button'
 import { ExportImportGuideButtons } from '@/features/guide-io/components/ExportImportGuideButtons'
 import { NotificationBell } from '@/features/notifications/components/NotificationBell'
+import { HelpButton } from '@/features/settings/components/HelpButton'
+import { GameLinksMenu } from '@/features/games/components/GameLinksMenu'
 import { ListControls } from '@/features/achievements/components/ListControls'
 import { GuideAiChat } from '@/features/ai/components/GuideAiChat'
 import { WindowControls } from '@/components/WindowControls'
 import { useWindowDrag } from '@/hooks/useWindowDrag'
 import { SidebarCollapseToggle } from '@/features/sidebar/components/SidebarCollapseToggle'
-import type { Achievement, AchievementSort, GroupBy } from '@/types/achievement'
+import type { AchievementSort, GroupBy } from '@/types/achievement'
 import type { FacetFilters, FacetOption } from '@/features/achievements/utils/filter'
 
 export function GuideLayout({
@@ -23,7 +25,6 @@ export function GuideLayout({
   facets,
   setFacets,
   facetOptions,
-  achievements,
   onNew,
   children,
 }: {
@@ -43,7 +44,6 @@ export function GuideLayout({
     dlcOpts: FacetOption[]
     hasMissable: boolean
   }
-  achievements?: Achievement[]
   children: ReactNode
 }) {
   const t = useT()
@@ -89,7 +89,9 @@ export function GuideLayout({
                 </Button>
               ) : null}
               <div className="list-pane-toolbarIcons">
-                <NotificationBell achievements={achievements} />
+                <GameLinksMenu />
+                <HelpButton />
+                <NotificationBell />
                 <ExportImportGuideButtons />
               </div>
             </div>

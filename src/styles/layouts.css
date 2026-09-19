@@ -512,6 +512,7 @@
   background: var(--overlay-10);
   color: rgb(255 255 255 / 0.82);
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .list-pane-toolbarRight .btn-icon .btnIcon,
@@ -521,9 +522,14 @@
   display: block;
   margin: 0;
   color: inherit;
-  fill: none;
-  stroke: currentColor;
   flex-shrink: 0;
+}
+
+.list-pane-toolbarRight .btn-icon .gameLinksGlyph {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  stroke: none;
 }
 
 .list-pane-toolbarRight .btn-icon:hover:not(:disabled) {

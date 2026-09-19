@@ -102,7 +102,7 @@
   --diff-missable-fill: color-mix(in srgb, #f2c94c 12%, transparent);
 
   --color-shadow: oklch(15% 0 0 / 0.28);
-  --color-modal-backdrop: oklch(15% 0 0 / 0.62);
+  --color-modal-backdrop: rgb(0 0 0 / 0.5);
   --color-ring: var(--ring);
 
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -185,5 +185,5 @@
   --color-danger: var(--danger-hot);
   --color-danger-soft: color-mix(in srgb, var(--danger-hot) 16%, transparent);
   --color-shadow: rgb(0 0 0 / 0.5);
-  --color-modal-backdrop: rgb(0 0 0 / 0.8);
+  --color-modal-backdrop: rgb(0 0 0 / 0.5);
 }

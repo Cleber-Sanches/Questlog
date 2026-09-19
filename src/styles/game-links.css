@@ -1,0 +1,303 @@
+.gameLinksMenu {
+  position: relative;
+  display: inline-flex;
+}
+
+.gameLinksPanel {
+  position: absolute;
+  isolation: isolate;
+  overflow: hidden;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 40;
+  width: min(280px, calc(100vw - 24px));
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  background: color-mix(in oklch, var(--card) 82%, transparent);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.06),
+    0 16px 40px -12px rgb(0 0 0 / 0.55);
+  animation: listControlPop 0.14s var(--ease);
+}
+
+.gameLinksPanel::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  border-radius: inherit;
+  backdrop-filter: blur(18px);
+  pointer-events: none;
+}
+
+.gameLinksPanelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--overlay-08, var(--overlay-05));
+  background: var(--overlay-05);
+}
+
+.gameLinksPanelTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.gameLinksPanelCount {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fg-muted);
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--overlay-10);
+}
+
+.gameLinksEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px;
+}
+
+.gameLinksEmpty p,
+.gameLinksHint {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--fg-muted);
+}
+
+.gameLinksHint {
+  margin-bottom: 12px;
+}
+
+.gameLinksList {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: min(320px, 50vh);
+  overflow: auto;
+}
+
+.gameLinksItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: 8px;
+  text-align: left;
+  color: var(--fg);
+  font-size: 13px;
+  font-weight: 550;
+}
+
+.gameLinksItem:hover,
+.gameLinksItem:focus-visible {
+  background: var(--overlay-08, var(--overlay-05));
+  outline: none;
+}
+
+.gameLinksItem > i:first-child {
+  width: 18px;
+  text-align: center;
+  color: var(--fg-muted);
+  font-size: 15px;
+}
+
+.gameLinksItem span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gameLinksItemGo {
+  font-size: 14px;
+  color: var(--fg-muted);
+  opacity: 0.7;
+}
+
+.gameLinksPanelFoot {
+  padding: 8px 10px 10px;
+  border-top: 1px solid var(--overlay-08, var(--overlay-05));
+}
+
+.gameLinksManage {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  text-align: left;
+  font-size: 12.5px;
+  font-weight: 550;
+  color: var(--fg-muted);
+}
+
+.gameLinksManage:hover,
+.gameLinksManage:focus-visible {
+  background: var(--overlay-08, var(--overlay-05));
+  color: var(--fg);
+  outline: none;
+}
+
+.gameLinksHint {
+  margin: 0 0 16px;
+}
+
+.gameLinksEditorHead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 28px minmax(120px, 0.36fr) minmax(0, 1fr) 32px;
+  gap: 8px;
+  padding: 0 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  background: color-mix(in oklch, var(--card) 92%, #000);
+}
+
+.gameLinksEditorListWrap {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin-right: calc(0px - var(--sp-5));
+  padding-right: var(--sp-5);
+  padding-bottom: 8px;
+  scroll-padding: 8px;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--overlay-15) transparent;
+}
+
+.gameLinksEditorList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gameLinksEditorList:has(.isDragging) {
+  cursor: grabbing;
+}
+
+.gameLinksEditorRow {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28px minmax(120px, 0.36fr) minmax(0, 1fr) 32px;
+  gap: 8px;
+  align-items: center;
+  cursor: default;
+  scroll-margin: 8px;
+}
+
+.gameLinksEditorRow.isDragging .gameLinksEditorInput {
+  background: #1a1a1a;
+  box-shadow: 0 8px 22px rgb(0 0 0 / 0.42);
+}
+
+.gameLinksDrag {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 32px;
+  border-radius: 8px;
+  color: var(--fg-muted);
+  cursor: grab;
+  touch-action: none;
+}
+
+.gameLinksDrag.isIdle {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.gameLinksDrag:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.gameLinksDrag:not(:disabled):hover,
+.gameLinksDrag:not(:disabled):focus-visible {
+  color: var(--fg);
+  background: var(--overlay-10);
+  outline: none;
+}
+
+.gameLinksDrag:not(:disabled):active {
+  cursor: grabbing;
+}
+
+.gameLinksEditorInput {
+  box-sizing: border-box;
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 8px;
+  background: #141414;
+  color: #fff;
+  font-size: 13px;
+  outline: none;
+}
+
+.gameLinksEditorInput::placeholder {
+  color: rgb(255 255 255 / 0.45);
+}
+
+.gameLinksEditorInput:hover {
+  background: #181818;
+}
+
+.gameLinksEditorInput:focus {
+  box-shadow: 0 0 0 1px var(--overlay-15);
+}
+
+.gameLinksIconBtn {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: var(--fg-muted);
+  background: var(--overlay-10);
+}
+
+.gameLinksIconBtn:hover:not(:disabled) {
+  background: var(--overlay-15);
+  color: var(--fg);
+}
+
+.gameLinksAdd {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 0;
+  color: var(--fg-muted);
+  font-size: 13px;
+  font-weight: 550;
+  background: none;
+}
+
+.gameLinksAdd:hover,
+.gameLinksAdd:focus-visible {
+  color: var(--fg);
+  outline: none;
+}

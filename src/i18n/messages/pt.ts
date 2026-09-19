@@ -51,6 +51,32 @@ export const pt = {
   'settings.nav.language.desc': 'Idioma da interface do app.',
   'settings.nav.update': 'Atualizações',
   'settings.nav.update.desc': 'Verificar e instalar novas versões.',
+  'settings.nav.help': 'Ajuda',
+  'settings.nav.help.desc': 'Sincronização, guia, IA e atalhos.',
+
+  'settings.help.open': 'Ajuda',
+  'settings.help.title': 'Ajuda',
+  'settings.help.subtitle': 'O que mexe no que você já fez, e o que só mexe no guia.',
+  'settings.help.sync.title': 'Sincronização Steam',
+  'settings.help.sync.p1':
+    'A cada 30 segundos o app olha as conquistas da Steam no jogo aberto. Se uma destrava lá, marca aqui e avisa no topo e no sino.',
+  'settings.help.sync.p2':
+    'Pode marcar na mão se quiser adiantar. Essa marca não some. Quando a Steam destrava de verdade, o app também marca.',
+  'settings.help.sync.p3': 'Dicas, grupos e dificuldade a Steam não preenche. Isso é do guia.',
+  'settings.help.guide.title': 'Importar e exportar guia',
+  'settings.help.guide.p1':
+    'O arquivo leva dicas, grupos, dificuldade, perdíveis, vídeos e links. Não leva o que você já fez nem o andamento da conquista.',
+  'settings.help.guide.p2':
+    'Ao importar neste jogo, só entra o texto do guia. O que já está feito continua feito.',
+  'settings.help.ai.title': 'Assistente de IA',
+  'settings.help.ai.p1':
+    'O chat escreve no guia: dicas, perdíveis, dificuldade, grupos, níveis e vídeos.',
+  'settings.help.ai.p2':
+    'Ele não marca conquista como feita e não mexe no que a Steam já gravou. Se o assistente não estiver ligado, o chat não grava no guia.',
+  'settings.help.keys.title': 'Atalhos',
+  'settings.help.keys.search': 'Busca na lista de conquistas',
+  'settings.help.keys.esc': 'Fecha painel, janela ou configurações',
+  'settings.help.keys.help': 'Abre esta ajuda',
 
   // Language
   'settings.language.title': 'Idioma',
@@ -77,7 +103,9 @@ export const pt = {
   'settings.update.install': 'Atualizar e reiniciar',
   'settings.update.installShort': 'Atualizar',
   'settings.update.downloading': 'Baixando… {progress}%',
+  'settings.update.downloadingShort': 'Baixando…',
   'settings.update.installing': 'Instalando… o app vai reiniciar',
+  'settings.update.installingShort': 'Instalando…',
   'settings.update.installed': 'Atualização instalada. Reiniciando…',
   'settings.update.checkError': 'Não foi possível verificar atualizações',
   'settings.update.installError': 'Falha ao baixar ou instalar a atualização',
@@ -136,6 +164,10 @@ export const pt = {
   'settings.ai.saving': 'Salvando…',
 
   // Steam settings
+  'settings.steam.section.sync': 'Sincronização',
+  'settings.steam.section.alerts': 'Notificações',
+  'settings.steam.section.window': 'Janela',
+  'settings.steam.section.folder': 'Steam',
   'settings.steam.sync.title': 'Sincronização automática',
   'settings.steam.sync.desc': 'Salva conquistas liberadas e mostra no sino',
   'settings.steam.sync.badge': 'Automática',
@@ -146,6 +178,29 @@ export const pt = {
   'settings.steam.folder.useAuto': 'Usar automática',
   'settings.steam.folder.chooseOther': 'Escolher outra',
   'settings.steam.folder.notFound': 'Steam não encontrada em Program Files',
+  'settings.steam.overlay.title': 'Aviso no topo da tela',
+  'settings.steam.overlay.desc':
+    'Aparece em cima quando você destrava uma conquista, mesmo com o jogo na frente',
+  'settings.steam.overlay.progress.title': 'Também no progresso',
+  'settings.steam.overlay.progress.desc': 'Mostra a faixa quando o contador sobe, tipo 7/10',
+  'settings.steam.overlay.sound.title': 'Som ao desbloquear',
+  'settings.steam.overlay.sound.desc': 'Toca um som quando a conquista libera',
+  'settings.steam.overlay.soundProgress.title': 'Som no progresso',
+  'settings.steam.overlay.soundProgress.desc': 'Toca também quando o contador sobe',
+  'settings.steam.overlay.test': 'Mostrar exemplo',
+  'settings.steam.overlay.previewHint': 'Ver um exemplo',
+  'settings.steam.overlay.previewDesc': 'Mostra um aviso de teste sem precisar jogar',
+  'settings.steam.overlay.previewDifficulty': 'Conquista',
+  'settings.steam.overlay.previewProgress': 'Progresso',
+  'settings.steam.overlay.sampleTitle': 'Máscara da Alma',
+  'settings.steam.tray.title': 'Minimizar para a bandeja',
+  'settings.steam.tray.desc':
+    'O X e o minimizar escondem o app ao lado do relógio. O sync continua. Sair pelo ícone.',
+
+  'overlay.kicker': 'Conquista desbloqueada',
+  'overlay.kickerMany': '{n} conquistas',
+  'overlay.progress': 'Progresso',
+  'overlay.manyHint': 'liberadas neste momento',
 
   // Guide
   'guide.pane.aria': 'Conquistas',
@@ -283,6 +338,21 @@ export const pt = {
   'game.status.inLibrary': 'Na biblioteca',
   'game.options.aria': 'Opções de {name}',
   'game.active.aria': 'Jogo ativo: {name}',
+  'game.links.title': 'Links',
+  'game.links.aria': 'Links do jogo',
+  'game.links.empty': 'Nenhum link ainda. Steam e SteamDB entram com um clique.',
+  'game.links.manage': 'Editar links',
+  'game.links.manageTitle': 'Links de {name}',
+  'game.links.hint': 'Atalhos para SteamDB, mapa, wiki ou o que você usar na caça.',
+  'game.links.add': 'Adicionar link',
+  'game.links.label': 'Nome',
+  'game.links.label.placeholder': 'SteamDB, wiki…',
+  'game.links.url': 'URL',
+  'game.links.seed': 'Adicionar Steam e SteamDB',
+  'game.links.reorder': 'Arrastar para reordenar',
+  'game.links.unlink': 'Desvincular',
+  'game.links.saved': 'Links salvos',
+  'game.links.invalid': 'Preencha nome e URL juntos, ou deixe a linha vazia.',
 
   // Notifications
   'notif.title': 'Histórico de conquistas liberadas',
@@ -290,6 +360,13 @@ export const pt = {
   'notif.empty':
     'Nenhuma conquista liberada ainda. Quando a Steam desbloquear uma, ela aparece aqui com a data.',
   'notif.manualComplete': 'Marcada como concluída',
+  'notif.filter.aria': 'Filtrar histórico',
+  'notif.filter.all': 'Todos os jogos',
+  'notif.filter.game': 'Este jogo',
+  'notif.group.today': 'Hoje',
+  'notif.group.yesterday': 'Ontem',
+  'notif.scope.today': '{n} hoje',
+  'notif.scope.session': '{n} nesta sessão',
   'time.now': 'agora',
   'time.minutesAgo': '{n} min atrás',
   'time.hoursAgo': '{n} h atrás',

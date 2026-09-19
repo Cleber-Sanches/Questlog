@@ -43,6 +43,18 @@ export function useGuideImport() {
           await gamesApi.upsert(game)
           upsertGameLocal(game)
           await setActiveGame(appId)
+        } else if (game && (pack.game.links || []).length) {
+          const current = game
+          const next = {
+            ...current,
+            links: (pack.game.links || []).map((l, i) => ({
+              id: current.links?.[i]?.id ?? `link_${i}`,
+              label: l.label,
+              url: l.url,
+            })),
+          }
+          await gamesApi.upsert(next)
+          upsertGameLocal(next)
         }
 
         let current = activeGame?.appId === appId ? achievements : []

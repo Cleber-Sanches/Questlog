@@ -10,6 +10,7 @@
 @import './drawer.css';
 @import './list-controls.css';
 @import './game-switcher.css';
+@import './game-links.css';
 @import './archived.css';
 @import './library.css';
 @import './onboarding.css';
@@ -81,6 +82,7 @@
   position: fixed;
   inset: 0;
   background: var(--color-modal-backdrop);
+  backdrop-filter: blur(8px);
   z-index: var(--z-modal);
   display: grid;
   place-items: center;
@@ -88,14 +90,34 @@
 }
 
 .modal {
+  isolation: isolate;
+  position: relative;
   width: min(560px, 100%);
   max-height: min(85vh, 800px);
   overflow: auto;
-  background: var(--color-panel);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
+  background: color-mix(in oklch, var(--card) 82%, transparent);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 20px;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.06),
+    0 16px 40px -12px rgb(0 0 0 / 0.55);
   padding: var(--sp-5);
+  user-select: none;
+}
+
+.modal input,
+.modal textarea {
+  user-select: text;
+}
+
+.modal::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  border-radius: inherit;
+  backdrop-filter: blur(18px);
+  pointer-events: none;
 }
 
 .modal.is-wide {
@@ -105,7 +127,25 @@
 .modal h2 {
   color: var(--color-text-heading);
   font-size: var(--fs-lg);
-  margin-bottom: var(--sp-3);
+  margin: 0;
+}
+
+.modalHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.modalHead .btn-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.modalHead .btn-icon svg {
+  display: block;
 }
 
 .modal-actions {
@@ -113,6 +153,19 @@
   justify-content: flex-end;
   gap: var(--sp-2);
   margin-top: var(--sp-4);
+}
+
+.gameLinksModal {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.gameLinksModal .modalHead,
+.gameLinksModal .gameLinksHint,
+.gameLinksModal .gameLinksAdd,
+.gameLinksModal .modal-actions {
+  flex-shrink: 0;
 }
 
 .field {

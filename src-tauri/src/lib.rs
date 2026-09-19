@@ -41,6 +41,11 @@ pub fn run() {
             let conn = db::schema::open_db(&db_path)?;
             let state = AppState::new(conn, app_data);
             app.manage(state.clone());
+            app.manage(commands::desktop::DesktopFlags::new());
+            commands::desktop::prepare_overlay(app.handle());
+            if let Err(err) = commands::desktop::install_tray(app.handle(), &state) {
+                log::warn!("bandeja: {err}");
+            }
 
             let handle = app.handle().clone();
             std::thread::spawn(move || loop {
@@ -59,12 +64,7 @@ pub fn run() {
             Ok(())
         })
         .on_window_event(|window, event| {
-            if let tauri::WindowEvent::CloseRequested { .. } = event {
-                if let Some(state) = window.try_state::<std::sync::Arc<AppState>>() {
-                    let conn = state.db.lock();
-                    let _ = backup::run_backup(&conn, &state.app_data_dir);
-                }
-            }
+            commands::desktop::handle_window_event(window, event);
         })
         .invoke_handler(tauri::generate_handler![
             commands::db::db_get_bootstrap,
@@ -95,6 +95,13 @@ pub fn run() {
             commands::backup::backup_maybe_auto,
             commands::backup::backup_restore_sqlite,
             commands::system::open_external_url,
+            commands::desktop::overlay_show_unlock,
+            commands::desktop::overlay_hide,
+            commands::desktop::app_show_main,
+            commands::desktop::app_to_tray,
+            commands::desktop::app_minimize_or_tray,
+            commands::desktop::app_close_or_tray,
+            commands::desktop::app_quit,
             commands::ai::ai_get_settings,
             commands::ai::ai_save_settings,
             commands::ai::ai_detect_cli,

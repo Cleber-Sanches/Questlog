@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "overlay",
+  "description": "Faixa de conquista — só escuta o evento e não acessa o banco",
+  "windows": ["overlay"],
+  "permissions": ["core:default"]
+}

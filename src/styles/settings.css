@@ -326,12 +326,12 @@
 
 .stSectionTitle {
   margin: 0;
-  padding: 0 2px;
-  font-size: 12px;
-  font-weight: 550;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: var(--fg-muted);
+  padding: 0 4px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.15px;
+  line-height: 1.2;
+  color: rgb(255 255 255 / 0.62);
 }
 
 .stPanel {
@@ -507,7 +507,7 @@
 }
 
 .stIntegrationToggle .settingsSwitch.is-sm {
-  height: 16px;
+  height: 18px;
 }
 
 .stIntegrationFooter {
@@ -727,6 +727,66 @@
   line-height: 1.4;
   letter-spacing: -0.2px;
   color: var(--fg-muted);
+}
+
+.stInlineAction {
+  padding: 0 16px 14px;
+}
+
+.stPreviewRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.stBundleExtras {
+  padding: 0 0 6px;
+}
+
+.stRow.is-sub {
+  position: relative;
+  min-height: 44px;
+  padding: 8px 16px 8px 64px;
+  gap: 16px;
+}
+
+.stRow.is-sub + .stRow.is-sub::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 64px;
+  right: 16px;
+  height: 1px;
+  background: var(--overlay-05);
+}
+
+.stRow.is-sub .stRowLead {
+  gap: 8px;
+}
+
+.stRow.is-sub .stRowIcon {
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: rgb(255 255 255 / 0.78);
+}
+
+.stRow.is-sub .stRowIcon i {
+  font-size: 18px;
+}
+
+.stRow.is-sub.is-disabled .stRowTitle {
+  color: var(--fg-muted);
+}
+
+.stRow.is-sub.is-disabled .stRowDesc,
+.stRow.is-sub.is-disabled .stRowIcon,
+.stRow.is-sub.is-disabled .stPreviewRow {
+  opacity: 0.55;
 }
 
 .stItem {
@@ -968,12 +1028,88 @@
   box-shadow: 0 0 0 2px var(--overlay-025);
 }
 
-.stNote {
+.stHelpArticle {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+}
+
+.stHelpBody {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stHelpTitle {
   margin: 0;
+  font-size: 14px;
+  font-weight: 550;
+  letter-spacing: -0.2px;
+  line-height: 1.3;
+  color: var(--fg);
+}
+
+.stHelpP {
+  margin: 0;
+  max-width: 62ch;
   font-size: 13px;
-  line-height: 1.4;
-  color: var(--icon-muted);
-  word-break: break-word;
+  font-weight: 450;
+  line-height: 1.5;
+  letter-spacing: -0.15px;
+  color: rgb(255 255 255 / 0.72);
+}
+
+.stHelpKeyRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 44px;
+  padding: 10px 16px 10px 64px;
+}
+
+.stHelpArticle + .stHelpKeyRow,
+.stHelpKeyRow + .stHelpKeyRow {
+  border-top: 1px solid var(--overlay-05);
+}
+
+.stHelpKeys {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.stKbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 6px;
+  border: 1px solid var(--overlay-10);
+  background: var(--bg-canvas);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 550;
+  letter-spacing: -0.1px;
+  line-height: 1;
+}
+
+.stHelpKeyLabel {
+  min-width: 0;
+  flex: 1;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 450;
+  letter-spacing: -0.2px;
+  line-height: 1.35;
+  color: var(--fg-muted);
 }
 
 .stNote.is-ok {
@@ -984,19 +1120,18 @@
   color: #f87171;
 }
 
-.stUpdateBar {
-  height: 6px;
-  margin: 4px 0 8px;
-  border-radius: 999px;
-  background: var(--overlay-06, rgba(255, 255, 255, 0.06));
-  overflow: hidden;
+.stUpdateBarWrap {
+  padding: 0 16px 14px 64px;
 }
 
-.stUpdateBarFill {
-  height: 100%;
-  border-radius: inherit;
-  background: var(--accent-brand, #c64d2e);
-  transition: width 0.2s ease;
+.stUpdateBarWrap .segmentedBar {
+  height: 8px;
+  gap: 3px;
+}
+
+.stUpdateBarWrap .segmentedBarSeg {
+  min-width: 4px;
+  border-radius: 4px;
 }
 
 .stFooter {
@@ -1018,47 +1153,80 @@
 
 .settingsSwitch {
   position: relative;
-  display: inline-flex;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 22px;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
   cursor: pointer;
   flex-shrink: 0;
+  align-self: center;
 }
 
 .settingsSwitch input {
   position: absolute;
+  inset: -8px 0;
   opacity: 0;
-  width: 1px;
-  height: 1px;
+  margin: 0;
+  width: auto;
+  height: auto;
+  cursor: pointer;
 }
 
 .settingsSwitchUi {
-  width: 40px;
+  display: block;
+  width: 38px;
   height: 22px;
-  border-radius: var(--radius-pill);
+  box-sizing: border-box;
+  border: 0;
+  border-radius: 7px;
   background: var(--overlay-10);
-  border: 1px solid transparent;
   position: relative;
-  transition: background 0.15s var(--ease);
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: background 0.16s var(--ease);
 }
 
+.settingsSwitchUi::before,
 .settingsSwitchUi::after {
   content: '';
   position: absolute;
-  top: 2px;
-  left: 2px;
+  box-sizing: border-box;
+  transition: transform 0.16s var(--ease), background 0.16s var(--ease);
+}
+
+.settingsSwitchUi::before {
+  top: 3px;
+  left: 3px;
   width: 16px;
   height: 16px;
-  border-radius: 50%;
-  background: var(--fg);
-  transition: transform 0.15s var(--ease);
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.28);
+}
+
+.settingsSwitchUi::after {
+  top: 7px;
+  left: 7px;
+  width: 8px;
+  height: 8px;
+  border-radius: 2.5px;
+  background: color-mix(in srgb, var(--overlay-10) 80%, #000);
 }
 
 .settingsSwitch input:checked + .settingsSwitchUi {
   background: var(--accent-bright);
 }
 
+.settingsSwitch input:checked + .settingsSwitchUi::before,
 .settingsSwitch input:checked + .settingsSwitchUi::after {
-  transform: translateX(18px);
-  background: #fff;
+  transform: translateX(16px);
+}
+
+.settingsSwitch input:checked + .settingsSwitchUi::after {
+  background: var(--accent-brand);
 }
 
 .settingsSwitch input:focus-visible + .settingsSwitchUi {
@@ -1066,36 +1234,55 @@
   outline-offset: 2px;
 }
 
+.settingsSwitch.is-disabled,
+.settingsSwitch:has(input:disabled) {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.settingsSwitch:has(input:disabled) .settingsSwitchUi,
+.settingsSwitch:has(input:disabled) input:checked + .settingsSwitchUi {
+  background: var(--overlay-10);
+}
+
+.settingsSwitch:has(input:disabled) input:checked + .settingsSwitchUi::after {
+  background: color-mix(in srgb, var(--overlay-10) 55%, #000);
+}
+
+.settingsSwitch:has(input:disabled) .settingsSwitchUi::before {
+  background: color-mix(in srgb, #fff 55%, var(--overlay-10));
+}
+
 .settingsSwitch.is-sm {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 0;
-  flex-shrink: 0;
-  vertical-align: middle;
+  width: 30px;
+  height: 18px;
 }
 
 .settingsSwitch.is-sm .settingsSwitchUi {
-  display: block;
-  width: 28px;
-  height: 16px;
-  flex-shrink: 0;
-  overflow: hidden;
-  box-sizing: border-box;
+  width: 30px;
+  height: 18px;
+  border-radius: 6px;
+}
+
+.settingsSwitch.is-sm .settingsSwitchUi::before {
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
 }
 
 .settingsSwitch.is-sm .settingsSwitchUi::after {
-  top: 50%;
-  left: 3px;
-  width: 10px;
-  height: 10px;
-  margin-top: -5px;
-  transform: translateX(0);
+  top: 5.5px;
+  left: 5.5px;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
 }
 
+.settingsSwitch.is-sm input:checked + .settingsSwitchUi::before,
 .settingsSwitch.is-sm input:checked + .settingsSwitchUi::after {
   transform: translateX(12px);
-  background: #fff;
 }
 
 @media (max-width: 960px) {

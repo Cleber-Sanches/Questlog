@@ -34,3 +34,23 @@ export function formatProgressCount(value: number, locale = 'pt-BR') {
   }
   return new Intl.NumberFormat(locale).format(n)
 }
+
+/** Contador curto para HUD/overlay — 75.6k / 111k, sem “mil”. */
+export function formatHudCount(value: number) {
+  const n = Math.max(0, Math.round(value))
+  if (n >= 1_000_000) {
+    const v = n / 1_000_000
+    const digits = v >= 10 ? 0 : 1
+    return `${trimFixed(v, digits)}M`
+  }
+  if (n >= 10_000) {
+    const v = n / 1_000
+    const digits = v >= 100 ? 0 : 1
+    return `${trimFixed(v, digits)}k`
+  }
+  return String(n)
+}
+
+function trimFixed(value: number, digits: number) {
+  return value.toFixed(digits).replace(/\.0$/, '')
+}

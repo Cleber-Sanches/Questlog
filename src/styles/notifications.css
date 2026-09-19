@@ -8,6 +8,13 @@
   overflow: visible;
 }
 
+.chromeActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
 .notifBellBadge {
   position: absolute;
   top: -3px;
@@ -34,7 +41,6 @@
   box-shadow: 0 0 0 2px var(--bg-surface, #1a1a1a);
 }
 
-/* Um só unread: ponto limpo, sem número esmagando o ícone */
 .notifBellBadge.is-dot {
   min-width: 9px;
   width: 9px;
@@ -48,20 +54,33 @@
 
 .notifPanel {
   position: absolute;
+  isolation: isolate;
+  overflow: hidden;
   top: calc(100% + 8px);
   right: 0;
   z-index: 40;
-  width: min(320px, calc(100vw - 24px));
+  width: min(340px, calc(100vw - 24px));
   max-height: min(420px, 70vh);
   display: flex;
   flex-direction: column;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--bg-surface) 92%, #000);
-  border: 1px solid var(--overlay-10);
+  border-radius: 20px;
+  padding-bottom: 12px;
+  background: color-mix(in oklch, var(--card) 82%, transparent);
+  border: 1px solid rgb(255 255 255 / 0.14);
   box-shadow:
-    0 0 0 1px rgb(0 0 0 / 0.35),
-    0 18px 48px rgb(0 0 0 / 0.55);
-  overflow: hidden;
+    inset 0 0 0 1px rgb(255 255 255 / 0.06),
+    0 16px 40px -12px rgb(0 0 0 / 0.55);
+  animation: listControlPop 0.14s var(--ease);
+}
+
+.notifPanel::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  border-radius: inherit;
+  backdrop-filter: blur(18px);
+  pointer-events: none;
 }
 
 .notifPanelHead {
@@ -69,10 +88,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 12px 14px;
+  padding: 12px 14px 10px;
   flex-shrink: 0;
-  border-bottom: 1px solid var(--overlay-08, var(--overlay-05));
-  background: var(--overlay-05);
 }
 
 .notifPanelTitle {
@@ -90,6 +107,37 @@
   background: var(--overlay-10);
 }
 
+.notifFilters {
+  display: flex;
+  gap: 6px;
+  padding: 0 14px 10px;
+  flex-shrink: 0;
+}
+
+.notifFilters button {
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 0;
+  background: var(--overlay-10);
+  color: var(--fg-muted);
+  font-size: 12px;
+  font-weight: 550;
+  cursor: pointer;
+}
+
+.notifFilters button.isActive {
+  background: var(--overlay-15);
+  color: var(--fg);
+}
+
+.notifScope {
+  margin: 0;
+  padding: 0 14px 10px;
+  font-size: 11px;
+  color: var(--fg-muted);
+}
+
 .notifEmpty {
   margin: 0;
   padding: 14px 14px 18px;
@@ -101,8 +149,10 @@
 .notifList {
   list-style: none;
   margin: 0;
-  padding: 6px;
+  padding: 0 8px;
   overflow: auto;
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -110,20 +160,76 @@
   scrollbar-color: var(--overlay-15) transparent;
 }
 
+.notifList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.notifList::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.notifList::-webkit-scrollbar-track {
+  margin-block: 8px;
+  background: transparent;
+}
+
+.notifList::-webkit-scrollbar-thumb {
+  background: var(--overlay-15);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.notifList::-webkit-scrollbar-thumb:hover {
+  background: var(--overlay-20, var(--overlay-15));
+  background-clip: padding-box;
+}
+
+.notifList::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Flex + overflow ignora padding-bottom; o spacer segura o último item acima da curva. */
+.notifList::after {
+  content: '';
+  display: block;
+  height: 8px;
+  flex-shrink: 0;
+}
+
+.notifGroupLabel {
+  padding: 8px 8px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
 .notifItem {
   display: flex;
   align-items: flex-start;
   gap: 10px;
+  width: 100%;
   padding: 10px 8px;
+  border: 0;
   border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
 .notifItem.is-unread {
   background: var(--overlay-08, var(--overlay-05));
 }
 
-.notifItem:hover {
+.notifItem:hover,
+.notifItem:focus-visible {
   background: var(--overlay-08, var(--overlay-05));
+  outline: none;
 }
 
 .notifItemIcon {
@@ -171,4 +277,15 @@
   font-size: 11px;
   color: var(--fg-muted);
   opacity: 0.85;
+}
+
+@keyframes listControlPop {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }

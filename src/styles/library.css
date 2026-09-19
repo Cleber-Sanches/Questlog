@@ -307,6 +307,26 @@
     color-mix(in srgb, var(--color-success) 72%, #141414);
 }
 
+.segmentedBar.is-brand .segmentedBarSeg.isOn {
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgb(255 255 255 / 0.08) 0 3px,
+      transparent 3px 7px
+    ),
+    color-mix(in srgb, var(--accent-brand-bright) 78%, #141414);
+}
+
+.segmentedBar.is-brand .segmentedBarSeg.isOn.is-done {
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgb(255 255 255 / 0.07) 0 3px,
+      transparent 3px 7px
+    ),
+    color-mix(in srgb, var(--color-success) 72%, #141414);
+}
+
 .segmentedBar.isPlatinum .segmentedBarSeg.isOn {
   background:
     repeating-linear-gradient(

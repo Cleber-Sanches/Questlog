@@ -69,3 +69,4 @@ export function DownloadIcon({ strokeWidth = 1.75, ...props }: IconProps) {
     </svg>
   )
 }
+
