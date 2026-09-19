@@ -26,6 +26,8 @@
     "fs:allow-home-write-recursive",
     "updater:default",
     "process:default",
+    "clipboard-manager:allow-write-text",
+    "clipboard-manager:allow-read-text",
     "allow-guia"
   ]
 }

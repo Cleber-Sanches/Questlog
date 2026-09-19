@@ -10,7 +10,7 @@ const BLOCKS: Array<{ icon: string; titleKey: MessageKey; bodyKeys: MessageKey[]
   {
     icon: 'ph-fill ph-book-open',
     titleKey: 'settings.help.guide.title',
-    bodyKeys: ['settings.help.guide.p1', 'settings.help.guide.p2'],
+    bodyKeys: ['settings.help.guide.p1', 'settings.help.guide.p2', 'settings.help.guide.p3'],
   },
   {
     icon: 'ph-fill ph-robot',

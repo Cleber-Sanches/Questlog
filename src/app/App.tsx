@@ -15,6 +15,7 @@ import { ArchivedGamesPage } from '@/pages/ArchivedGamesPage'
 
 import { OnboardingFlow } from '@/features/onboarding/components/OnboardingFlow'
 import { useOnboarding } from '@/features/onboarding/hooks/useOnboarding'
+import { GuideShareDrop } from '@/features/guide-io/components/GuideShareDrop'
 import { useSteamSync } from '@/features/steam/hooks/useSteamSync'
 import { useHelpShortcut } from '@/features/settings/hooks/useHelpShortcut'
 import { warmUnlockAudio } from '@/features/overlay/playUnlockChime'
@@ -53,6 +54,7 @@ function Shell() {
       {onboard.active ? null : <HuntCompanion />}
       <div className="app-frame">
         <Routes onboard={onboard} />
+        {onboard.active ? null : <GuideShareDrop />}
       </div>
     </>
   )

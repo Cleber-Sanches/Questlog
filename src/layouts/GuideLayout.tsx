@@ -2,7 +2,7 @@ import type { ReactNode, RefObject } from 'react'
 import { useT } from '@/app/providers/LocaleProvider'
 import { SearchField } from '@/components/ui/SearchField'
 import { Button } from '@/components/ui/Button'
-import { ExportImportGuideButtons } from '@/features/guide-io/components/ExportImportGuideButtons'
+import { GuideShareMenu } from '@/features/guide-io/components/GuideShareMenu'
 import { NotificationBell } from '@/features/notifications/components/NotificationBell'
 import { HelpButton } from '@/features/settings/components/HelpButton'
 import { GameLinksMenu } from '@/features/games/components/GameLinksMenu'
@@ -92,7 +92,7 @@ export function GuideLayout({
                 <GameLinksMenu />
                 <HelpButton />
                 <NotificationBell />
-                <ExportImportGuideButtons />
+                <GuideShareMenu />
               </div>
             </div>
           </div>
