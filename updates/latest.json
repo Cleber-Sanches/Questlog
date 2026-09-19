@@ -1,11 +1,11 @@
 {
-  "version": "0.2.1",
-  "notes": "Questlog 0.2.1 — alerta de atualização.",
-  "pub_date": "2026-09-18T00:06:27.976Z",
+  "version": "0.3.0",
+  "notes": "Questlog 0.3.0 — overlay, links do jogo, ajuda e aviso de atualização.",
+  "pub_date": "2026-09-19T00:34:48.237Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTVnREVGszRVh5TlJWMlFMTmFjVkNMb0JUdjM3ZlcwdTJzdzc1cmdBV3dSeUVsU0JpRW0zVUEwWmNmd1JvSDRucnpoNjRLd210WnBIQ1R0SGxuS2lkMVExOXd2VWUzMkFvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5Njg5OTY4CWZpbGU6UXVlc3Rsb2dfMC4yLjFfeDY0LXNldHVwLmV4ZQpVMnRmdkdNQXljanhVMXNYRUFvTFFIdFE0VUtxaU1iMnRwUXp0RmtUeXVMQktXdStWTVpxQ1NuK3pGMk5wdUErdWFCR3hEMGJwOGFvWlN0c0MwRlBCdz09Cg==",
-      "url": "https://github.com/Cleber-Sanches/Questlog/releases/download/v0.2.1/Questlog_0.2.1_x64-setup.exe"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTVnREVGszRVh5Tlo3NGRFeUd3cWIwRFowdm1paStaQU1FSmt2UXpad1RNOFRpdDhua1ZQeC83aWNMMXUzdWhVc0VpcklUajI5ZUxza0NyZTcyYVQ3cSthY1ovZlVPZXdZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg5Nzc3OTc4CWZpbGU6UXVlc3Rsb2dfMC4zLjBfeDY0LXNldHVwLmV4ZQpXcThtdWpDMFJ2V1lYSEEyc0IzRXFqVWFTMkhVTElwcng1cVpHNGpmaUp6ZlRBMGlWVUNhMkN5MGNqM2tQZnlDNTYxKzh2NnBxbUJETlNsWUpybFBDUT09Cg==",
+      "url": "https://github.com/Cleber-Sanches/Questlog/releases/download/v0.3.0/Questlog_0.3.0_x64-setup.exe"
     }
   }
 }
