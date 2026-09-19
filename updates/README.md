@@ -2,14 +2,61 @@
 
 O app verifica atualizações ao abrir e em **Configurações → Atualizações**.
 
-## Como publicar uma nova versão
+Endpoint (em `src-tauri/tauri.conf.json`):
 
-1. Suba a versão em `package.json`, `src-tauri/tauri.conf.json` e `src-tauri/Cargo.toml` (ex.: `0.1.1`).
-2. Gere o instalador **assinado**:
+```
+https://github.com/Cleber-Sanches/Questlog/releases/latest/download/latest.json
+```
+
+## Liberar pelo GitHub Actions (recomendado)
+
+Workflow: [`.github/workflows/release.yml`](../.github/workflows/release.yml)
+
+### 1. Secret da assinatura (uma vez)
+
+Em **Settings → Secrets and variables → Actions**, crie:
+
+| Secret | Valor |
+| --- | --- |
+| `TAURI_SIGNING_PRIVATE_KEY` | Conteúdo inteiro de `keys/questlog.key` |
+| `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` | Vazio se a chave foi gerada com `--ci` |
+
+Em **Settings → Actions → General → Workflow permissions**, marque **Read and write**.
+
+### 2. Subir a versão
+
+Alinhe a mesma versão em:
+
+- `package.json`
+- `src-tauri/tauri.conf.json`
+- `src-tauri/Cargo.toml`
+
+Commit no `main`.
+
+### 3. Tag e push
+
+```powershell
+git tag v0.3.2
+git push origin v0.3.2
+```
+
+A Action:
+
+1. Faz o build Windows (NSIS)
+2. Assina o instalador (updater)
+3. Cria o GitHub Release `vX.Y.Z`
+4. Anexa o `.exe`, o `.sig` e o `latest.json`
+
+Também dá para disparar em **Actions → Release → Run workflow** (usa a versão já commitada no `package.json`).
+
+## Fluxo manual (fallback)
+
+1. Suba a versão nos três arquivos acima.
+2. Gere o instalador assinado:
    ```powershell
    .\tools\build-release.ps1
    ```
-3. Crie um release no GitHub (`Cleber-Sanches/Questlog`) e anexe:
+3. Crie um release no GitHub e anexe:
    - `Questlog_X.Y.Z_x64-setup.exe`
    - `Questlog_X.Y.Z_x64-setup.exe.sig`
 4. Gere o manifesto:
@@ -18,19 +65,9 @@ O app verifica atualizações ao abrir e em **Configurações → Atualizações
    ```
 5. Anexe também o `updates/latest.json` no release (nome do arquivo: `latest.json`).
 
-## Endpoint
-
-Configurado em `src-tauri/tauri.conf.json`:
-
-```
-https://github.com/Cleber-Sanches/Questlog/releases/latest/download/latest.json
-```
-
-Se o repositório tiver outro nome/dono, altere esse URL.
-
 ## Chaves
 
 - Pública: embutida em `tauri.conf.json` (`plugins.updater.pubkey`)
-- Privada: `keys/questlog.key` (ou legado `keys/trophydesk.key`) — não versionar
+- Privada: `keys/questlog.key` (ou legado `keys/trophydesk.key`) — **não versionar**; no CI vai no secret
 
-Se perder a chave privada, precisará gerar um novo par e publicar um instalador “base” novo (atualizações antigas deixam de validar).
+Se perder a chave privada, precisa gerar um novo par e publicar um instalador “base” novo (atualizações antigas deixam de validar).
