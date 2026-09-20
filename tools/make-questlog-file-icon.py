@@ -1,4 +1,8 @@
-"""Gera ícone de tipo de arquivo .questlog (documento + marca Questlog)."""
+"""Ícone .questlog = marca Questlog (arte do app) + leve sugestão de documento.
+
+O Explorer mostra 16–32px: nested badge / troféu vetorial fino some.
+A marca já existente lê bem nesses tamanhos.
+"""
 from __future__ import annotations
 
 from pathlib import Path
@@ -7,113 +11,110 @@ from PIL import Image, ImageDraw, ImageFilter
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / 'src-tauri' / 'resources'
-PREVIEW = ROOT / 'src-tauri' / 'icons' / 'questlog-file-preview.png'
-APP_SRC = ROOT / 'src-tauri' / 'icons' / 'app-icon-source.png'
+ICONS = ROOT / 'src-tauri' / 'icons'
+APP_SRC = ICONS / 'app-icon-source.png'
+PREVIEW = ICONS / 'questlog-file-preview.png'
 OUT_ICO = OUT_DIR / 'questlog-file.ico'
-SIZE = 512
-ICO_SIZES = (16, 24, 32, 48, 64, 128, 256)
+
+ACCENT = (224, 90, 56, 255)
+PAPER = (236, 232, 226, 255)
 
 
-def rounded_rect(draw: ImageDraw.ImageDraw, box, radius, fill, outline=None, width=1):
-    draw.rounded_rectangle(box, radius=radius, fill=fill, outline=outline, width=width)
+def rounded_mask(size: int, radius: float) -> Image.Image:
+    m = Image.new('L', (size, size), 0)
+    ImageDraw.Draw(m).rounded_rectangle([0, 0, size - 1, size - 1], radius=radius, fill=255)
+    return m
 
 
-def make_document(size: int) -> Image.Image:
-    img = Image.new('RGBA', (size, size), (0, 0, 0, 0))
-    d = ImageDraw.Draw(img)
+def make_icon(size: int) -> Image.Image:
+    canvas = Image.new('RGBA', (size, size), (0, 0, 0, 0))
+    mark = Image.open(APP_SRC).convert('RGBA')
 
-    # Sombra suave
-    shadow = Image.new('RGBA', (size, size), (0, 0, 0, 0))
-    sd = ImageDraw.Draw(shadow)
-    margin = int(size * 0.12)
-    fold = int(size * 0.18)
-    left, top = margin, int(size * 0.08)
-    right, bottom = size - margin, size - int(size * 0.08)
-    sd.rounded_rectangle(
-        [left + size * 0.03, top + size * 0.04, right + size * 0.02, bottom + size * 0.03],
-        radius=int(size * 0.06),
+    if size <= 24:
+        # Só a marca — máxima legibilidade
+        mark = mark.resize((size, size), Image.Resampling.LANCZOS)
+        canvas.alpha_composite(mark)
+        return canvas
+
+    # Página atrás (sugere “arquivo/guia”)
+    page = Image.new('RGBA', (size, size), (0, 0, 0, 0))
+    pd = ImageDraw.Draw(page)
+    inset = max(1, size // 18)
+    fold = max(2, size // 6)
+    left, top = inset, inset // 2
+    right, bottom = size - inset // 2, size - inset
+    # sombra
+    sh = Image.new('RGBA', (size, size), (0, 0, 0, 0))
+    ImageDraw.Draw(sh).rounded_rectangle(
+        [left + 2, top + 3, right + 1, bottom + 2],
+        radius=size // 12,
         fill=(0, 0, 0, 90),
     )
-    shadow = shadow.filter(ImageFilter.GaussianBlur(radius=size * 0.03))
-    img = Image.alpha_composite(img, shadow)
-    d = ImageDraw.Draw(img)
+    page = Image.alpha_composite(page, sh.filter(ImageFilter.GaussianBlur(max(1, size // 40))))
+    pd = ImageDraw.Draw(page)
+    pd.polygon(
+        [
+            (left, top),
+            (right - fold, top),
+            (right, top + fold),
+            (right, bottom),
+            (left, bottom),
+        ],
+        fill=PAPER,
+    )
+    pd.polygon(
+        [(right - fold, top), (right, top + fold), (right - fold, top + fold)],
+        fill=ACCENT,
+    )
+    pd.rectangle([left, bottom - max(1, size // 20), right, bottom], fill=ACCENT)
 
-    # Página
-    paper = (245, 242, 238, 255)
-    paper_edge = (210, 205, 198, 255)
-    page = [
-        (left, top),
-        (right - fold, top),
-        (right, top + fold),
-        (right, bottom),
-        (left, bottom),
-    ]
-    d.polygon(page, fill=paper)
-
-    # Canto dobrado
-    fold_pts = [
-        (right - fold, top),
-        (right, top + fold),
-        (right - fold, top + fold),
-    ]
-    d.polygon(fold_pts, fill=(228, 223, 216, 255))
-    d.line([(right - fold, top), (right - fold, top + fold), (right, top + fold)], fill=paper_edge, width=max(1, size // 180))
-
-    # Linhas de “conteúdo” (guia)
-    line_x0 = left + int(size * 0.12)
-    line_x1 = right - int(size * 0.14)
-    y = top + int(size * 0.28)
-    gap = int(size * 0.07)
-    for i, w in enumerate((1.0, 0.92, 0.78, 0.88, 0.55)):
-        x1 = line_x0 + int((line_x1 - line_x0) * w)
-        tone = 198 - i * 6
-        d.rounded_rectangle(
-            [line_x0, y, x1, y + max(2, size // 48)],
-            radius=size // 80,
-            fill=(tone, tone - 4, tone - 8, 220),
-        )
-        y += gap
-
-    # Faixa de marca (accent)
-    accent = (224, 90, 56, 255)  # ~ brand
-    bar_h = max(3, size // 40)
-    d.rectangle([left, bottom - bar_h, right, bottom], fill=accent)
-
-    return img
+    # Marca por cima, centrada, ~78% do canvas
+    side = int(size * 0.78)
+    mark = mark.resize((side, side), Image.Resampling.LANCZOS)
+    ox = (size - side) // 2
+    oy = (size - side) // 2 + size // 40
+    page.alpha_composite(mark, (ox, oy))
+    return page
 
 
-def paste_badge(doc: Image.Image, badge_src: Path) -> Image.Image:
-    if not badge_src.exists():
-        return doc
-    badge = Image.open(badge_src).convert('RGBA')
-    size = doc.size[0]
-    side = int(size * 0.42)
-    badge = badge.resize((side, side), Image.Resampling.LANCZOS)
+def ico_write(path: Path, images: list[Image.Image]) -> None:
+    import struct
+    from io import BytesIO
 
-    # Máscara squircle leve já vem no PNG; sombra sob o badge
-    shadow = Image.new('RGBA', doc.size, (0, 0, 0, 0))
-    sd = ImageDraw.Draw(shadow)
-    bx = size - int(size * 0.14) - side
-    by = size - int(size * 0.12) - side
-    sd.ellipse([bx + side * 0.08, by + side * 0.12, bx + side * 0.92, by + side * 0.95], fill=(0, 0, 0, 70))
-    shadow = shadow.filter(ImageFilter.GaussianBlur(radius=size * 0.02))
-    out = Image.alpha_composite(doc, shadow)
-    out.alpha_composite(badge, (bx, by))
-    return out
+    blobs: list[bytes] = []
+    entries: list[tuple[int, int, int, int]] = []
+    offset = 6 + 16 * len(images)
+    for im in images:
+        raw = im.convert('RGBA')
+        buf = BytesIO()
+        raw.save(buf, format='PNG')
+        data = buf.getvalue()
+        w, h = raw.size
+        entries.append((0 if w >= 256 else w, 0 if h >= 256 else h, len(data), offset))
+        blobs.append(data)
+        offset += len(data)
 
-
-def to_ico(master: Image.Image, path: Path) -> None:
-    # Pillow gera as camadas a partir do master quando sizes= é passado.
-    master.save(path, format='ICO', sizes=[(s, s) for s in ICO_SIZES])
+    out = bytearray()
+    out += struct.pack('<HHH', 0, 1, len(images))
+    for w, h, nbytes, off in entries:
+        out += struct.pack('<BBBBHHII', w, h, 0, 0, 1, 32, nbytes, off)
+    for b in blobs:
+        out += b
+    path.write_bytes(out)
 
 
 def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    doc = make_document(SIZE)
-    icon = paste_badge(doc, APP_SRC)
-    icon.save(PREVIEW)
-    to_ico(icon, OUT_ICO)
-    print(f'OK: {OUT_ICO}')
+    sizes = (16, 24, 32, 48, 64, 128, 256)
+    frames = [make_icon(s) for s in sizes]
+    # preview em alta
+    make_icon(512).save(PREVIEW)
+    ico_write(OUT_ICO, frames)
+    for s in (16, 32, 48):
+        frames[sizes.index(s)].resize((s * 10, s * 10), Image.Resampling.NEAREST).save(
+            ICONS / f'questlog-file-{s}.png'
+        )
+    print(f'OK: {OUT_ICO} ({OUT_ICO.stat().st_size} bytes)')
     print(f'Preview: {PREVIEW}')
 
 
