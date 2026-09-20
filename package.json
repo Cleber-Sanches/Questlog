@@ -1,7 +1,7 @@
 {
   "name": "questlog",
   "private": true,
-  "version": "0.3.6",
+  "version": "0.3.7",
   "type": "module",
   "description": "Questlog — guia local de conquistas Steam (Tauri + React + SQLite)",
   "scripts": {

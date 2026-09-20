@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Questlog",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "identifier": "com.questlog.desktop",
   "build": {
     "frontendDist": "../dist",
@@ -76,7 +76,12 @@
     "windows": {
       "nsis": {
         "installerIcon": "icons/icon.ico",
-        "installerHooks": "./windows/nsis-hooks.nsh"
+        "sidebarImage": "windows/nsis-sidebar.bmp",
+        "headerImage": "windows/nsis-header.bmp",
+        "installerHooks": "./windows/nsis-hooks.nsh",
+        "installMode": "currentUser",
+        "languages": ["PortugueseBR", "English"],
+        "displayLanguageSelector": false
       }
     }
   },
