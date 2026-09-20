@@ -78,25 +78,20 @@ jobs:
             $raw = $raw -replace '\\n', "`n"
           }
 
-          function Convert-FromB64([string]$s) {
-            $clean = ($s -replace '\s', '')
-            return [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($clean))
-          }
-
-          $material = $raw
-          if ($material -notmatch '(?m)^untrusted comment:') {
+          $ok = $raw -match '(?m)^untrusted comment:'
+          if (-not $ok) {
             try {
-              $decoded = Convert-FromB64 $material
-              if ($decoded -match '(?m)^untrusted comment:') {
-                $material = $decoded
-                Write-Host "Chave em base64 decodificada."
-              }
+              $decoded = [System.Text.Encoding]::UTF8.GetString(
+                [Convert]::FromBase64String(($raw -replace '\s', ''))
+              )
+              $ok = $decoded -match '(?m)^untrusted comment:'
+              if ($ok) { Write-Host "Secret em base64 válido." }
             } catch {
-              # mantém $material original; validação abaixo decide
+              $ok = $false
             }
           }
 
-          if ($material -notmatch '(?m)^untrusted comment:') {
+          if (-not $ok) {
             throw @"
           Chave inválida: falta 'untrusted comment:' (texto ou base64 do keys/*.key).
           Comando:
@@ -104,10 +99,6 @@ jobs:
           "@
           }
 
-          $path = Join-Path $env:RUNNER_TEMP 'questlog.key'
-          $utf8 = New-Object System.Text.UTF8Encoding $false
-          [System.IO.File]::WriteAllText($path, ($material.TrimEnd() + "`n"), $utf8)
-          "TAURI_SIGNING_PRIVATE_KEY_PATH=$path" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
           Write-Host "Chave de assinatura ok."
 
       - name: Build and publish
@@ -116,7 +107,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Evita o target-dir absoluto do .cargo/config.toml (só faz sentido na máquina local).
           CARGO_TARGET_DIR: ${{ github.workspace }}/target
-          # Senha vazia: chave gerada com tauri signer generate --ci
+          # Conteúdo do keys/*.key (base64 ou texto minisign). Senha vazia = --ci.
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ''
         with:
           tagName: v__VERSION__
