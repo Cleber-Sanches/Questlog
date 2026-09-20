@@ -1,101 +1,47 @@
-"""Ícone .questlog = marca Questlog (arte do app) + leve sugestão de documento.
-
-O Explorer mostra 16–32px: nested badge / troféu vetorial fino some.
-A marca já existente lê bem nesses tamanhos.
-"""
+"""Gera ICO do arquivo .questlog a partir da arte premium (diario)."""
 from __future__ import annotations
 
+from io import BytesIO
 from pathlib import Path
+import struct
 
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT_DIR = ROOT / 'src-tauri' / 'resources'
 ICONS = ROOT / 'src-tauri' / 'icons'
-APP_SRC = ICONS / 'app-icon-source.png'
+OUT_DIR = ROOT / 'src-tauri' / 'resources'
+SOURCE = ICONS / 'questlog-file-source.png'
 PREVIEW = ICONS / 'questlog-file-preview.png'
+BOARD = ICONS / 'questlog-icon-board.png'
 OUT_ICO = OUT_DIR / 'questlog-file.ico'
-
-ACCENT = (224, 90, 56, 255)
-PAPER = (236, 232, 226, 255)
+SIZES = (16, 24, 32, 48, 64, 128, 256)
 
 
-def rounded_mask(size: int, radius: float) -> Image.Image:
-    m = Image.new('L', (size, size), 0)
-    ImageDraw.Draw(m).rounded_rectangle([0, 0, size - 1, size - 1], radius=radius, fill=255)
-    return m
-
-
-def make_icon(size: int) -> Image.Image:
-    canvas = Image.new('RGBA', (size, size), (0, 0, 0, 0))
-    mark = Image.open(APP_SRC).convert('RGBA')
-
-    if size <= 24:
-        # Só a marca — máxima legibilidade
-        mark = mark.resize((size, size), Image.Resampling.LANCZOS)
-        canvas.alpha_composite(mark)
-        return canvas
-
-    # Página atrás (sugere “arquivo/guia”)
-    page = Image.new('RGBA', (size, size), (0, 0, 0, 0))
-    pd = ImageDraw.Draw(page)
-    inset = max(1, size // 18)
-    fold = max(2, size // 6)
-    left, top = inset, inset // 2
-    right, bottom = size - inset // 2, size - inset
-    # sombra
-    sh = Image.new('RGBA', (size, size), (0, 0, 0, 0))
-    ImageDraw.Draw(sh).rounded_rectangle(
-        [left + 2, top + 3, right + 1, bottom + 2],
-        radius=size // 12,
-        fill=(0, 0, 0, 90),
-    )
-    page = Image.alpha_composite(page, sh.filter(ImageFilter.GaussianBlur(max(1, size // 40))))
-    pd = ImageDraw.Draw(page)
-    pd.polygon(
-        [
-            (left, top),
-            (right - fold, top),
-            (right, top + fold),
-            (right, bottom),
-            (left, bottom),
-        ],
-        fill=PAPER,
-    )
-    pd.polygon(
-        [(right - fold, top), (right, top + fold), (right - fold, top + fold)],
-        fill=ACCENT,
-    )
-    pd.rectangle([left, bottom - max(1, size // 20), right, bottom], fill=ACCENT)
-
-    # Marca por cima, centrada, ~78% do canvas
-    side = int(size * 0.78)
-    mark = mark.resize((side, side), Image.Resampling.LANCZOS)
-    ox = (size - side) // 2
-    oy = (size - side) // 2 + size // 40
-    page.alpha_composite(mark, (ox, oy))
-    return page
+def load_master() -> Image.Image:
+    master = Image.open(SOURCE).convert('RGBA')
+    bbox = master.getbbox()
+    if bbox:
+        master = master.crop(bbox)
+    w, h = master.size
+    side = max(w, h)
+    sq = Image.new('RGBA', (side, side), (0, 0, 0, 0))
+    sq.paste(master, ((side - w) // 2, (side - h) // 2), master)
+    return sq.resize((512, 512), Image.Resampling.LANCZOS)
 
 
 def ico_write(path: Path, images: list[Image.Image]) -> None:
-    import struct
-    from io import BytesIO
-
     blobs: list[bytes] = []
     entries: list[tuple[int, int, int, int]] = []
     offset = 6 + 16 * len(images)
     for im in images:
-        raw = im.convert('RGBA')
         buf = BytesIO()
-        raw.save(buf, format='PNG')
+        im.convert('RGBA').save(buf, format='PNG')
         data = buf.getvalue()
-        w, h = raw.size
+        w, h = im.size
         entries.append((0 if w >= 256 else w, 0 if h >= 256 else h, len(data), offset))
         blobs.append(data)
         offset += len(data)
-
-    out = bytearray()
-    out += struct.pack('<HHH', 0, 1, len(images))
+    out = bytearray(struct.pack('<HHH', 0, 1, len(images)))
     for w, h, nbytes, off in entries:
         out += struct.pack('<BBBBHHII', w, h, 0, 0, 1, 32, nbytes, off)
     for b in blobs:
@@ -103,19 +49,39 @@ def ico_write(path: Path, images: list[Image.Image]) -> None:
     path.write_bytes(out)
 
 
+def make_board(master: Image.Image) -> Image.Image:
+    W, H = 920, 540
+    board = Image.new('RGBA', (W, H), (22, 22, 24, 255))
+    d = ImageDraw.Draw(board)
+    d.text((36, 24), 'Icone .questlog — diario premium', fill=(240, 240, 240, 255))
+    board.alpha_composite(master.resize((256, 256), Image.Resampling.LANCZOS), (48, 80))
+    d.text((48, 350), '256px', fill=(170, 170, 170, 255))
+    x = 360
+    d.text((x, 60), 'Como no Explorer', fill=(200, 200, 200, 255))
+    for sz in (48, 32, 16):
+        cell = Image.new('RGBA', (88, 108), (34, 34, 36, 255))
+        im = master.resize((sz, sz), Image.Resampling.LANCZOS)
+        cell.alpha_composite(im, ((88 - sz) // 2, 18))
+        board.alpha_composite(cell, (x, 100))
+        d.text((x + 32, 220), str(sz), fill=(160, 160, 160, 255))
+        x += 108
+    y = 290
+    d.rounded_rectangle([360, y, 880, y + 58], radius=10, fill=(40, 40, 42, 255))
+    board.alpha_composite(master.resize((32, 32), Image.Resampling.LANCZOS), (376, y + 13))
+    d.text((424, y + 18), 'valheim-guia.questlog', fill=(235, 235, 235, 255))
+    return board
+
+
 def main() -> None:
+    if not SOURCE.exists():
+        raise SystemExit(f'Arte fonte ausente: {SOURCE}')
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    sizes = (16, 24, 32, 48, 64, 128, 256)
-    frames = [make_icon(s) for s in sizes]
-    # preview em alta
-    make_icon(512).save(PREVIEW)
+    master = load_master()
+    master.save(PREVIEW)
+    frames = [master.resize((s, s), Image.Resampling.LANCZOS) for s in SIZES]
     ico_write(OUT_ICO, frames)
-    for s in (16, 32, 48):
-        frames[sizes.index(s)].resize((s * 10, s * 10), Image.Resampling.NEAREST).save(
-            ICONS / f'questlog-file-{s}.png'
-        )
+    make_board(master).convert('RGB').save(BOARD)
     print(f'OK: {OUT_ICO} ({OUT_ICO.stat().st_size} bytes)')
-    print(f'Preview: {PREVIEW}')
 
 
 if __name__ == '__main__':
