@@ -6,18 +6,39 @@ mod state;
 mod steam;
 mod ai;
 
+use commands::guide_open::{
+    emit_guide_open_paths, focus_main, guide_paths_from_args, PendingGuideOpens,
+};
 use state::AppState;
+use std::sync::Mutex;
 use std::time::Duration;
 use tauri::Manager;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
+    let mut builder = tauri::Builder::default();
+
+    #[cfg(desktop)]
+    {
+        builder = builder.plugin(tauri_plugin_single_instance::init(|app, argv, _cwd| {
+            focus_main(&app);
+            let paths = guide_paths_from_args(&argv);
+            if paths.is_empty() {
+                return;
+            }
+            emit_guide_open_paths(&app, &paths);
+        }));
+    }
+
+    builder
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
+        .manage(PendingGuideOpens(Mutex::new(guide_paths_from_args(
+            &std::env::args().collect::<Vec<_>>(),
+        ))))
         .setup(|app| {
             if let Some(window) = app.get_webview_window("main") {
                 if let Some(icon) = app.default_window_icon().cloned() {
@@ -96,6 +117,8 @@ pub fn run() {
             commands::backup::backup_maybe_auto,
             commands::backup::backup_restore_sqlite,
             commands::system::open_external_url,
+            commands::guide_open::take_pending_guide_opens,
+            commands::guide_open::read_guide_open_file,
             commands::desktop::overlay_show_unlock,
             commands::desktop::overlay_hide,
             commands::desktop::app_show_main,

@@ -20,8 +20,9 @@ export function useGuideExport() {
     try {
       const pack = buildGuidePack(activeGame, achievements)
       const saved = await downloadJson(
-        `${slugFilename(activeGame.name) || activeGame.appId}-guia.json`,
+        `${slugFilename(activeGame.name) || activeGame.appId}-guia.questlog`,
         pack,
+        { filterName: 'Guia Questlog', extensions: ['questlog', 'json'] },
       )
       if (saved) toast(t('toast.guide.exported'), 'success')
     } catch (err) {

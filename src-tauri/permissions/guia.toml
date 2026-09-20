@@ -29,6 +29,8 @@ commands.allow = [
   "backup_maybe_auto",
   "backup_restore_sqlite",
   "open_external_url",
+  "take_pending_guide_opens",
+  "read_guide_open_file",
   "ai_get_settings",
   "ai_save_settings",
   "ai_detect_cli",

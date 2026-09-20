@@ -27,7 +27,16 @@ export function parseGuidePack(text: string): GuidePack {
 export function isGuideFile(file: File) {
   const name = file.name.toLowerCase()
   const type = file.type.toLowerCase()
-  return name.endsWith('.json') || type.includes('json') || type === ''
+  if (
+    name.endsWith('.questlog') ||
+    name.endsWith('.json') ||
+    name.endsWith('.txt') ||
+    name === 'message.txt'
+  ) {
+    return true
+  }
+  if (type.includes('json') || type === 'text/plain' || type === '') return true
+  return false
 }
 
 function text(value: unknown) {

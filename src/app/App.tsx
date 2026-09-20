@@ -16,6 +16,7 @@ import { ArchivedGamesPage } from '@/pages/ArchivedGamesPage'
 import { OnboardingFlow } from '@/features/onboarding/components/OnboardingFlow'
 import { useOnboarding } from '@/features/onboarding/hooks/useOnboarding'
 import { GuideShareDrop } from '@/features/guide-io/components/GuideShareDrop'
+import { useGuideOpenFromOs } from '@/features/guide-io/hooks/useGuideOpenFromOs'
 import { useSteamSync } from '@/features/steam/hooks/useSteamSync'
 import { useHelpShortcut } from '@/features/settings/hooks/useHelpShortcut'
 import { warmUnlockAudio } from '@/features/overlay/playUnlockChime'
@@ -42,6 +43,7 @@ function Routes({
 function Shell() {
   const onboard = useOnboarding()
   useHelpShortcut(!onboard.active)
+  useGuideOpenFromOs(!onboard.active)
   useEffect(() => {
     const warm = () => warmUnlockAudio()
     window.addEventListener('pointerdown', warm, { once: true })

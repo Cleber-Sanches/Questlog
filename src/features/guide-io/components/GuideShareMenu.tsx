@@ -5,6 +5,8 @@ import { useGuideExport } from '@/features/guide-io/hooks/useGuideExport'
 import { useGuideImport } from '@/features/guide-io/hooks/useGuideImport'
 import { useT } from '@/app/providers/LocaleProvider'
 
+const GUIDE_ACCEPT = '.questlog,.json,.txt,application/json,text/plain'
+
 export function GuideShareMenu() {
   const t = useT()
   const { exportGuide, copyGuide } = useGuideExport()
@@ -56,39 +58,12 @@ export function GuideShareMenu() {
                 type="button"
                 className="guideShareItem"
                 onClick={() => {
-                  void copyGuide()
-                  setOpen(false)
-                }}
-              >
-                <i className="ph ph-copy" aria-hidden />
-                <span>{t('guide.io.copy')}</span>
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                className="guideShareItem"
-                onClick={() => {
                   setOpen(false)
                   void exportGuide()
                 }}
               >
                 <i className="ph ph-upload-simple" aria-hidden />
                 <span>{t('guide.io.save')}</span>
-              </button>
-            </li>
-            <li className="guideShareSplit" aria-hidden />
-            <li>
-              <button
-                type="button"
-                className="guideShareItem"
-                onClick={() => {
-                  setOpen(false)
-                  void importGuideFromClipboard()
-                }}
-              >
-                <i className="ph ph-clipboard" aria-hidden />
-                <span>{t('guide.io.paste')}</span>
               </button>
             </li>
             <li>
@@ -104,6 +79,33 @@ export function GuideShareMenu() {
                 <span>{t('guide.io.open')}</span>
               </button>
             </li>
+            <li className="guideShareSplit" aria-hidden />
+            <li>
+              <button
+                type="button"
+                className="guideShareItem"
+                onClick={() => {
+                  void copyGuide()
+                  setOpen(false)
+                }}
+              >
+                <i className="ph ph-copy" aria-hidden />
+                <span>{t('guide.io.copy')}</span>
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className="guideShareItem"
+                onClick={() => {
+                  setOpen(false)
+                  void importGuideFromClipboard()
+                }}
+              >
+                <i className="ph ph-clipboard" aria-hidden />
+                <span>{t('guide.io.paste')}</span>
+              </button>
+            </li>
           </ul>
           <p className="guideShareHint">{t('guide.io.drop.hint')}</p>
         </div>
@@ -112,7 +114,7 @@ export function GuideShareMenu() {
       <input
         ref={fileRef}
         type="file"
-        accept=".json,application/json"
+        accept={GUIDE_ACCEPT}
         hidden
         onChange={(e) => {
           const file = e.target.files?.[0]
