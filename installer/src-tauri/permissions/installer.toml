@@ -1,0 +1,9 @@
+[[permission]]
+identifier = "allow-run-silent-install"
+description = "Permite instalar o Questlog em silêncio"
+commands.allow = ["run_silent_install"]
+
+[[permission]]
+identifier = "allow-launch-app"
+description = "Permite abrir o Questlog após instalar"
+commands.allow = ["launch_app"]

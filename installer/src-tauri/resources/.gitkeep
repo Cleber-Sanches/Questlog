@@ -1,0 +1,2 @@
+# Placeholder: o script tools/build-questlog-setup.ps1 copia o NSIS real para cá
+# como Questlog_x64-setup.exe antes do `tauri build` do bootstrapper.

@@ -1,0 +1,21 @@
+{
+  "name": "questlog-setup",
+  "private": true,
+  "version": "0.3.9",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.9.0",
+    "typescript": "~5.9.3",
+    "vite": "^8.2.0"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.9.0"
+  }
+}

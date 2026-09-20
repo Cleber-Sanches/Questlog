@@ -1,5 +1,5 @@
 # Build + GitHub Release + latest.json (updater do Tauri).
-# Disparo: tag vX.Y.Z (ex.: v0.3.2) ou Actions → Release → Run workflow.
+# Disparo: tag vX.Y.Z (ex.: v0.3.9) ou Actions → Release → Run workflow.
 #
 # Secrets necessários (Settings → Secrets and variables → Actions):
 #   TAURI_SIGNING_PRIVATE_KEY — conteúdo inteiro de keys/questlog.key
@@ -114,7 +114,10 @@ jobs:
           tagName: v__VERSION__
           releaseName: Questlog __VERSION__
           releaseBody: |
-            Instalador Windows (NSIS) assinado para o updater.
+            ## Download
+            Use **Questlog-Setup.exe** (instalador visual).
+
+            O NSIS (`Questlog_*_x64-setup.exe`) continua no release para o updater automático.
 
             O app busca atualizações em:
             `https://github.com/Cleber-Sanches/Questlog/releases/latest/download/latest.json`
@@ -123,3 +126,27 @@ jobs:
           uploadUpdaterJson: true
           updaterJsonPreferNsis: true
           generateReleaseNotes: true
+
+      - name: Build Questlog-Setup.exe
+        shell: pwsh
+        env:
+          CARGO_TARGET_DIR: ${{ github.workspace }}/setup-target
+          QUESTLOG_NSIS_DIR: ${{ github.workspace }}/target/release/bundle/nsis
+        run: |
+          Push-Location installer
+          npm ci
+          Pop-Location
+          powershell -ExecutionPolicy Bypass -File tools/build-questlog-setup.ps1 -SkipAppBuild
+          if (-not (Test-Path "dist-setup\Questlog-Setup.exe")) {
+            throw "dist-setup/Questlog-Setup.exe não foi gerado."
+          }
+
+      - name: Upload Questlog-Setup.exe
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $ver = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          $tag = "v$ver"
+          gh release upload $tag "dist-setup/Questlog-Setup.exe" --clobber
+          Write-Host "Uploaded Questlog-Setup.exe to $tag"

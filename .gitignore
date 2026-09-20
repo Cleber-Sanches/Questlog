@@ -16,9 +16,14 @@ lerna-debug.log*
 
 node_modules
 dist
+dist-setup
 dist-ssr
 *.local
 src-tauri/target
+installer/node_modules
+installer/dist
+installer/src-tauri/target
+installer/src-tauri/resources/Questlog_x64-setup.exe
 
 # Editor directories and files
 .vscode/*

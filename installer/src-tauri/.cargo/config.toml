@@ -1,0 +1,3 @@
+# Preferir pasta sem espaços (mesmo padrão do app principal)
+[build]
+target-dir = "C:\\Users\\Sancs\\.cache\\questlog-setup-target"

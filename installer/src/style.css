@@ -1,0 +1,326 @@
+:root {
+  --bg-canvas: #141414;
+  --fg: #ffffff;
+  --fg-muted: rgb(255 255 255 / 0.52);
+  --fg-faint: rgb(255 255 255 / 0.32);
+  --accent-brand: #c64d2e;
+  --accent-brand-bright: #e05a38;
+  --overlay-075: rgb(255 255 255 / 0.075);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  font-family: Inter, "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-canvas);
+  color: var(--fg);
+  user-select: none;
+}
+
+.shell {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-canvas);
+}
+
+.titlebar {
+  flex-shrink: 0;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px 0 0;
+}
+
+.titlebarDrag {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  -webkit-app-region: drag;
+  app-region: drag;
+}
+
+.titlebar button {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--fg-faint);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  transition: background 0.18s var(--ease), color 0.18s var(--ease);
+}
+
+.titlebar button:hover {
+  background: var(--overlay-075);
+  color: var(--fg);
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 0;
+  padding: 28px 36px 40px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(300px, 100%);
+}
+
+.logo {
+  display: block;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 20px;
+  border-radius: 18px;
+  object-fit: cover;
+  animation: enter 0.55s var(--ease-out) both;
+}
+
+.title {
+  margin: 0 0 8px;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.6px;
+  line-height: 1.15;
+  color: var(--fg);
+  text-align: center;
+  animation: enter 0.55s var(--ease-out) 0.06s both;
+}
+
+.lead {
+  margin: 0;
+  min-height: 42px;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: -0.15px;
+  color: var(--fg-muted);
+  text-align: center;
+  max-width: 28ch;
+  animation: enter 0.55s var(--ease-out) 0.1s both;
+  transition: opacity 0.2s var(--ease);
+}
+
+.lead.is-swap {
+  opacity: 0;
+}
+
+/* Altura fixa: status + barra — o botão não sobe/desce */
+.meta {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+  height: 48px;
+  margin-top: 16px;
+}
+
+.status {
+  height: 18px;
+  margin: 0 0 8px;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--fg-faint);
+  text-align: center;
+  opacity: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: opacity 0.2s var(--ease);
+}
+
+.status.is-on {
+  opacity: 1;
+}
+
+.status.error {
+  color: #ff8fa3;
+  white-space: normal;
+  overflow: hidden;
+}
+
+.barWrap {
+  width: 100%;
+  height: 10px;
+  opacity: 0;
+  transition: opacity 0.22s var(--ease);
+}
+
+.barWrap.is-on {
+  opacity: 1;
+}
+
+.segmentedBar {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  gap: 4px;
+  height: 10px;
+}
+
+.segmentedBarTip {
+  display: flex;
+  flex: 0 1 0;
+  min-width: 6px;
+  height: 100%;
+  transition: flex-grow 0.28s ease-out;
+}
+
+.segmentedBarTip[hidden] {
+  display: none;
+}
+
+.segmentedBarSeg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 6px;
+  border-radius: 5px;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgb(255 255 255 / 0.04) 0 3px,
+      transparent 3px 7px
+    ),
+    #2c2c2c;
+  transition: background 0.35s var(--ease);
+}
+
+.segmentedBar.is-brand .segmentedBarSeg.isOn {
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgb(255 255 255 / 0.08) 0 3px,
+      transparent 3px 7px
+    ),
+    color-mix(in srgb, var(--accent-brand-bright) 78%, #141414);
+}
+
+.segmentedBar.is-brand .segmentedBarSeg.isOn.is-done {
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgb(255 255 255 / 0.07) 0 3px,
+      transparent 3px 7px
+    ),
+    color-mix(in srgb, #3ecf8e 72%, #141414);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  gap: 8px;
+  margin-top: 24px;
+  /* Sempre reserva 2 botões — "Agora não" não empurra o Abrir */
+  min-height: 88px;
+  animation: enter 0.55s var(--ease-out) 0.16s both;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 40px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+  cursor: pointer;
+  transition:
+    background 0.18s var(--ease),
+    border-color 0.18s var(--ease),
+    color 0.18s var(--ease),
+    opacity 0.18s var(--ease),
+    transform 0.18s var(--ease-out);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+}
+
+.btn-primary {
+  background: var(--accent-brand);
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-brand-bright);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--fg-muted);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btn-ghost.is-on {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.btn-ghost.is-on:hover:not(:disabled) {
+  background: var(--overlay-075);
+  color: var(--fg);
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo,
+  .title,
+  .lead,
+  .actions {
+    animation: none;
+  }
+
+  .lead,
+  .status,
+  .barWrap,
+  .segmentedBarTip,
+  .btn {
+    transition: none;
+  }
+}
