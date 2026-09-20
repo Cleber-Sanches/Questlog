@@ -2,8 +2,11 @@
 # Disparo: tag vX.Y.Z (ex.: v0.3.2) ou Actions → Release → Run workflow.
 #
 # Secrets necessários (Settings → Secrets and variables → Actions):
-#   TAURI_SIGNING_PRIVATE_KEY          — conteúdo de keys/questlog.key
-#   TAURI_SIGNING_PRIVATE_KEY_PASSWORD — vazio se a chave foi gerada com --ci
+#   TAURI_SIGNING_PRIVATE_KEY — conteúdo inteiro de keys/questlog.key
+#   Preferível (preserva quebras de linha):
+#     gh secret set TAURI_SIGNING_PRIVATE_KEY < keys/questlog.key
+#
+# A chave local é --ci (senha vazia). Não precisa de secret de senha.
 #
 # Também: Settings → Actions → General → Workflow permissions → Read and write.
 
@@ -57,14 +60,47 @@ jobs:
           }
           Write-Host "Versão ok: $tag"
 
+      - name: Prepare updater signing key
+        shell: pwsh
+        env:
+          KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:KEY)) {
+            throw @"
+          Secret TAURI_SIGNING_PRIVATE_KEY não está configurado.
+          No PC (na pasta do repo):
+            gh secret set TAURI_SIGNING_PRIVATE_KEY < keys/questlog.key
+          "@
+          }
+
+          $raw = $env:KEY.Trim()
+          # Se colaram com \n literais no GitHub UI, normaliza.
+          if ($raw -notmatch '(?m)^untrusted comment:') {
+            $raw = $raw -replace '\\n', "`n"
+          }
+          if ($raw -notmatch '(?m)^untrusted comment:') {
+            throw @"
+          Chave inválida: falta a linha 'untrusted comment:'.
+          Cole o arquivo keys/questlog.key INTEIRO, sem aspas.
+          Comando seguro:
+            gh secret set TAURI_SIGNING_PRIVATE_KEY < keys/questlog.key
+          "@
+          }
+
+          $path = Join-Path $env:RUNNER_TEMP 'questlog.key'
+          $utf8 = New-Object System.Text.UTF8Encoding $false
+          [System.IO.File]::WriteAllText($path, ($raw.TrimEnd() + "`n"), $utf8)
+          "TAURI_SIGNING_PRIVATE_KEY_PATH=$path" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          Write-Host "Chave de assinatura ok (arquivo temporário)."
+
       - name: Build and publish
         uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Evita o target-dir absoluto do .cargo/config.toml (só faz sentido na máquina local).
           CARGO_TARGET_DIR: ${{ github.workspace }}/target
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          # Senha vazia: chave gerada com tauri signer generate --ci
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ''
         with:
           tagName: v__VERSION__
           releaseName: Questlog __VERSION__

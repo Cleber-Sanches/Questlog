@@ -14,12 +14,15 @@ Workflow: [`.github/workflows/release.yml`](../.github/workflows/release.yml)
 
 ### 1. Secret da assinatura (uma vez)
 
-Em **Settings → Secrets and variables → Actions**, crie:
+Em **Settings → Secrets and variables → Actions**, crie `TAURI_SIGNING_PRIVATE_KEY` com o conteúdo **inteiro** de `keys/questlog.key`.
 
-| Secret | Valor |
-| --- | --- |
-| `TAURI_SIGNING_PRIVATE_KEY` | Conteúdo inteiro de `keys/questlog.key` |
-| `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` | Vazio se a chave foi gerada com `--ci` |
+Forma segura (preserva quebras de linha — evita o erro `Missing comment in secret key`):
+
+```powershell
+gh secret set TAURI_SIGNING_PRIVATE_KEY < keys/questlog.key
+```
+
+A chave local é `--ci` (senha vazia). Não precisa de secret de senha.
 
 Em **Settings → Actions → General → Workflow permissions**, marque **Read and write**.
 
