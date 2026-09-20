@@ -1,6 +1,6 @@
 [package]
 name = "questlog"
-version = "0.3.3"
+version = "0.3.4"
 description = "Questlog — guia local de conquistas com sync Steam"
 authors = ["Questlog"]
 edition = "2021"
