@@ -69,29 +69,46 @@ jobs:
             throw @"
           Secret TAURI_SIGNING_PRIVATE_KEY não está configurado.
           No PC (na pasta do repo):
-            gh secret set TAURI_SIGNING_PRIVATE_KEY < keys/questlog.key
+            Get-Content -Raw keys/trophydesk.key | gh secret set TAURI_SIGNING_PRIVATE_KEY
           "@
           }
 
-          $raw = $env:KEY.Trim()
-          # Se colaram com \n literais no GitHub UI, normaliza.
-          if ($raw -notmatch '(?m)^untrusted comment:') {
+          $raw = $env:KEY.Trim().Trim('"').Trim("'")
+          if ($raw -match '\\n') {
             $raw = $raw -replace '\\n', "`n"
           }
-          if ($raw -notmatch '(?m)^untrusted comment:') {
+
+          function Convert-FromB64([string]$s) {
+            $clean = ($s -replace '\s', '')
+            return [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($clean))
+          }
+
+          $material = $raw
+          if ($material -notmatch '(?m)^untrusted comment:') {
+            try {
+              $decoded = Convert-FromB64 $material
+              if ($decoded -match '(?m)^untrusted comment:') {
+                $material = $decoded
+                Write-Host "Chave em base64 decodificada."
+              }
+            } catch {
+              # mantém $material original; validação abaixo decide
+            }
+          }
+
+          if ($material -notmatch '(?m)^untrusted comment:') {
             throw @"
-          Chave inválida: falta a linha 'untrusted comment:'.
-          Cole o arquivo keys/questlog.key INTEIRO, sem aspas.
-          Comando seguro:
-            gh secret set TAURI_SIGNING_PRIVATE_KEY < keys/questlog.key
+          Chave inválida: falta 'untrusted comment:' (texto ou base64 do keys/*.key).
+          Comando:
+            Get-Content -Raw keys/trophydesk.key | gh secret set TAURI_SIGNING_PRIVATE_KEY
           "@
           }
 
           $path = Join-Path $env:RUNNER_TEMP 'questlog.key'
           $utf8 = New-Object System.Text.UTF8Encoding $false
-          [System.IO.File]::WriteAllText($path, ($raw.TrimEnd() + "`n"), $utf8)
+          [System.IO.File]::WriteAllText($path, ($material.TrimEnd() + "`n"), $utf8)
           "TAURI_SIGNING_PRIVATE_KEY_PATH=$path" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
-          Write-Host "Chave de assinatura ok (arquivo temporário)."
+          Write-Host "Chave de assinatura ok."
 
       - name: Build and publish
         uses: tauri-apps/tauri-action@v1

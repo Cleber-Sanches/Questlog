@@ -16,10 +16,12 @@ Workflow: [`.github/workflows/release.yml`](../.github/workflows/release.yml)
 
 Em **Settings → Secrets and variables → Actions**, crie `TAURI_SIGNING_PRIVATE_KEY` com o conteúdo **inteiro** de `keys/questlog.key`.
 
-Forma segura (preserva quebras de linha — evita o erro `Missing comment in secret key`):
+Forma segura (o arquivo pode ser base64 numa linha; a Action decodifica):
 
 ```powershell
-gh secret set TAURI_SIGNING_PRIVATE_KEY < keys/questlog.key
+Get-Content -Raw keys/trophydesk.key | gh secret set TAURI_SIGNING_PRIVATE_KEY
+# ou, se existir:
+Get-Content -Raw keys/questlog.key | gh secret set TAURI_SIGNING_PRIVATE_KEY
 ```
 
 A chave local é `--ci` (senha vazia). Não precisa de secret de senha.
