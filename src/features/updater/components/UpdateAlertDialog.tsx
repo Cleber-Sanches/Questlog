@@ -89,12 +89,12 @@ export function UpdateAlertDialog({
         {downloading || installing ? (
           <div className="updateAlertProgress">
             <span className="updateAlertProgressText">
-              {Math.min(100, installing ? 100 : progress)}%
+              {installing ? t('settings.update.installingShort') : `${Math.min(100, progress)}%`}
             </span>
             <SegmentedFill
-              percent={installing ? 100 : progress}
+              percent={installing ? Math.max(progress, 92) : progress}
               brand
-              done={installing}
+              done={false}
             />
           </div>
         ) : null}

@@ -6,12 +6,6 @@ import { getVersion } from '@tauri-apps/api/app'
 import { useToast } from '@/app/providers/ToastProvider'
 import { useT } from '@/app/providers/LocaleProvider'
 
-function waitMs(ms: number) {
-  return new Promise<void>((resolve) => {
-    window.setTimeout(resolve, ms)
-  })
-}
-
 function waitForPaint() {
   return new Promise<void>((resolve) => {
     requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
@@ -141,13 +135,26 @@ export function useAppUpdater(options?: { autoCheck?: boolean }) {
       }
 
       flushSync(() => {
-        setProgress(100)
+        setProgress(92)
         setPhase('installing')
       })
       await waitForPaint()
-      await waitMs(360)
 
-      await target.install()
+      // NSIS roda em /S (quiet) — progresso só na UI do app, como no Setup.
+      const installStarted = performance.now()
+      const INSTALL_UI_MS = 2800
+      const installTick = window.setInterval(() => {
+        const t = Math.min(1, (performance.now() - installStarted) / INSTALL_UI_MS)
+        paintProgress(92 + easeOut(t) * 7)
+      }, 40)
+
+      try {
+        await target.install()
+      } finally {
+        window.clearInterval(installTick)
+      }
+
+      paintProgress(100)
       toast(t('settings.update.installed'), 'success')
       await relaunch()
     } catch (err) {

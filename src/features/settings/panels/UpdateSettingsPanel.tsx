@@ -125,9 +125,9 @@ export function UpdateSettingsPanel() {
                             : t('settings.update.downloading', { progress: String(progress) })}
                         </p>
                         <SegmentedFill
-                          percent={phase === 'installing' ? 100 : progress}
+                          percent={phase === 'installing' ? Math.max(progress, 92) : progress}
                           brand
-                          done={phase === 'installing'}
+                          done={false}
                         />
                       </div>
                     ) : null}
