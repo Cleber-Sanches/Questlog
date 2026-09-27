@@ -352,7 +352,7 @@ export function AchievementEditor({
 
         <div className="drawerShellActions">
           <div className="drawerShellActionsLeft">
-            {!isNew && onDelete ? (
+            {onDelete ? (
               <button type="button" className="drawerActionDanger" onClick={onDelete}>
                 <Trash size={16} weight="fill" aria-hidden />
                 <span>{t('common.delete')}</span>

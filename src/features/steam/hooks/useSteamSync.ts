@@ -392,15 +392,27 @@ export function useSteamSync(appId?: string | null) {
     )
   }, [sync])
 
-  // Sync ao abrir o jogo / quando a lista de conquistas fica disponível
+  // Sync ao abrir o jogo / quando a lista de conquistas fica disponível.
+  // Não re-sincronizar só porque o length mudou (ex.: conquista custom criada).
+  const bootstrappedForApp = useRef<string | null>(null)
   useEffect(() => {
-    if (!appId || achievements.length === 0) return
+    bootstrappedForApp.current = null
     lastMtime.current = 0
     lastFingerprint.current = ''
+  }, [appId])
+
+  useEffect(() => {
+    if (!appId || achievements.length === 0) return
+    if (bootstrappedForApp.current === appId) return
+    bootstrappedForApp.current = appId
     runAndAnnounce()
+  }, [appId, achievements.length, runAndAnnounce])
+
+  useEffect(() => {
+    if (!appId) return
     const id = window.setInterval(runAndAnnounce, SYNC_INTERVAL_MS)
     return () => window.clearInterval(id)
-  }, [appId, achievements.length, runAndAnnounce])
+  }, [appId, runAndAnnounce])
 
   useWindowFocus(runAndAnnounce)
 }

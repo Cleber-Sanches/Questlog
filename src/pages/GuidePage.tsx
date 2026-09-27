@@ -8,6 +8,7 @@ import { useAchievementFilters } from '@/features/achievements/hooks/useAchievem
 import { AchievementList } from '@/features/achievements/components/AchievementList'
 import { AchievementEditor } from '@/features/achievements/components/AchievementEditor'
 import { showHiddenAchievements } from '@/features/achievements/utils/hidden'
+import { EMPTY_FACETS } from '@/features/achievements/utils/filter'
 import { useSteamLocaleTexts } from '@/features/steam/hooks/useSteamLocaleTexts'
 import { useKeyboardShortcut } from '@/hooks/useKeyboardShortcut'
 import { EmptyState } from '@/components/feedback/EmptyState'
@@ -20,6 +21,7 @@ export function GuidePage() {
   const { activeGame, loading, settings } = useAppData()
   const { achievements, toggleCompleted, patch, create, remove } = useAchievements(activeGame?.appId)
   const filters = useAchievementFilters(achievements, showHiddenAchievements(settings))
+  const { setGroupBy, setStatus, setSearch, setFacets } = filters
   useSteamLocaleTexts(activeGame?.appId)
   const { openModal } = useModal()
   const searchRef = useRef<HTMLInputElement>(null)
@@ -47,6 +49,11 @@ export function GuidePage() {
 
   const handleNew = useCallback(async () => {
     if (!activeGame) return
+    // Garante que a nova conquista aparece (Caça/filtros escondem sem classificação).
+    setGroupBy('flat')
+    setStatus('all')
+    setSearch('')
+    setFacets(EMPTY_FACETS)
     const item = await create()
     if (!item) return
     openModal(
@@ -58,7 +65,17 @@ export function GuidePage() {
         onDelete={() => handleDelete(item.id)}
       />,
     )
-  }, [activeGame, create, openModal, handleSave, handleDelete])
+  }, [
+    activeGame,
+    create,
+    openModal,
+    handleSave,
+    handleDelete,
+    setGroupBy,
+    setStatus,
+    setSearch,
+    setFacets,
+  ])
 
   useKeyboardShortcut('ctrl+k', useCallback(() => searchRef.current?.focus(), []))
 
@@ -97,7 +114,7 @@ export function GuidePage() {
             }}
             onToggle={(a) => void toggleCompleted(a)}
             onSave={handleSave}
-            onDelete={(id) => handleDelete(id)}
+            onDelete={(id) => void remove(id)}
           />
         </GuideLayout>
       )}

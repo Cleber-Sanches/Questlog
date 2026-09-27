@@ -103,12 +103,12 @@ pub fn db_insert_achievement(
     state: tauri::State<'_, Arc<AppState>>,
     app_id: String,
     achievement: Achievement,
-) -> AppResult<()> {
+) -> AppResult<Achievement> {
     let conn = state.db.lock();
-    repos::insert_achievement(&conn, &app_id, &achievement)?;
+    let created = repos::insert_achievement(&conn, &app_id, &achievement)?;
     drop(conn);
     state.mark_dirty_for_backup();
-    Ok(())
+    Ok(created)
 }
 
 #[tauri::command]

@@ -8,7 +8,7 @@ export const achievementsApi = {
   patch: (appId: string, achievement: Achievement) =>
     invoke<void>('db_patch_achievement', { appId, achievement }),
   insert: (appId: string, achievement: Achievement) =>
-    invoke<void>('db_insert_achievement', { appId, achievement }),
+    invoke<Achievement>('db_insert_achievement', { appId, achievement }),
   remove: (appId: string, id: number) =>
     invoke<void>('db_delete_achievement', { appId, id }),
   setCollapsed: (appId: string, view: string, sectionName: string, collapsed: boolean) =>

@@ -42,8 +42,18 @@ export function useAchievements(appId?: string | null) {
   const replaceAll = useCallback(
     async (items: Achievement[]) => {
       if (!appId) return
-      setAchievementsLocal(appId, items)
-      await achievementsApi.setAll(appId, items)
+      const isCustom = (a: Achievement) => {
+        const api = (a.apiName || '').trim().toLowerCase()
+        return api.startsWith('custom_') || api.startsWith('guia_')
+      }
+      let merged = items
+      setAchievementsLocal(appId, (prev) => {
+        const ids = new Set(items.map((i) => i.id))
+        const keep = prev.filter((a) => isCustom(a) && !ids.has(a.id))
+        merged = keep.length ? [...items, ...keep] : items
+        return merged
+      })
+      await achievementsApi.setAll(appId, merged)
     },
     [appId, setAchievementsLocal],
   )
@@ -51,12 +61,11 @@ export function useAchievements(appId?: string | null) {
   const create = useCallback(
     async (partial?: Partial<Achievement>) => {
       if (!appId) return null
-      const id = Math.max(0, ...achievements.map((a) => a.id)) + 1
-      const item: Achievement = {
-        id,
+      const draft: Achievement = {
+        id: 0,
         title: partial?.title || t('achievement.new'),
         description: partial?.description || '',
-        apiName: partial?.apiName || `custom_${id}`,
+        apiName: partial?.apiName || 'custom_pending',
         icon: partial?.icon || '',
         group: partial?.group || ACH_KEYS.GROUP_NONE,
         dlc: partial?.dlc || ACH_KEYS.DLC_BASE,
@@ -66,23 +75,36 @@ export function useAchievements(appId?: string | null) {
         completed: false,
         missable: false,
         ...partial,
+        id: 0,
       }
-      const next = [...achievements, item]
-      setAchievementsLocal(appId, next)
-      await achievementsApi.insert(appId, item)
-      return item
+      try {
+        const created = await achievementsApi.insert(appId, draft)
+        setAchievementsLocal(appId, (current) => {
+          if (current.some((a) => a.id === created.id)) return current
+          return [...current, created]
+        })
+        return created
+      } catch (err) {
+        toast(String(err), 'error')
+        await refresh()
+        return null
+      }
     },
-    [appId, achievements, setAchievementsLocal, t],
+    [appId, setAchievementsLocal, t, toast, refresh],
   )
 
   const remove = useCallback(
     async (id: number) => {
       if (!appId) return
-      const next = achievements.filter((a) => a.id !== id)
-      setAchievementsLocal(appId, next)
-      await achievementsApi.remove(appId, id)
+      setAchievementsLocal(appId, (current) => current.filter((a) => a.id !== id))
+      try {
+        await achievementsApi.remove(appId, id)
+      } catch (err) {
+        toast(String(err), 'error')
+        await refresh()
+      }
     },
-    [appId, achievements, setAchievementsLocal],
+    [appId, setAchievementsLocal, toast, refresh],
   )
 
   return { achievements, patch, toggleCompleted, replaceAll, create, remove }

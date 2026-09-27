@@ -346,7 +346,29 @@ pub fn patch_achievement(conn: &Connection, app_id: &str, item: &Achievement) ->
     Ok(())
 }
 
-pub fn insert_achievement(conn: &Connection, app_id: &str, item: &Achievement) -> AppResult<()> {
+pub fn next_achievement_id(conn: &Connection, app_id: &str) -> AppResult<i64> {
+    let next = conn.query_row(
+        "SELECT COALESCE(MAX(id), 0) + 1 FROM achievements WHERE app_id = ?1",
+        params![app_id],
+        |row| row.get::<_, i64>(0),
+    )?;
+    Ok(next)
+}
+
+pub fn insert_achievement(conn: &Connection, app_id: &str, item: &Achievement) -> AppResult<Achievement> {
+    let mut item = item.clone();
+    item.id = next_achievement_id(conn, app_id)?;
+    if item
+        .api_name
+        .as_deref()
+        .map(|api| {
+            let api = api.trim().to_ascii_lowercase();
+            api.is_empty() || api.starts_with("custom_") || api.starts_with("guia_")
+        })
+        .unwrap_or(true)
+    {
+        item.api_name = Some(format!("custom_{}", item.id));
+    }
     conn.execute(
         "INSERT INTO achievements(
             id, app_id, api_name, title, description, icon_url, global_percent,
@@ -381,7 +403,7 @@ pub fn insert_achievement(conn: &Connection, app_id: &str, item: &Achievement) -
             if item.hidden { 1 } else { 0 },
         ],
     )?;
-    Ok(())
+    Ok(item)
 }
 
 pub fn delete_achievement(conn: &Connection, app_id: &str, id: i64) -> AppResult<()> {

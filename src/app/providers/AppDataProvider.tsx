@@ -31,7 +31,10 @@ interface AppDataContextValue {
   settings: Record<string, string>
   refresh: () => Promise<void>
   setActiveGame: (appId: string) => Promise<void>
-  setAchievementsLocal: (appId: string, items: Achievement[]) => void
+  setAchievementsLocal: (
+    appId: string,
+    items: Achievement[] | ((prev: Achievement[]) => Achievement[]),
+  ) => void
   setSetting: (key: string, value: string) => Promise<void>
   upsertGameLocal: (game: Game) => void
 }
@@ -70,9 +73,16 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     [],
   )
 
-  const setAchievementsLocal = useCallback((appId: string, items: Achievement[]) => {
-    setAchievementsByAppId((prev) => ({ ...prev, [appId]: items }))
-  }, [])
+  const setAchievementsLocal = useCallback(
+    (appId: string, items: Achievement[] | ((prev: Achievement[]) => Achievement[])) => {
+      setAchievementsByAppId((prev) => {
+        const current = prev[appId] ?? []
+        const next = typeof items === 'function' ? items(current) : items
+        return { ...prev, [appId]: next }
+      })
+    },
+    [],
+  )
 
   const setSetting = useCallback(async (key: string, value: string) => {
     await invoke<void>('db_set_setting', { key, value })

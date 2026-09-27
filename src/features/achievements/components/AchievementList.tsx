@@ -97,20 +97,48 @@ export function AchievementList({
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
 
   if (groupBy === 'queue' && hunt && !hunt.classified) {
+    const hasItems = groups.some((g) => g.items.length > 0)
     return (
-      <div className="huntQueueEmpty">
-        <p className="huntQueueEmptyTitle">{t('guide.queue.empty.title')}</p>
-        <p className="huntQueueEmptyHint">{t('guide.queue.empty.hint')}</p>
-        <div className="huntQueueEmptyActions">
-          <Button variant="primary" size="md" onClick={() => openGuideChat()}>
-            {t('guide.queue.empty.chat')}
-          </Button>
-          {onShowAll ? (
-            <Button variant="ghost" size="md" onClick={onShowAll}>
-              {t('guide.queue.empty.list')}
+      <div className="huntQueueEmptyWrap">
+        <div className="huntQueueEmpty">
+          <p className="huntQueueEmptyTitle">{t('guide.queue.empty.title')}</p>
+          <p className="huntQueueEmptyHint">{t('guide.queue.empty.hint')}</p>
+          <div className="huntQueueEmptyActions">
+            <Button variant="primary" size="md" onClick={() => openGuideChat()}>
+              {t('guide.queue.empty.chat')}
             </Button>
-          ) : null}
+            {onShowAll ? (
+              <Button variant="ghost" size="md" onClick={onShowAll}>
+                {t('guide.queue.empty.list')}
+              </Button>
+            ) : null}
+          </div>
         </div>
+        {hasItems ? (
+          <div id="achievementList" className={compact ? 'isCompact' : ''}>
+            {groups.map((group) => (
+              <div key={group.key} className="achievementGroup">
+                <div className="groupSection">
+                  <div className="groupSectionInner">
+                    {group.items.map((a) => (
+                      <AchievementRow
+                        key={a.id}
+                        achievement={a}
+                        groupBy={groupBy}
+                        compact={compact}
+                        selected={selectedId === a.id}
+                        onSelect={onSelect ? () => onSelect(a) : undefined}
+                        onToggle={() => onToggle(a)}
+                        onSave={onSave}
+                        onDelete={() => onDelete(a.id)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : null}
       </div>
     )
   }

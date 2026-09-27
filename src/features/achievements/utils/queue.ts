@@ -75,8 +75,20 @@ export function buildHuntQueue(pending: Achievement[], limit = HUNT_QUEUE_LIMIT)
   if (totalPending === 0) {
     return { classified: true, groups: [], hidden: 0, totalPending }
   }
+
+  const isCustom = (item: Achievement) => {
+    const api = (item.apiName || '').trim().toLowerCase()
+    return api.startsWith('custom_') || api.startsWith('guia_')
+  }
+
+  // Sem classificação: ainda mostra todas as pendentes (senão conquistas novas somem).
   if (!pending.some(isClassified)) {
-    return { classified: false, groups: [], hidden: 0, totalPending }
+    return {
+      classified: false,
+      groups: [{ key: ACH_KEYS.QUEUE_REST, items: pending }],
+      hidden: 0,
+      totalPending,
+    }
   }
 
   const ranked = pending
@@ -94,6 +106,14 @@ export function buildHuntQueue(pending: Achievement[], limit = HUNT_QUEUE_LIMIT)
     .map((entry) => entry.item)
 
   const sliced = ranked.slice(0, Math.max(1, limit))
+  const seen = new Set(sliced.map((item) => item.id))
+  for (const item of pending) {
+    if (isCustom(item) && !seen.has(item.id)) {
+      sliced.push(item)
+      seen.add(item.id)
+    }
+  }
+
   const map = new Map<string, Achievement[]>()
   for (const item of sliced) {
     const key = huntKey(item)
