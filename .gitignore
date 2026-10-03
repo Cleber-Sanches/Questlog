@@ -35,3 +35,11 @@ installer/src-tauri/resources/Questlog_x64-setup.exe
 *.njsproj
 *.sln
 *.sw?
+
+# Python
+**/__pycache__/
+*.py[cod]
+
+# Protótipos / dumps locais (não fazem parte do app)
+valheim-ui-mocks/
+src-tauri/improved_tips.json
