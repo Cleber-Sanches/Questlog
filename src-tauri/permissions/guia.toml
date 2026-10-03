@@ -28,6 +28,7 @@ commands.allow = [
   "backup_get_status",
   "backup_maybe_auto",
   "backup_restore_sqlite",
+  "backup_restore_latest_if_empty",
   "open_external_url",
   "take_pending_guide_opens",
   "read_guide_open_file",

@@ -455,6 +455,7 @@ export const en = {
   'library.bar.pending.unit.one': 'remaining',
   'library.empty.title': 'No games in your library',
   'library.empty.hint': 'Search Steam above to add a game and start the guide.',
+  'library.empty.reload': 'Reload guides',
   'library.empty.search': 'No results for "{q}"',
   'library.open': 'Open guide for {name}',
 

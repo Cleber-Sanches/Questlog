@@ -60,3 +60,10 @@ pub fn backup_restore_sqlite(
 ) -> AppResult<()> {
     backup::restore_sqlite_backup(&state, std::path::Path::new(&path))
 }
+
+#[tauri::command]
+pub fn backup_restore_latest_if_empty(
+    state: tauri::State<'_, Arc<AppState>>,
+) -> AppResult<bool> {
+    backup::restore_latest_if_empty(&state)
+}

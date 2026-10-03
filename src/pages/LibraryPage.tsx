@@ -25,7 +25,7 @@ type LibrarySort = 'hunt' | 'name'
 export function LibraryPage() {
   const t = useT()
   const { bcp47 } = useLocale()
-  const { games, achievementsByAppId, activeGame, setActiveGame, loading } = useAppData()
+  const { games, achievementsByAppId, activeGame, setActiveGame, loading, refresh } = useAppData()
   const { navigate } = useRouter()
   const { bind } = useWindowDrag()
   const [query, setQuery] = useState('')
@@ -131,6 +131,9 @@ export function LibraryPage() {
                 items={steamItems}
                 busy={busy}
                 onAdd={(item) => void addFromSteam(item)}
+                onReload={() => {
+                  void refresh().catch(() => undefined)
+                }}
               />
             ) : library.length === 0 ? (
               <div className="archivedEmpty">
@@ -227,6 +230,7 @@ function EmptyLibrary({
   items,
   busy,
   onAdd,
+  onReload,
 }: {
   searching: boolean
   loading: boolean
@@ -234,6 +238,7 @@ function EmptyLibrary({
   items: SteamSearchItem[]
   busy: boolean
   onAdd: (item: SteamSearchItem) => void
+  onReload?: () => void
 }) {
   const t = useT()
 
@@ -245,6 +250,11 @@ function EmptyLibrary({
         </div>
         <p>{t('library.empty.title')}</p>
         <span>{t('library.empty.hint')}</span>
+        {onReload ? (
+          <button type="button" className="btn btnGhost" style={{ marginTop: 14 }} onClick={onReload}>
+            {t('library.empty.reload')}
+          </button>
+        ) : null}
       </div>
     )
   }

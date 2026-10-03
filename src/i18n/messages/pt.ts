@@ -470,6 +470,7 @@ export const pt = {
   'library.bar.pending.unit.one': 'pendente',
   'library.empty.title': 'Nenhum jogo na biblioteca',
   'library.empty.hint': 'Busque um jogo da Steam acima para começar o guia.',
+  'library.empty.reload': 'Recarregar guias',
   'library.empty.search': 'Nenhum resultado para "{q}"',
   'library.open': 'Abrir guia de {name}',
 

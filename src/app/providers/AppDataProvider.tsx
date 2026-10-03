@@ -41,6 +41,19 @@ interface AppDataContextValue {
 
 const AppDataContext = createContext<AppDataContextValue | null>(null)
 
+async function loadBootstrap(retries = 3): Promise<Bootstrap> {
+  let lastErr: unknown
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await invoke<Bootstrap>('db_get_bootstrap')
+    } catch (err) {
+      lastErr = err
+      await new Promise((r) => setTimeout(r, 200 * (i + 1)))
+    }
+  }
+  throw lastErr
+}
+
 export function AppDataProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast()
   const [loading, setLoading] = useState(true)
@@ -50,8 +63,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({})
   const [settings, setSettings] = useState<Record<string, string>>({})
 
-  const refresh = useCallback(async () => {
-    const data = await invoke<Bootstrap>('db_get_bootstrap')
+  const applyBootstrap = useCallback((data: Bootstrap) => {
     setGames(data.games ?? [])
     setActiveGameAppId(data.activeGameAppId ?? null)
     setAchievementsByAppId(data.achievementsByAppId ?? {})
@@ -59,19 +71,43 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setSettings(data.settings ?? {})
   }, [])
 
+  const refresh = useCallback(async () => {
+    let data = await loadBootstrap()
+    // Banco vazio após update? tenta o backup automático mais recente.
+    if ((data.games ?? []).length === 0) {
+      try {
+        const restored = await invoke<boolean>('backup_restore_latest_if_empty')
+        if (restored) {
+          data = await loadBootstrap()
+          toast('Guias restaurados do backup automático.', 'success')
+        }
+      } catch {
+        // ignora — usuário pode restaurar manualmente
+      }
+    }
+    applyBootstrap(data)
+  }, [applyBootstrap, toast])
+
   useEffect(() => {
-    refresh()
-      .catch((err: unknown) => toast(String(err), 'error'))
-      .finally(() => setLoading(false))
+    let cancelled = false
+    ;(async () => {
+      try {
+        await refresh()
+      } catch (err: unknown) {
+        if (!cancelled) toast(String(err), 'error')
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
   }, [refresh, toast])
 
-  const setActiveGame = useCallback(
-    async (appId: string) => {
-      await gamesApi.setActive(appId)
-      setActiveGameAppId(appId)
-    },
-    [],
-  )
+  const setActiveGame = useCallback(async (appId: string) => {
+    await gamesApi.setActive(appId)
+    setActiveGameAppId(appId)
+  }, [])
 
   const setAchievementsLocal = useCallback(
     (appId: string, items: Achievement[] | ((prev: Achievement[]) => Achievement[])) => {

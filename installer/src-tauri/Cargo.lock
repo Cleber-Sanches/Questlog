@@ -2366,7 +2366,7 @@ dependencies = [
 
 [[package]]
 name = "questlog-setup"
-version = "0.3.12"
+version = "0.3.13"
 dependencies = [
  "serde",
  "serde_json",

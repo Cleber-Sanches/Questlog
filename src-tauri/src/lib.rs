@@ -116,6 +116,7 @@ pub fn run() {
             commands::backup::backup_get_status,
             commands::backup::backup_maybe_auto,
             commands::backup::backup_restore_sqlite,
+            commands::backup::backup_restore_latest_if_empty,
             commands::system::open_external_url,
             commands::guide_open::take_pending_guide_opens,
             commands::guide_open::read_guide_open_file,

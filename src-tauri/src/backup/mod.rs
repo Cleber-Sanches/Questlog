@@ -101,6 +101,23 @@ pub fn set_external_dir(conn: &Connection, path: &str) -> AppResult<()> {
     repos::set_setting(conn, "external_backup_dir", path)
 }
 
+pub fn latest_backup(app_data: &Path) -> Option<PathBuf> {
+    let dir = backups_dir(app_data);
+    let mut files: Vec<_> = fs::read_dir(&dir)
+        .ok()?
+        .filter_map(|e| e.ok())
+        .filter(|e| {
+            e.path()
+                .extension()
+                .and_then(|x| x.to_str())
+                .map(|x| x.eq_ignore_ascii_case("sqlite"))
+                .unwrap_or(false)
+        })
+        .collect();
+    files.sort_by_key(|e| e.metadata().and_then(|m| m.modified()).ok());
+    files.pop().map(|e| e.path())
+}
+
 pub fn restore_sqlite_backup(
     state: &crate::state::AppState,
     source: &Path,
@@ -135,4 +152,28 @@ pub fn restore_sqlite_backup(
     let fresh = crate::db::schema::open_db(&db_path)?;
     *state.db.lock() = fresh;
     Ok(())
+}
+
+/// Se o banco ativo estiver sem jogos, restaura o backup local mais recente.
+pub fn restore_latest_if_empty(state: &crate::state::AppState) -> AppResult<bool> {
+    let empty = {
+        let conn = state.db.lock();
+        repos::list_games(&conn)?.is_empty()
+    };
+    if !empty {
+        return Ok(false);
+    }
+    let Some(backup) = latest_backup(&state.app_data_dir) else {
+        return Ok(false);
+    };
+    // Confirma que o backup tem jogos antes de sobrescrever
+    {
+        let probe = Connection::open(&backup)?;
+        let n: i64 = probe.query_row("SELECT COUNT(*) FROM games", [], |r| r.get(0))?;
+        if n <= 0 {
+            return Ok(false);
+        }
+    }
+    restore_sqlite_backup(state, &backup)?;
+    Ok(true)
 }
