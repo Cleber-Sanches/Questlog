@@ -31,7 +31,7 @@ export function TipsEditor({ appId, seedKey, value, onChange, placeholder }: Pro
     setReady(false)
     ;(async () => {
       const asHtml = plainTipsToHtml(value || '')
-      const resolved = await tipsHtmlForDisplay(asHtml)
+      const resolved = await tipsHtmlForDisplay(asHtml, appId)
       if (!cancelled) {
         seeding.current = true
         setDisplayHtml(resolved)

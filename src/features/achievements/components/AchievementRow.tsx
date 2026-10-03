@@ -142,7 +142,7 @@ export function AchievementRow({
     openModal(
       <Modal title={`${t('row.tips')} · ${title}`}>
         {hasTips ? (
-          <TipsHtml html={achievement.tips || ''} />
+          <TipsHtml html={achievement.tips || ''} appId={appId} />
         ) : (
           <p className="tipsEmpty">{t('row.tips.emptyBody')}</p>
         )}

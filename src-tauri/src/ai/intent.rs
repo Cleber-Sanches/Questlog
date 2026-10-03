@@ -23,6 +23,8 @@ pub struct IntentPlan {
     pub full_guide: bool,
     /// Refazer grupos existentes (não só os sem grupo).
     pub redo_groups: bool,
+    /// Melhorar dicas já preenchidas (imagens, organização) — não só vazias.
+    pub improve_tips: bool,
     /// Só vídeos: resolve no app sem chamar o modelo.
     pub skip_model: bool,
     pub catalog_cap: usize,
@@ -66,8 +68,18 @@ impl IntentPlan {
             Tool::Ask => {
                 "Foque em responder a dúvida. Só emita patches se o usuário pedir alteração."
             }
+            Tool::Tips if self.improve_tips => {
+                "Ferramenta: DICAS (melhorar). Reescreva as tips do catálogo (já têm texto): \
+                 organize em HTML claro, adicione <img src=\"https://url-direta\"> quando ajudar, \
+                 ajuste layout. tips SEMPRE HTML (p, ul, li, strong, h3, img). \
+                 PROIBIDO ![alt](url). Em weirdgloop use /images/ (sem /w/). Não altere vídeo/grupo/nível/dificuldade."
+            }
             Tool::Tips => {
-                "Ferramenta: DICAS. Preencha tips (e guideUrl se achar) só nas conquistas do catálogo sem dica. Não altere vídeo, grupo, nível ou dificuldade."
+                "Ferramenta: DICAS. \
+                 Com conquistas mencionadas (@): reescreva/melhore as tips delas (imagens, organização, clareza), \
+                 mesmo que já tenham dica. Sem @: preencha tips (e guideUrl se achar) só nas do catálogo sem dica. \
+                 tips SEMPRE em HTML: <p>, <ul>, <li>, <strong>, <h3> e imagens como <img src=\"https://...\">. \
+                 PROIBIDO markdown de imagem ![alt](url). Em weirdgloop use /images/ (sem /w/). Não altere vídeo, grupo, nível ou dificuldade."
             }
             Tool::Missable => {
                 "Ferramenta: PERDÍVEIS. Defina missable true/false. \
@@ -275,8 +287,16 @@ fn detect_missable(q: &str) -> bool {
 }
 
 fn detect_difficulty(q: &str) -> bool {
+    // "ficar fácil de entender" / "mais fácil ler" ≠ classificar dificuldade
+    let cleaned = q
+        .replace("fácil de ", " ")
+        .replace("facil de ", " ")
+        .replace("mais fácil", " ")
+        .replace("mais facil", " ")
+        .replace("bem fácil", " ")
+        .replace("bem facil", " ");
     has_any(
-        q,
+        &cleaned,
         &[
             "dificuld",
             "classific",
@@ -306,6 +326,59 @@ fn detect_tips(q: &str) -> bool {
     )
 }
 
+/// “Melhore / organize / coloque imagens nas dicas” → editar as que já têm texto.
+fn wants_improve_tips(q: &str) -> bool {
+    let about_tips = q.contains("dica") || q.contains("tip") || q.contains("texto");
+    if !about_tips {
+        return false;
+    }
+    // “completa as que faltam” / “sem dica” = preencher vazias, não melhorar
+    if has_any(
+        q,
+        &[
+            "que faltam",
+            "sem dica",
+            "sem dicas",
+            "faltando",
+            "vazias",
+            "vazios",
+        ],
+    ) {
+        return false;
+    }
+    has_any(
+        q,
+        &[
+            "melhor",
+            "melhora",
+            "melhorar",
+            "melhores",
+            "organize",
+            "organizar",
+            "organiz",
+            "imagem",
+            "imagens",
+            "foto",
+            "fotos",
+            "ajuste",
+            "ajustar",
+            "ajusta",
+            "reescrev",
+            "refazer",
+            "atualizar",
+            "enriquec",
+            "revis",
+            "formata",
+            "coloque",
+            "coloca",
+            "adicionar",
+            "adicione",
+            "inclua",
+            "incluir",
+        ],
+    )
+}
+
 fn has_mentions(msg: &str) -> bool {
     msg.contains("@[")
 }
@@ -328,6 +401,7 @@ pub fn detect_intent_with_context(user_msg: &str, recent_context: &str) -> Inten
     let missable = detect_missable(&ql);
     let difficulty = detect_difficulty(&ql);
     let tips = detect_tips(&ql);
+    let improve_tips = tips && wants_improve_tips(&ql);
     let redo_groups = groups
         && has_any(
             &ql,
@@ -381,8 +455,11 @@ pub fn detect_intent_with_context(user_msg: &str, recent_context: &str) -> Inten
     }
 
     // Primary: prioridade de ação estruturada
+    // Com @ + dicas: editar tips da mencionada ganha de "fácil/difícil" acidental no texto.
     let primary = if tools.contains(&Tool::FullEnrich) {
         Tool::FullEnrich
+    } else if mentions && tools.contains(&Tool::Tips) {
+        Tool::Tips
     } else if tools.contains(&Tool::Videos) && tools.len() == 1 {
         Tool::Videos
     } else if tools.contains(&Tool::Groups) {
@@ -406,8 +483,19 @@ pub fn detect_intent_with_context(user_msg: &str, recent_context: &str) -> Inten
     let (catalog_cap, chunk_size, agentic, effort, full_guide, label) = match primary {
         // Ask: pouco contexto, sem agentic (rápido)
         Tool::Ask => (12usize, 12, false, "low", false, "Resposta"),
-        // Dicas: cobre todas sem dica (em lotes); web se precisar
-        Tool::Tips => (10_000, 12, true, "medium", true, "Dicas"),
+        // Dicas: vazias em lotes; ou todas com dica se for melhorar
+        Tool::Tips => (
+            10_000,
+            12,
+            true,
+            "medium",
+            true,
+            if improve_tips {
+                "Melhorar dicas"
+            } else {
+                "Dicas"
+            },
+        ),
         // Perdíveis: todas as pendentes, em lotes
         // Perdíveis: classifica localmente (mundo aberto etc.) — sem web; cobre todas em lotes
         Tool::Missable => (10_000, 20, false, "low", true, "Perdíveis"),
@@ -435,7 +523,8 @@ pub fn detect_intent_with_context(user_msg: &str, recent_context: &str) -> Inten
 
     let scope_hint = match primary {
         Tool::Ask => "subset relevante",
-        Tool::Tips => "só sem dica",
+        Tool::Tips if improve_tips => "com dica (melhorar/imagens)",
+        Tool::Tips => "mencionadas ou sem dica",
         Tool::Missable => "para classificar perdível",
         Tool::Difficulty => "sem dificuldade / a revisar",
         Tool::Groups if redo_groups => "todas (refazer)",
@@ -464,6 +553,7 @@ pub fn detect_intent_with_context(user_msg: &str, recent_context: &str) -> Inten
         primary,
         full_guide,
         redo_groups,
+        improve_tips: primary == Tool::Tips && improve_tips,
         skip_model,
         catalog_cap,
         chunk_size,
@@ -608,7 +698,26 @@ pub fn select_targets<'a>(
             scored.sort_by(|a, b| b.0.cmp(&a.0).then_with(|| a.1.title.cmp(&b.1.title)));
             scored.into_iter().map(|(_, a)| a).collect()
         }
-        Tool::Tips => pool.into_iter().filter(|a| needs_tips(a)).collect(),
+        Tool::Tips => {
+            if mentioned_only {
+                // Com @: editar/reescrever as mencionadas, mesmo com dica.
+                pool
+            } else if plan.improve_tips {
+                // Melhorar/organizar/imagens: trabalha nas que JÁ têm dica.
+                let with_tips: Vec<&Achievement> = pool
+                    .iter()
+                    .copied()
+                    .filter(|a| !needs_tips(a))
+                    .collect();
+                if with_tips.is_empty() {
+                    pool.into_iter().filter(|a| needs_tips(a)).collect()
+                } else {
+                    with_tips
+                }
+            } else {
+                pool.into_iter().filter(|a| needs_tips(a)).collect()
+            }
+        }
         Tool::Missable => {
             // Prioriza sem revisão clara (sem dificuldade) e as hard
             let mut v: Vec<&Achievement> = pool;
@@ -752,5 +861,109 @@ mod tests {
     fn completa_dicas_que_faltam() {
         let p = detect_intent("Completa as dicas que faltam");
         assert_eq!(p.primary, Tool::Tips);
+    }
+
+    #[test]
+    fn mention_with_tips_keeps_mentioned_even_if_filled() {
+        let msg = "em @[Odin está satisfeito](odin_ok) em dicas coloque as imagens e organize o texto";
+        let p = detect_intent(msg);
+        assert_eq!(p.primary, Tool::Tips);
+
+        let with_tips = Achievement {
+            id: 1,
+            api_name: Some("odin_ok".into()),
+            title: "Odin está satisfeito".into(),
+            description: Some("Mate os mini chefes".into()),
+            title_en: None,
+            description_en: None,
+            icon: None,
+            global_percent: None,
+            group: None,
+            group_en: None,
+            dlc: None,
+            tips: Some("<p>já tem dica</p>".into()),
+            video_url: None,
+            guide_url: None,
+            difficulty: None,
+            missable: false,
+            req_level: None,
+            completed: false,
+            completed_manual: false,
+            unlocked_at: None,
+            progress: None,
+            progress_max: None,
+            hidden: false,
+        };
+        let empty = Achievement {
+            id: 2,
+            api_name: Some("other".into()),
+            title: "Outra".into(),
+            tips: None,
+            ..with_tips.clone()
+        };
+        let list = vec![with_tips.clone(), empty];
+        let targets = select_targets(&list, msg, &p);
+        assert_eq!(targets.len(), 1);
+        assert_eq!(targets[0].api_name.as_deref(), Some("odin_ok"));
+    }
+
+    #[test]
+    fn improve_tips_without_mention_targets_filled() {
+        let msg = "melhores as dicas coloque imagens ajustas as das dicas e organize os textos";
+        let p = detect_intent(msg);
+        assert_eq!(p.primary, Tool::Tips);
+        assert!(p.improve_tips);
+
+        let filled = Achievement {
+            id: 1,
+            api_name: Some("a".into()),
+            title: "Com dica".into(),
+            description: None,
+            title_en: None,
+            description_en: None,
+            icon: None,
+            global_percent: None,
+            group: None,
+            group_en: None,
+            dlc: None,
+            tips: Some("<p>texto</p>".into()),
+            video_url: None,
+            guide_url: None,
+            difficulty: None,
+            missable: false,
+            req_level: None,
+            completed: false,
+            completed_manual: false,
+            unlocked_at: None,
+            progress: None,
+            progress_max: None,
+            hidden: false,
+        };
+        let empty = Achievement {
+            id: 2,
+            api_name: Some("b".into()),
+            title: "Sem dica".into(),
+            tips: None,
+            ..filled.clone()
+        };
+        let list = vec![filled.clone(), empty];
+        let targets = select_targets(&list, msg, &p);
+        assert_eq!(targets.len(), 1);
+        assert_eq!(targets[0].api_name.as_deref(), Some("a"));
+    }
+
+    #[test]
+    fn completa_dicas_que_faltam_does_not_improve() {
+        let p = detect_intent("Completa as dicas que faltam");
+        assert_eq!(p.primary, Tool::Tips);
+        assert!(!p.improve_tips);
+    }
+
+    #[test]
+    fn facil_de_entender_does_not_steal_tips_intent() {
+        let msg = "@[Odin está satisfeito](odin_ok) colocar imagens do mini boss e organizar mais a dica para ficar fácil de entender";
+        let p = detect_intent(msg);
+        assert_eq!(p.primary, Tool::Tips);
+        assert!(!p.includes(Tool::Difficulty));
     }
 }

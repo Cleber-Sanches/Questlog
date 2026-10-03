@@ -84,30 +84,39 @@
   fill: var(--color-text-heading);
 }
 
-.tipsEditor .ql-editor img,
-.tipsView img {
+.tipsEditor .ql-editor img {
   max-width: 100%;
+  max-height: 320px;
+  width: auto;
   height: auto;
+  object-fit: contain;
   border-radius: 6px;
   margin: 0.5rem 0;
   display: block;
 }
 
-.tipsView--html img {
-  cursor: zoom-in;
-  outline: 1px solid transparent;
-  transition: outline-color 0.15s ease, opacity 0.15s ease;
+.tipsView img {
+  max-width: min(100%, 420px);
+  max-height: 220px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 6px;
+  margin: 0.5rem 0;
+  display: block;
+  background: rgba(255, 255, 255, 0.03);
 }
 
-.tipsView--html img:hover {
-  outline-color: rgba(255, 255, 255, 0.18);
-  opacity: 0.95;
+.tipsView--html img {
+  cursor: zoom-in;
 }
 
 .tipsView {
   color: var(--color-text-body);
   font-size: var(--fs-sm);
   line-height: 1.55;
+  overflow-x: auto;
 }
 
 .tipsView--plain {
@@ -122,6 +131,32 @@
   margin-bottom: 0;
 }
 
+.tipsView--html p:has(> img:only-child) {
+  margin: 0.35em 0 0.75em;
+}
+
+.tipsView--html h1,
+.tipsView--html h2,
+.tipsView--html h3 {
+  margin: 0.85em 0 0.4em;
+  font-size: var(--fs-md);
+  font-weight: 650;
+  color: var(--color-text);
+  line-height: 1.35;
+}
+
+.tipsView--html h1:first-child,
+.tipsView--html h2:first-child,
+.tipsView--html h3:first-child {
+  margin-top: 0;
+}
+
+.tipsView--html hr {
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 0.9em 0;
+}
+
 .tipsView--html ul,
 .tipsView--html ol {
   margin: 0 0 0.65em 1.2em;
@@ -130,6 +165,46 @@
 
 .tipsView--html a {
   color: var(--color-accent);
+}
+
+.tipsView--html table {
+  width: 100%;
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+  margin: 0.65em 0 0.9em;
+  font-size: 0.92em;
+  line-height: 1.4;
+}
+
+.tipsView--html thead,
+.tipsView--html tbody,
+.tipsView--html tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.tipsView--html th,
+.tipsView--html td {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.45em 0.55em;
+  text-align: left;
+  vertical-align: top;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.tipsView--html th {
+  color: var(--color-text-heading);
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.04);
+  white-space: normal;
+}
+
+.tipsView--html strong {
+  color: var(--color-text-heading);
+  font-weight: 600;
 }
 
 .tipsEmpty {

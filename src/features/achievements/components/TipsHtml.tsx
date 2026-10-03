@@ -1,46 +1,52 @@
-import { useEffect, useState, type MouseEvent, type KeyboardEvent, type PointerEvent } from 'react'
+import { useEffect, useState, type MouseEvent, type KeyboardEvent } from 'react'
 import {
-  looksLikeHtml,
+  normalizeTipsToHtml,
   sanitizeTipsHtml,
   tipsHtmlForDisplay,
 } from '@/features/media/tipsHtml'
-import { AnchorTooltip, Tooltip } from '@/components/ui/Tooltip'
+import { Tooltip } from '@/components/ui/Tooltip'
 import { useT } from '@/app/providers/LocaleProvider'
 
-export function TipsHtml({ html }: { html: string }) {
+function decorateTipsHtml(asHtml: string, zoomHint: string): string {
+  return sanitizeTipsHtml(asHtml).replace(
+    /<img\b([^>]*?)\/?>/gi,
+    (_m, attrs: string) => {
+      const cleaned = String(attrs)
+        .replace(/\s*title\s*=\s*("[^"]*"|'[^']*')/i, '')
+        .replace(/\s*class\s*=\s*("[^"]*"|'[^']*')/i, '')
+        .replace(/\/\s*$/, '')
+      return `<img class="tipsViewImg" title="${escapeAttr(zoomHint)}"${cleaned} />`
+    },
+  )
+}
+
+function escapeAttr(s: string) {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+}
+
+export function TipsHtml({ html, appId = 'misc' }: { html: string; appId?: string }) {
   const t = useT()
-  const [content, setContent] = useState('')
-  const [plain, setPlain] = useState(false)
+  const zoomHint = t('tips.image.zoom')
+  const [content, setContent] = useState(() =>
+    decorateTipsHtml(normalizeTipsToHtml(html || ''), zoomHint),
+  )
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null)
-  const [imgTip, setImgTip] = useState<HTMLElement | null>(null)
 
   useEffect(() => {
     let cancelled = false
     const raw = html || ''
-    if (!looksLikeHtml(raw)) {
-      setPlain(true)
-      setContent(raw)
-      return
-    }
-    setPlain(false)
-    void tipsHtmlForDisplay(raw).then((resolved) => {
-      if (!cancelled) {
-        const withHint = sanitizeTipsHtml(resolved).replace(
-          /<img\b([^>]*?)>/gi,
-          (_m, attrs: string) => {
-            const cleaned = String(attrs)
-              .replace(/\s*title\s*=\s*("[^"]*"|'[^']*')/i, '')
-              .replace(/\s*class\s*=\s*("[^"]*"|'[^']*')/i, '')
-            return `<img class="tipsViewImg"${cleaned} />`
-          },
-        )
-        setContent(withHint)
-      }
+    setContent(decorateTipsHtml(normalizeTipsToHtml(raw), zoomHint))
+    void tipsHtmlForDisplay(raw, appId).then((resolved) => {
+      if (cancelled) return
+      setContent(decorateTipsHtml(resolved.trim() || '', zoomHint))
     })
     return () => {
       cancelled = true
     }
-  }, [html])
+  }, [html, appId, zoomHint])
 
   useEffect(() => {
     if (!lightboxSrc) return
@@ -71,33 +77,15 @@ export function TipsHtml({ html }: { html: string }) {
     if (src) setLightboxSrc(src)
   }
 
-  function onPointerOver(e: PointerEvent) {
-    const img = (e.target as HTMLElement | null)?.closest?.('img') as HTMLElement | null
-    if (img) setImgTip(img)
-  }
-
-  function onPointerOut(e: PointerEvent) {
-    const img = (e.target as HTMLElement | null)?.closest?.('img')
-    const next = e.relatedTarget as Node | null
-    if (img && (!next || !img.contains(next))) setImgTip(null)
-  }
-
   return (
     <>
-      {plain ? (
-        <div className="tipsView tipsView--plain">{content}</div>
-      ) : (
-        <div
-          className="tipsView tipsView--html"
-          role="presentation"
-          onClick={openFromClick}
-          onKeyDown={onKeyActivate}
-          onPointerOver={onPointerOver}
-          onPointerOut={onPointerOut}
-          dangerouslySetInnerHTML={{ __html: content || '<p></p>' }}
-        />
-      )}
-      <AnchorTooltip anchor={imgTip} content={t('tips.image.zoom')} side="top" />
+      <div
+        className="tipsView tipsView--html"
+        role="presentation"
+        onClick={openFromClick}
+        onKeyDown={onKeyActivate}
+        dangerouslySetInnerHTML={{ __html: content || '<p></p>' }}
+      />
 
       {lightboxSrc ? (
         <div

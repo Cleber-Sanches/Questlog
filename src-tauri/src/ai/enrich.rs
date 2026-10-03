@@ -109,8 +109,8 @@ com dicas práticas em português (pt-BR), links úteis e metadados.
 Regras:
 - Identifique por apiName (obrigatório).
 - Preencha só o que fizer sentido: group, tips, guideUrl, videoUrl, difficulty (easy|medium|hard), missable, reqLevel, dlc.
-- tips: como desbloquear; HTML leve (p, ul, li, strong) e <img src="https://url-direta-da-imagem"> se ajudar.
-  O app baixa as imagens e salva localmente. Sem data/base64.
+- tips: como desbloquear em HTML (p, ul, li, strong, h3). Imagens SOMENTE como <img src="https://url-direta.png"> — nunca ![alt](url) nem markdown.
+  Para Valheim/weirdgloop use https://valheim.weirdgloop.org/images/... (sem /w/ no path). O app baixa as imagens e salva localmente. Sem data/base64.
 - guideUrl: URL http(s) de guia confiável (Steam Guide, wiki, PowerPyx, etc.) ou omita.
 - videoUrl: URL de um vídeo único do YouTube (watch?v=) ou Vimeo. Nunca use /results nem search_query. Se não souber o vídeo real, omita.
 - difficulty: easy|medium|hard quando souber.
@@ -254,22 +254,98 @@ pub(crate) fn run_cli_with_options(
             .map_err(AppError::Message)?;
 
     if code != 0 && stdout.trim().is_empty() {
-        let detail = if stderr.trim().is_empty() {
-            format!("exit {code}")
-        } else {
-            stderr.chars().take(500).collect()
-        };
-        return Err(AppError::Message(format!("CLI {bin} falhou: {detail}")));
+        return Err(AppError::Message(format_cli_failure(bin, provider, code, &stderr)));
     }
 
     if stdout.trim().is_empty() {
-        return Err(AppError::Message(
-            "CLI retornou saída vazia. Confirme a autenticação (Conectar) nas Configurações."
-                .into(),
-        ));
+        let detail = humanize_cli_stderr(&stderr);
+        if !detail.is_empty() {
+            return Err(AppError::Message(format!("CLI {bin}: {detail}")));
+        }
+        let hint = match provider {
+            AiProvider::Opencode => {
+                "OpenCode não devolveu texto. Atualize o CLI (`opencode upgrade`) e confira o modelo/provedor (`opencode providers`)."
+            }
+            AiProvider::ClaudeCode => {
+                "CLI retornou saída vazia. Confirme a autenticação (Conectar) nas Configurações."
+            }
+        };
+        return Err(AppError::Message(hint.into()));
     }
 
     Ok(stdout)
+}
+
+fn format_cli_failure(bin: &str, provider: &AiProvider, code: i32, stderr: &str) -> String {
+    let detail = humanize_cli_stderr(stderr);
+    if !detail.is_empty() {
+        return format!("CLI {bin} falhou: {detail}");
+    }
+    match provider {
+        AiProvider::Opencode => format!(
+            "CLI {bin} falhou (exit {code}). O modelo free do OpenCode pode estar fora do ar — tente de novo ou troque o modelo."
+        ),
+        AiProvider::ClaudeCode => format!("CLI {bin} falhou (exit {code})."),
+    }
+}
+
+fn humanize_cli_stderr(raw: &str) -> String {
+    let cleaned = strip_cli_noise(raw);
+    if cleaned.is_empty() {
+        return String::new();
+    }
+    // OpenCode: {"name":"UnknownError","data":{"message":"Unexpected server error..."}}
+    if let Some(msg) = extract_json_error_message(&cleaned) {
+        let lower = msg.to_ascii_lowercase();
+        if lower.contains("unexpected server error") || lower.contains("server error") {
+            return "O provedor do OpenCode (modelo free) falhou no servidor. Tente de novo em instantes ou troque o modelo.".into();
+        }
+        if lower.contains("1.18.0 or newer") || lower.contains("upgrade") {
+            return "Atualize o OpenCode (`opencode upgrade`) — o modelo free exige CLI recente.".into();
+        }
+        return msg.chars().take(280).collect();
+    }
+    cleaned.chars().take(320).collect()
+}
+
+fn extract_json_error_message(text: &str) -> Option<String> {
+    let start = text.find('{')?;
+    let slice = &text[start..];
+    let value: serde_json::Value = serde_json::from_str(slice).ok()?;
+    value
+        .pointer("/data/message")
+        .or_else(|| value.get("message"))
+        .and_then(|v| v.as_str())
+        .map(|s| s.trim().to_string())
+        .filter(|s| !s.is_empty())
+}
+
+fn strip_cli_noise(raw: &str) -> String {
+    // Remove códigos ANSI e linhas vazias para mostrar o erro real do provedor.
+    let mut out = String::new();
+    let mut chars = raw.chars().peekable();
+    while let Some(c) = chars.next() {
+        if c == '\u{1b}' {
+            if chars.peek() == Some(&'[') {
+                chars.next();
+                while let Some(n) = chars.next() {
+                    if n.is_ascii_alphabetic() {
+                        break;
+                    }
+                }
+            }
+            continue;
+        }
+        out.push(c);
+    }
+    out.lines()
+        .map(str::trim)
+        .filter(|l| !l.is_empty() && *l != ">" && !l.starts_with("build"))
+        .collect::<Vec<_>>()
+        .join(" · ")
+        .chars()
+        .take(420)
+        .collect()
 }
 
 fn run_anthropic_api(api_key: &str, model: &str, prompt: &str) -> AppResult<String> {
@@ -343,6 +419,107 @@ fn normalize_url(value: &str) -> String {
     }
 }
 
+/// Converte markdown de imagem e tip markdown-leve em HTML que o app renderiza.
+fn normalize_tips_content(raw: &str) -> String {
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+        return String::new();
+    }
+    let re = match regex::Regex::new(r"!\[([^\]]*)\]\(\s*<?([^)\s>]+)>?\s*\)") {
+        Ok(r) => r,
+        Err(_) => return trimmed.to_string(),
+    };
+    let with_imgs = re.replace_all(trimmed, r#"<img src="$2" alt="$1" />"#);
+    let s = with_imgs.trim();
+    if s.is_empty() {
+        return String::new();
+    }
+    // Já parece HTML estruturado
+    if regex::Regex::new(r"<(p|div|ul|ol|li|h[1-6]|br|img|table)\b")
+        .ok()
+        .map(|r| r.is_match(s))
+        .unwrap_or(false)
+    {
+        return s.to_string();
+    }
+    // Markdown leve → HTML básico
+    let mut parts: Vec<String> = Vec::new();
+    let mut list: Vec<String> = Vec::new();
+    let flush_list = |list: &mut Vec<String>, parts: &mut Vec<String>| {
+        if list.is_empty() {
+            return;
+        }
+        let items = list
+            .iter()
+            .map(|i| format!("<li>{}</li>", inline_md_lite(i)))
+            .collect::<String>();
+        parts.push(format!("<ul>{items}</ul>"));
+        list.clear();
+    };
+    for line in s.replace("\r\n", "\n").lines() {
+        let t = line.trim();
+        if t.is_empty() {
+            flush_list(&mut list, &mut parts);
+            continue;
+        }
+        if t.chars().all(|c| c == '-') || t.chars().all(|c| c == '*') {
+            flush_list(&mut list, &mut parts);
+            parts.push("<hr />".into());
+            continue;
+        }
+        if let Some(rest) = t.strip_prefix("### ") {
+            flush_list(&mut list, &mut parts);
+            parts.push(format!("<h3>{}</h3>", inline_md_lite(rest)));
+            continue;
+        }
+        if let Some(rest) = t.strip_prefix("## ") {
+            flush_list(&mut list, &mut parts);
+            parts.push(format!("<h2>{}</h2>", inline_md_lite(rest)));
+            continue;
+        }
+        if let Some(rest) = t.strip_prefix("# ") {
+            flush_list(&mut list, &mut parts);
+            parts.push(format!("<h1>{}</h1>", inline_md_lite(rest)));
+            continue;
+        }
+        if let Some(rest) = t
+            .strip_prefix("- ")
+            .or_else(|| t.strip_prefix("* "))
+            .or_else(|| t.strip_prefix("• "))
+        {
+            list.push(rest.to_string());
+            continue;
+        }
+        flush_list(&mut list, &mut parts);
+        if t.starts_with("<img") {
+            parts.push(t.to_string());
+        } else {
+            parts.push(format!("<p>{}</p>", inline_md_lite(t)));
+        }
+    }
+    flush_list(&mut list, &mut parts);
+    if parts.is_empty() {
+        s.to_string()
+    } else {
+        parts.join("")
+    }
+}
+
+fn inline_md_lite(s: &str) -> String {
+    let mut out = html_escape_text(s);
+    if let Ok(re) = regex::Regex::new(r"\*\*([^*]+)\*\*") {
+        out = re.replace_all(&out, "<strong>$1</strong>").to_string();
+    }
+    out
+}
+
+fn html_escape_text(s: &str) -> String {
+    s.replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
+        .replace('"', "&quot;")
+}
+
 pub(crate) fn apply_patch(target: &mut Achievement, raw: &Value) -> bool {
     let Ok(patch) = serde_json::from_value::<AiPatch>(raw.clone()) else {
         return false;
@@ -379,7 +556,7 @@ pub(crate) fn apply_patch(target: &mut Achievement, raw: &Value) -> bool {
     }
 
     if let Some(v) = patch.tips {
-        let v = v.trim().to_string();
+        let v = normalize_tips_content(v.trim());
         if !v.is_empty() && target.tips.as_deref() != Some(v.as_str()) {
             target.tips = Some(v);
             changed = true;

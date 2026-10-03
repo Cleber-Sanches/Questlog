@@ -89,18 +89,19 @@ fn write_bytes(app_data: &Path, app_id: &str, bytes: &[u8], ext: &str) -> AppRes
 }
 
 pub fn save_url_to_media(app_data: &Path, app_id: &str, url: &str) -> AppResult<SavedMedia> {
-    let url = url.trim();
+    let url = rewrite_media_url(url.trim());
     if !(url.starts_with("http://") || url.starts_with("https://")) {
         return Err(AppError::Message("URL de imagem inválida.".into()));
     }
 
     let client = crate::steam::paths::http_client()?;
     let res = client
-        .get(url)
+        .get(&url)
         .header(
             "User-Agent",
-            "Mozilla/5.0 (compatible; GuiaConquistas/0.1)",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         )
+        .header("Accept", "image/avif,image/webp,image/apng,image/*,*/*;q=0.8")
         .send()
         .map_err(|e| AppError::Message(format!("Download da imagem falhou: {e}")))?
         .error_for_status()
@@ -116,12 +117,33 @@ pub fn save_url_to_media(app_data: &Path, app_id: &str, url: &str) -> AppResult<
         .bytes()
         .map_err(|e| AppError::Message(format!("Download da imagem falhou: {e}")))?;
 
-    let ext = if !mime.is_empty() {
+    // Resposta HTML (página 404) não é imagem
+    if mime.to_ascii_lowercase().contains("text/html") {
+        return Err(AppError::Message(format!(
+            "URL não é imagem (HTML): {url}"
+        )));
+    }
+    if bytes.len() < 64 {
+        return Err(AppError::Message("Download da imagem muito pequeno.".into()));
+    }
+
+    let ext = if !mime.is_empty() && !mime.contains("octet-stream") {
         ext_from_mime(&mime)
     } else {
-        ext_from_url(url)
+        ext_from_url(&url)
     };
     write_bytes(app_data, app_id, &bytes, ext)
+}
+
+/// Corrige URLs quebradas comuns (wiki Valheim weirdgloop `/w/images` → `/images`).
+fn rewrite_media_url(url: &str) -> String {
+    let mut u = url.to_string();
+    // weirdgloop: /w/images/... e /w/Images/... 404; /images/... funciona
+    if u.contains("weirdgloop.org/w/images/") || u.contains("weirdgloop.org/w/Images/") {
+        u = u.replace("/w/images/", "/images/");
+        u = u.replace("/w/Images/", "/images/");
+    }
+    u
 }
 
 /// Baixa imagens http(s) em HTML e troca por `guia-media:...`.
@@ -147,7 +169,8 @@ pub fn materialize_html_images(app_data: &Path, app_id: &str, html: &str) -> Str
             }
         }
     }
-    let md = match regex::Regex::new(r"!\[[^\]]*\]\((https?://[^)\s]+)\)") {
+    // Markdown ![alt](url) → <img>; baixa se possível, senão mantém URL remota.
+    let md = match regex::Regex::new(r"!\[([^\]]*)\]\(\s*<?(https?://[^)\s>]+)>?\s*\)") {
         Ok(r) => r,
         Err(_) => return out,
     };
@@ -155,12 +178,19 @@ pub fn materialize_html_images(app_data: &Path, app_id: &str, html: &str) -> Str
     let md_caps: Vec<_> = md.captures_iter(&source).collect();
     for cap in md_caps.into_iter().rev() {
         let full = cap.get(0).map(|m| m.as_str()).unwrap_or("");
-        let url = cap.get(1).map(|m| m.as_str()).unwrap_or("");
-        if let Ok(saved) = save_url_to_media(app_data, app_id, url) {
-            let repl = format!(r#"<img src="{}" alt="" />"#, saved.token);
-            if let Some(pos) = out.rfind(full) {
-                out.replace_range(pos..pos + full.len(), &repl);
-            }
+        let alt = cap.get(1).map(|m| m.as_str()).unwrap_or("");
+        let url = cap.get(2).map(|m| m.as_str()).unwrap_or("");
+        if url.is_empty() {
+            continue;
+        }
+        let src = match save_url_to_media(app_data, app_id, url) {
+            Ok(saved) => saved.token,
+            Err(_) => url.to_string(),
+        };
+        let safe_alt = alt.replace('"', "&quot;");
+        let repl = format!(r#"<img src="{src}" alt="{safe_alt}" />"#);
+        if let Some(pos) = out.rfind(full) {
+            out.replace_range(pos..pos + full.len(), &repl);
         }
     }
     out

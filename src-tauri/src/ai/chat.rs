@@ -547,12 +547,19 @@ fn achievements_to_catalog(items: &[&Achievement], plan: &IntentPlan) -> Vec<Val
                     .chars()
                     .take(90)
                     .collect::<String>();
-                json!({
+                let tips = a.tips.as_deref().unwrap_or("").trim();
+                let mut v = json!({
                     "apiName": a.api_name,
                     "title": a.title,
                     "description": desc,
-                    "hasTips": a.tips.as_deref().unwrap_or("").trim().len() > 0,
-                })
+                    "hasTips": !tips.is_empty(),
+                });
+                // Com dica existente, manda um recorte para a IA poder reorganizar/melhorar.
+                if !tips.is_empty() {
+                    let preview: String = tips.chars().take(1200).collect();
+                    v["tips"] = json!(preview);
+                }
+                v
             }
             Tool::Ask | Tool::FullEnrich => {
                 let desc = a
@@ -1749,10 +1756,17 @@ pub fn chat_turn(
     let chunk_total = chunks.len();
 
     if ordered.is_empty() {
+        let has_mentions = !extract_mentions(msg).is_empty();
         let empty_msg = match plan.primary {
             Tool::Videos => "Todas as conquistas relevantes já têm vídeo.".to_string(),
             Tool::Groups => "Não achei conquistas sem grupo. Peça para *refazer os grupos* se quiser reorganizar.".to_string(),
             Tool::Levels => "Nenhuma conquista sem nível para preencher.".to_string(),
+            Tool::Tips if has_mentions => {
+                "Não localizei a conquista mencionada neste guia. Confira o @ e tente de novo.".to_string()
+            }
+            Tool::Tips if plan.improve_tips => {
+                "Não achei dicas para melhorar neste recorte.".to_string()
+            }
             Tool::Tips => "Não achei conquistas sem dica neste recorte.".to_string(),
             Tool::Difficulty => "Não achei conquistas sem dificuldade.".to_string(),
             _ => "Nada a alterar com este pedido.".to_string(),
