@@ -69,10 +69,14 @@ impl IntentPlan {
                 "Foque em responder a dúvida. Só emita patches se o usuário pedir alteração."
             }
             Tool::Tips if self.improve_tips => {
-                "Ferramenta: DICAS (melhorar). Reescreva as tips do catálogo (já têm texto): \
-                 organize em HTML claro, adicione <img src=\"https://url-direta\"> quando ajudar, \
-                 ajuste layout. tips SEMPRE HTML (p, ul, li, strong, h3, img). \
-                 PROIBIDO ![alt](url). Em weirdgloop use /images/ (sem /w/). Não altere vídeo/grupo/nível/dificuldade."
+                "Ferramenta: DICAS (melhorar/imagens). Reescreva as tips do catálogo (já têm texto): \
+                 organize HTML e INCLUA imagens reais com <img src=\"https://url-direta.png\">. \
+                 Use web/wiki/Steam Guide para achar URL direta (arquivo .png/.jpg/.webp). \
+                 PROIBIDO recusar por 'sem web' ou 'sem URL' — este turno TEM web. \
+                 PROIBIDO ![alt](url). Em weirdgloop use /images/ (nunca /w/images/). \
+                 Sem inventar URL falsa: se não achar, omita só aquela img e siga. \
+                 tips SEMPRE HTML (p, ul, li, strong, h3, img). Não altere vídeo/grupo/nível/dificuldade. \
+                 reply: uma frase do que fez; patches obrigatórios nas do lote."
             }
             Tool::Tips => {
                 "Ferramenta: DICAS. \
@@ -326,12 +330,37 @@ fn detect_tips(q: &str) -> bool {
     )
 }
 
+/// Pedido de imagens/ícones nas dicas (mesmo sem a palavra “dica”).
+fn wants_tip_images(q: &str) -> bool {
+    has_any(
+        q,
+        &[
+            "imagem",
+            "imagens",
+            "icone",
+            "ícone",
+            "icones",
+            "ícones",
+            "icon",
+            "icons",
+            "foto",
+            "fotos",
+            "screenshot",
+            "print",
+        ],
+    )
+}
+
+fn recent_tips_context(ctx: &str) -> bool {
+    let c = ctx.to_ascii_lowercase();
+    c.contains("com dicas")
+        || c.contains("melhorar dicas")
+        || c.contains("ferramenta: dicas")
+        || (c.contains("cobertura") && c.contains("dica"))
+}
+
 /// “Melhore / organize / coloque imagens nas dicas” → editar as que já têm texto.
 fn wants_improve_tips(q: &str) -> bool {
-    let about_tips = q.contains("dica") || q.contains("tip") || q.contains("texto");
-    if !about_tips {
-        return false;
-    }
     // “completa as que faltam” / “sem dica” = preencher vazias, não melhorar
     if has_any(
         q,
@@ -346,6 +375,14 @@ fn wants_improve_tips(q: &str) -> bool {
     ) {
         return false;
     }
+    // “coloque imagens / ícones” sozinho já é melhorar tips
+    if wants_tip_images(q) {
+        return true;
+    }
+    let about_tips = q.contains("dica") || q.contains("tip") || q.contains("texto");
+    if !about_tips {
+        return false;
+    }
     has_any(
         q,
         &[
@@ -356,10 +393,6 @@ fn wants_improve_tips(q: &str) -> bool {
             "organize",
             "organizar",
             "organiz",
-            "imagem",
-            "imagens",
-            "foto",
-            "fotos",
             "ajuste",
             "ajustar",
             "ajusta",
@@ -400,8 +433,11 @@ pub fn detect_intent_with_context(user_msg: &str, recent_context: &str) -> Inten
     let groups = detect_groups(&ql);
     let missable = detect_missable(&ql);
     let difficulty = detect_difficulty(&ql);
-    let tips = detect_tips(&ql);
-    let improve_tips = tips && wants_improve_tips(&ql);
+    let tip_images = wants_tip_images(&ql);
+    let tips = detect_tips(&ql)
+        || tip_images
+        || (recent_tips_context(recent_context) && wants_improve_tips(&ql));
+    let improve_tips = tip_images || (tips && wants_improve_tips(&ql));
     let redo_groups = groups
         && has_any(
             &ql,
@@ -957,6 +993,14 @@ mod tests {
         let p = detect_intent("Completa as dicas que faltam");
         assert_eq!(p.primary, Tool::Tips);
         assert!(!p.improve_tips);
+    }
+
+    #[test]
+    fn imagens_icones_routes_to_improve_tips() {
+        let p = detect_intent("se tiver imagens icones que ajuda");
+        assert_eq!(p.primary, Tool::Tips);
+        assert!(p.improve_tips);
+        assert!(p.agentic);
     }
 
     #[test]

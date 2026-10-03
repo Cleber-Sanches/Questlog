@@ -437,7 +437,13 @@ fn build_chat_prompt(
     let fields = plan.allowed_patch_fields().join(",");
     let focus = plan.focus_instructions();
     let web = if plan.agentic {
-        "Web ok se faltar dado."
+        if plan.improve_tips {
+            "WEB ATIVA: busque URLs diretas de imagem (wiki/Steam). \
+             PROIBIDO dizer que não tem web ou pedir URL ao usuário. \
+             Devolva patches com <img src=\"https://...\"> nas tips."
+        } else {
+            "Web ok se faltar dado."
+        }
     } else {
         "Sem web neste turno."
     };
