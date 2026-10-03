@@ -272,6 +272,11 @@
   color: var(--fg-muted);
 }
 
+.stUpdateNotes {
+  white-space: pre-wrap;
+  color: var(--fg);
+}
+
 .stUpdateBar {
   display: flex;
   flex-direction: column;

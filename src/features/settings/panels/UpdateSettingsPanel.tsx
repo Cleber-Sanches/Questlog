@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/Button'
 import { SegmentedFill } from '@/components/ui/SegmentedBar'
 import { useT } from '@/app/providers/LocaleProvider'
 import { useUpdater } from '@/app/providers/UpdaterProvider'
+import { formatUpdateNotes } from '@/features/updater/formatUpdateNotes'
 import { SPRING_JUMP } from '@/lib/motion/ease'
 
 export function UpdateSettingsPanel() {
@@ -115,7 +116,9 @@ export function UpdateSettingsPanel() {
                     <p className="stUpdateRevealTitle">
                       {t('settings.update.availableShort', { version: availableVersion ?? '' })}
                     </p>
-                    {notes ? <p className="stUpdateRevealHint">{notes}</p> : null}
+                    <p className="stUpdateRevealHint stUpdateNotes">
+                      {formatUpdateNotes(notes, availableVersion)}
+                    </p>
                     <p className="stUpdateRevealHint">{t('settings.update.availableAlert')}</p>
                     {transferring ? (
                       <div className="stUpdateBar">

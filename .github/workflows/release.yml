@@ -113,14 +113,11 @@ jobs:
         with:
           tagName: v__VERSION__
           releaseName: Questlog __VERSION__
+          # Notas amigáveis para o updater (não misturar Setup/NSIS/latest.json aqui).
           releaseBody: |
-            ## Download
-            Use **Questlog-Setup.exe** (instalador visual).
+            Atualização do Questlog.
 
-            O NSIS (`Questlog_*_x64-setup.exe`) continua no release para o updater automático.
-
-            O app busca atualizações em:
-            `https://github.com/Cleber-Sanches/Questlog/releases/latest/download/latest.json`
+            O app reinicia depois de instalar.
           releaseDraft: false
           prerelease: false
           uploadUpdaterJson: true
@@ -150,3 +147,36 @@ jobs:
           $tag = "v$ver"
           gh release upload $tag "dist-setup/Questlog-Setup.exe" --clobber
           Write-Host "Uploaded Questlog-Setup.exe to $tag"
+
+      # Notas do updater: changelog legível (sem Setup/NSIS/latest.json).
+      - name: Polish release notes
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $ver = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          $tag = "v$ver"
+          $gen = gh api "repos/$env:GITHUB_REPOSITORY/releases/generate-notes" -f tag_name=$tag | ConvertFrom-Json
+          $log = [string]$gen.body
+          $log = $log -replace "(?m)^## What's Changed\s*", ''
+          $log = $log.Trim()
+          if ([string]::IsNullOrWhiteSpace($log)) {
+            $log = "- Melhorias e correções."
+          }
+          $body = @"
+          ## Novidades
+
+          $log
+
+          O app reinicia depois de instalar.
+          "@.Trim()
+          gh release edit $tag --notes $body
+
+          $tmp = Join-Path $env:RUNNER_TEMP "latest.json"
+          gh release download $tag -p latest.json -D $env:RUNNER_TEMP --clobber
+          $json = Get-Content -Raw $tmp | ConvertFrom-Json
+          $json.notes = $body
+          ($json | ConvertTo-Json -Depth 8) | Set-Content -Path $tmp -Encoding utf8NoBOM
+          gh release upload $tag $tmp --clobber
+          Write-Host "latest.json notes atualizadas."
