@@ -62,7 +62,6 @@ export function useAchievements(appId?: string | null) {
     async (partial?: Partial<Achievement>) => {
       if (!appId) return null
       const draft: Achievement = {
-        id: 0,
         title: partial?.title || t('achievement.new'),
         description: partial?.description || '',
         apiName: partial?.apiName || 'custom_pending',
@@ -75,6 +74,7 @@ export function useAchievements(appId?: string | null) {
         completed: false,
         missable: false,
         ...partial,
+        // ID final vem do SQLite; 0 força insert novo (não reaproveitar id do partial).
         id: 0,
       }
       try {
