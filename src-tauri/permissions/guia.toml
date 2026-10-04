@@ -43,8 +43,6 @@ commands.allow = [
   "media_save_base64",
   "media_save_from_url",
   "media_resolve_path",
-  "overlay_show_unlock",
-  "overlay_hide",
   "app_show_main",
   "app_to_tray",
   "app_minimize_or_tray",

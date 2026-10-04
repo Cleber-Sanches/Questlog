@@ -1,5 +1,5 @@
 import type { Achievement } from '@/types/achievement'
-import { settingEnabled } from '@/features/overlay/types'
+import { settingEnabled } from '@/lib/settings'
 
 export const SHOW_HIDDEN_SETTING_KEY = 'show_hidden_achievements'
 
