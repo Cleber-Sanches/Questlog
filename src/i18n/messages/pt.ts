@@ -173,6 +173,7 @@ export const pt = {
 
   // Steam settings
   'settings.steam.section.sync': 'Sincronização',
+  'settings.steam.section.alerts': 'Notificações',
   'settings.steam.section.window': 'Janela',
   'settings.steam.section.folder': 'Steam',
   'settings.steam.sync.title': 'Sincronização automática',
@@ -188,9 +189,29 @@ export const pt = {
   'settings.steam.folder.useAuto': 'Usar automática',
   'settings.steam.folder.chooseOther': 'Escolher outra',
   'settings.steam.folder.notFound': 'Steam não encontrada em Program Files',
+  'settings.steam.overlay.title': 'Aviso no topo da tela',
+  'settings.steam.overlay.desc':
+    'Aparece em cima quando você destrava uma conquista, mesmo com o jogo na frente',
+  'settings.steam.overlay.progress.title': 'Também no progresso',
+  'settings.steam.overlay.progress.desc': 'Mostra a faixa quando o contador sobe, tipo 7/10',
+  'settings.steam.overlay.sound.title': 'Som ao desbloquear',
+  'settings.steam.overlay.sound.desc': 'Toca um som quando a conquista libera',
+  'settings.steam.overlay.soundProgress.title': 'Som no progresso',
+  'settings.steam.overlay.soundProgress.desc': 'Toca também quando o contador sobe',
+  'settings.steam.overlay.test': 'Mostrar exemplo',
+  'settings.steam.overlay.previewHint': 'Ver um exemplo',
+  'settings.steam.overlay.previewDesc': 'Mostra um aviso de teste sem precisar jogar',
+  'settings.steam.overlay.previewDifficulty': 'Conquista',
+  'settings.steam.overlay.previewProgress': 'Progresso',
+  'settings.steam.overlay.sampleTitle': 'Máscara da Alma',
   'settings.steam.tray.title': 'Minimizar para a bandeja',
   'settings.steam.tray.desc':
     'O X e o minimizar escondem o app ao lado do relógio. O sync continua. Sair pelo ícone.',
+
+  'overlay.kicker': 'Conquista desbloqueada',
+  'overlay.kickerMany': '{n} conquistas',
+  'overlay.progress': 'Progresso',
+  'overlay.manyHint': 'liberadas neste momento',
 
   // Guide
   'guide.pane.aria': 'Conquistas',

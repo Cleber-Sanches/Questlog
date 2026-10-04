@@ -167,6 +167,7 @@ export const en = {
   'settings.ai.saving': 'Saving…',
 
   'settings.steam.section.sync': 'Sync',
+  'settings.steam.section.alerts': 'Notifications',
   'settings.steam.section.window': 'Window',
   'settings.steam.section.folder': 'Steam',
   'settings.steam.sync.title': 'Automatic sync',
@@ -182,9 +183,29 @@ export const en = {
   'settings.steam.folder.useAuto': 'Use automatic',
   'settings.steam.folder.chooseOther': 'Choose another',
   'settings.steam.folder.notFound': 'Steam not found in Program Files',
+  'settings.steam.overlay.title': 'Top-of-screen banner',
+  'settings.steam.overlay.desc':
+    'Shows at the top when you unlock an achievement, even with the game in front',
+  'settings.steam.overlay.progress.title': 'On progress too',
+  'settings.steam.overlay.progress.desc': 'Shows the banner when the counter goes up, like 7/10',
+  'settings.steam.overlay.sound.title': 'Sound on unlock',
+  'settings.steam.overlay.sound.desc': 'Plays a sound when the achievement unlocks',
+  'settings.steam.overlay.soundProgress.title': 'Sound on progress',
+  'settings.steam.overlay.soundProgress.desc': 'Also plays when the counter goes up',
+  'settings.steam.overlay.test': 'Show sample',
+  'settings.steam.overlay.previewHint': 'See an example',
+  'settings.steam.overlay.previewDesc': 'Shows a test banner without playing',
+  'settings.steam.overlay.previewDifficulty': 'Unlock',
+  'settings.steam.overlay.previewProgress': 'Progress',
+  'settings.steam.overlay.sampleTitle': 'Soul Mask',
   'settings.steam.tray.title': 'Minimize to tray',
   'settings.steam.tray.desc':
     'Close and minimize hide the app next to the clock. Sync keeps running. Quit from the icon.',
+
+  'overlay.kicker': 'Achievement unlocked',
+  'overlay.kickerMany': '{n} achievements',
+  'overlay.progress': 'Progress',
+  'overlay.manyHint': 'unlocked just now',
 
   'guide.pane.aria': 'Achievements',
   'guide.search.placeholder': 'Search achievement…',

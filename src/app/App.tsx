@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { ToastProvider } from '@/app/providers/ToastProvider'
 import { NotificationProvider } from '@/app/providers/NotificationProvider'
 import { ModalProvider } from '@/app/providers/ModalProvider'
@@ -18,6 +19,7 @@ import { GuideShareDrop } from '@/features/guide-io/components/GuideShareDrop'
 import { useGuideOpenFromOs } from '@/features/guide-io/hooks/useGuideOpenFromOs'
 import { useSteamSync } from '@/features/steam/hooks/useSteamSync'
 import { useHelpShortcut } from '@/features/settings/hooks/useHelpShortcut'
+import { warmUnlockAudio } from '@/features/overlay/playUnlockChime'
 
 function HuntCompanion() {
   const { activeGame } = useAppData()
@@ -42,6 +44,11 @@ function Shell() {
   const onboard = useOnboarding()
   useHelpShortcut(!onboard.active)
   useGuideOpenFromOs(!onboard.active)
+  useEffect(() => {
+    const warm = () => warmUnlockAudio()
+    window.addEventListener('pointerdown', warm, { once: true })
+    return () => window.removeEventListener('pointerdown', warm)
+  }, [])
   return (
     <>
       <AppRouteSync />

@@ -4,8 +4,19 @@ import { useAchievements } from '@/features/achievements/hooks/useAchievements'
 import { extractIconHash } from '@/features/achievements/utils/filter'
 import { useToast } from '@/app/providers/ToastProvider'
 import { useNotifications } from '@/app/providers/NotificationProvider'
+import { useAppData } from '@/app/providers/AppDataProvider'
 import { useT } from '@/app/providers/LocaleProvider'
 import { useWindowFocus } from '@/hooks/useWindowFocus'
+import { showUnlockOverlay } from '@/features/overlay/showUnlockOverlay'
+import {
+  OVERLAY_PROGRESS_SETTING_KEY,
+  OVERLAY_SETTING_KEY,
+  OVERLAY_SOUND_PROGRESS_SETTING_KEY,
+  OVERLAY_SOUND_SETTING_KEY,
+  overlayDifficulty,
+  settingEnabled,
+  type OverlayChime,
+} from '@/features/overlay/types'
 import { looksLikeHiddenPlaceholder } from '@/features/achievements/utils/hidden'
 import type { MessageKey } from '@/i18n'
 import type { Achievement } from '@/types/achievement'
@@ -59,8 +70,18 @@ function findSteamMatch(
   return null
 }
 
+function pickProgressTick(ticks: UnlockedItem[]) {
+  if (ticks.length === 0) return null
+  return ticks.reduce((best, item) => {
+    const bestRatio = (best.progress ?? 0) / Math.max(1, best.progressMax ?? 1)
+    const ratio = (item.progress ?? 0) / Math.max(1, item.progressMax ?? 1)
+    return ratio > bestRatio ? item : best
+  })
+}
+
 function announceUnlocks(
   unlocked: UnlockedItem[],
+  progressTicks: UnlockedItem[],
   source: string | undefined,
   toast: (message: string, kind?: 'info' | 'error' | 'success') => void,
   push: (input: {
@@ -70,9 +91,16 @@ function announceUnlocks(
     icon?: string | null
     createdAt?: number
   }) => void,
+  overlay: {
+    banner: boolean
+    progress: boolean
+    sound: boolean
+    soundProgress: boolean
+  },
+  gameName: string,
   t: Translate,
 ) {
-  if (unlocked.length === 0) return
+  if (unlocked.length === 0 && progressTicks.length === 0) return
   const via = source === 'community' ? ' (perfil Steam)' : ''
   for (const item of unlocked) {
     const createdAt = item.unlockedAt ? Date.parse(item.unlockedAt) : Date.now()
@@ -85,16 +113,72 @@ function announceUnlocks(
     })
   }
 
-  toast(
-    unlocked.length === 1
-      ? `Conquista salva: ${unlocked[0].title}${via}`
-      : `${unlocked.length} conquistas desbloqueadas salvas${via}`,
-    'success',
-  )
+  if (overlay.banner) {
+    if (unlocked.length > 0) {
+      const first = unlocked[0]
+      const chime: OverlayChime = overlay.sound ? 'unlock' : 'none'
+      void showUnlockOverlay(
+        unlocked.length === 1
+          ? {
+              kicker: t('overlay.kicker'),
+              title: first.title || t('achievement.fallback'),
+              subtitle: gameName,
+              icon: first.icon,
+              difficulty: overlayDifficulty(first.difficulty),
+              missable: Boolean(first.missable),
+              progress: first.progressMax ?? first.progress ?? null,
+              progressMax: first.progressMax ?? null,
+            }
+          : {
+              kicker: t('overlay.kickerMany', { n: unlocked.length }),
+              title: gameName || t('overlay.kicker'),
+              subtitle: t('overlay.manyHint', { n: unlocked.length }),
+              icon: first.icon,
+            },
+        chime,
+      ).then((ok) => {
+        if (!ok) {
+          toast(
+            unlocked.length === 1
+              ? `Conquista salva: ${unlocked[0].title}${via}`
+              : `${unlocked.length} conquistas desbloqueadas salvas${via}`,
+            'success',
+          )
+        }
+      })
+    } else if (overlay.progress) {
+      const tick = pickProgressTick(progressTicks)
+      if (tick) {
+        const chime: OverlayChime =
+          overlay.sound && overlay.soundProgress ? 'progress' : 'none'
+        void showUnlockOverlay(
+          {
+            kicker: t('overlay.progress'),
+            title: tick.title || t('achievement.fallback'),
+            subtitle: gameName,
+            icon: tick.icon,
+            difficulty: overlayDifficulty(tick.difficulty),
+            missable: Boolean(tick.missable),
+            progress: tick.progress ?? 0,
+            progressMax: tick.progressMax ?? null,
+          },
+          chime,
+        )
+      }
+    }
+  } else if (unlocked.length > 0) {
+    toast(
+      unlocked.length === 1
+        ? `Conquista salva: ${unlocked[0].title}${via}`
+        : `${unlocked.length} conquistas desbloqueadas salvas${via}`,
+      'success',
+    )
+  }
 }
 
 export function useSteamSync(appId?: string | null) {
   const t = useT()
+  const { settings, activeGame } = useAppData()
   const { achievements, replaceAll } = useAchievements(appId)
   const { toast } = useToast()
   const { push } = useNotifications()
@@ -107,21 +191,44 @@ export function useSteamSync(appId?: string | null) {
   toastRef.current = toast
   const pushRef = useRef(push)
   pushRef.current = push
+  const overlayOn = settingEnabled(settings, OVERLAY_SETTING_KEY, true)
+  const overlayProgressOn = settingEnabled(settings, OVERLAY_PROGRESS_SETTING_KEY, true)
+  const overlaySoundOn = settingEnabled(settings, OVERLAY_SOUND_SETTING_KEY, true)
+  const overlaySoundProgressOn = settingEnabled(
+    settings,
+    OVERLAY_SOUND_PROGRESS_SETTING_KEY,
+    false,
+  )
+  const overlayRef = useRef({
+    banner: overlayOn,
+    progress: overlayProgressOn,
+    sound: overlaySoundOn,
+    soundProgress: overlaySoundProgressOn,
+  })
+  overlayRef.current = {
+    banner: overlayOn,
+    progress: overlayProgressOn,
+    sound: overlaySoundOn,
+    soundProgress: overlaySoundProgressOn,
+  }
+  const gameNameRef = useRef(activeGame?.name ?? '')
+  gameNameRef.current = activeGame?.name ?? ''
   const tRef = useRef(t)
   tRef.current = t
 
   const sync = useCallback(async () => {
     if (!appId || busy.current) {
-      return { unlocked: [] as UnlockedItem[], source: '' }
+      return { unlocked: [] as UnlockedItem[], progressTicks: [] as UnlockedItem[], source: '' }
     }
 
     const current = achievementsRef.current
     // Evita “queimar” o fingerprint com lista vazia (corrida no boot).
     if (current.length === 0) {
-      return { unlocked: [] as UnlockedItem[], source: '' }
+      return { unlocked: [] as UnlockedItem[], progressTicks: [] as UnlockedItem[], source: '' }
     }
 
     busy.current = true
+    const skipProgressAnnounce = lastFingerprint.current === ''
     try {
       const progress = await steamApi.progress(appId)
       const unlockedApis = Object.entries(progress.achievements || {})
@@ -144,6 +251,7 @@ export function useSteamSync(appId?: string | null) {
       ) {
         return {
           unlocked: [] as UnlockedItem[],
+          progressTicks: [] as UnlockedItem[],
           source: progress.source || 'local',
         }
       }
@@ -162,12 +270,14 @@ export function useSteamSync(appId?: string | null) {
 
       let changed = false
       const unlocked: UnlockedItem[] = []
+      const progressTicks: UnlockedItem[] = []
       const next: Achievement[] = current.map((a) => {
         const hit = findSteamMatch(a, byApi, byHash, byTitle)
         if (!hit) return a
 
         let updated: Achievement = a
         let rowChanged = false
+        let justUnlocked = false
 
         if (
           (!a.apiName || a.apiName.startsWith('guia_') || a.apiName.startsWith('unknown_')) &&
@@ -197,6 +307,7 @@ export function useSteamSync(appId?: string | null) {
 
         if (hit.row.completed) {
           if (!a.completed) {
+            justUnlocked = true
             const unlockedAt = hit.row.unlockedAt || a.unlockedAt || new Date().toISOString()
             unlocked.push({
               id: a.id,
@@ -224,7 +335,24 @@ export function useSteamSync(appId?: string | null) {
         const max = hit.row.progressMax
         if (typeof max === 'number' && max > 0) {
           const cur = typeof hit.row.progress === 'number' ? hit.row.progress : 0
+          const prev = typeof a.progress === 'number' ? a.progress : 0
           if (a.progress !== cur || a.progressMax !== max) {
+            if (
+              !skipProgressAnnounce &&
+              !justUnlocked &&
+              !hit.row.completed &&
+              cur > prev
+            ) {
+              progressTicks.push({
+                id: a.id,
+                title: a.title,
+                icon: a.icon,
+                difficulty: a.difficulty,
+                missable: a.missable,
+                progress: cur,
+                progressMax: max,
+              })
+            }
             updated = { ...updated, progress: cur, progressMax: max }
             rowChanged = true
           }
@@ -241,9 +369,9 @@ export function useSteamSync(appId?: string | null) {
         await replaceAll(next)
       }
 
-      return { unlocked, source: progress.source || 'local' }
+      return { unlocked, progressTicks, source: progress.source || 'local' }
     } catch {
-      return { unlocked: [] as UnlockedItem[], source: '' }
+      return { unlocked: [] as UnlockedItem[], progressTicks: [] as UnlockedItem[], source: '' }
     } finally {
       busy.current = false
     }
@@ -253,9 +381,12 @@ export function useSteamSync(appId?: string | null) {
     void sync().then((result) =>
       announceUnlocks(
         result.unlocked,
+        result.progressTicks,
         result.source,
         toastRef.current,
         pushRef.current,
+        overlayRef.current,
+        gameNameRef.current,
         tRef.current,
       ),
     )

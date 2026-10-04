@@ -64,6 +64,7 @@ pub fn run() {
             let state = AppState::new(conn, app_data);
             app.manage(state.clone());
             app.manage(commands::desktop::DesktopFlags::new());
+            commands::desktop::prepare_overlay(app.handle());
             if let Err(err) = commands::desktop::install_tray(app.handle(), &state) {
                 log::warn!("bandeja: {err}");
             }
@@ -119,6 +120,8 @@ pub fn run() {
             commands::system::open_external_url,
             commands::guide_open::take_pending_guide_opens,
             commands::guide_open::read_guide_open_file,
+            commands::desktop::overlay_show_unlock,
+            commands::desktop::overlay_hide,
             commands::desktop::app_show_main,
             commands::desktop::app_to_tray,
             commands::desktop::app_minimize_or_tray,

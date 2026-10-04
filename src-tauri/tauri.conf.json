@@ -22,6 +22,24 @@
         "fullscreen": false,
         "decorations": false,
         "backgroundThrottling": "disabled"
+      },
+      {
+        "label": "overlay",
+        "title": "",
+        "url": "/",
+        "width": 384,
+        "height": 104,
+        "visible": false,
+        "decorations": false,
+        "transparent": true,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "resizable": false,
+        "maximizable": false,
+        "minimizable": false,
+        "focus": false,
+        "shadow": false,
+        "visibleOnAllWorkspaces": true
       }
     ],
     "security": {
