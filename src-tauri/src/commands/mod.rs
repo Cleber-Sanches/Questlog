@@ -1,4 +1,5 @@
 pub mod backup;
+pub mod companion;
 pub mod db;
 pub mod desktop;
 pub mod guide_open;

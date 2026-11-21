@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "companion",
+  "description": "Painel in-game — lê conquistas do jogo ativo e fecha a si mesmo",
+  "windows": ["companion"],
+  "permissions": ["core:default", "allow-companion"]
+}

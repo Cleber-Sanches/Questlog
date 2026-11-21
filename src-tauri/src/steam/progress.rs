@@ -2,7 +2,7 @@ use crate::error::{AppError, AppResult};
 use crate::steam::achievements::{bit_description, bit_is_hidden};
 use crate::steam::bvdf;
 use crate::steam::paths::{
-    extract_icon_hash, fetch_text, find_steam_path, pick_active_user, SteamUser,
+    extract_icon_hash, http_client, find_steam_path, pick_active_user, SteamUser,
 };
 use chrono::{TimeZone, Utc};
 use regex::Regex;
@@ -10,6 +10,29 @@ use serde::Serialize;
 use serde_json::Value;
 use std::collections::HashMap;
 use std::fs;
+use std::sync::{Mutex, OnceLock};
+use std::time::{Duration, Instant};
+
+/// Evita reconsultar a community a cada troca de jogo quando a Steam falha/atrasa.
+fn community_skip_until() -> &'static Mutex<HashMap<String, Instant>> {
+    static CACHE: OnceLock<Mutex<HashMap<String, Instant>>> = OnceLock::new();
+    CACHE.get_or_init(|| Mutex::new(HashMap::new()))
+}
+
+fn should_skip_community(app_id: &str) -> bool {
+    let Ok(guard) = community_skip_until().lock() else {
+        return false;
+    };
+    guard
+        .get(app_id)
+        .is_some_and(|until| *until > Instant::now())
+}
+
+fn mark_community_skip(app_id: &str, secs: u64) {
+    if let Ok(mut guard) = community_skip_until().lock() {
+        guard.insert(app_id.to_string(), Instant::now() + Duration::from_secs(secs));
+    }
+}
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -181,68 +204,78 @@ pub fn get_steam_progress(app_id: &str, custom_install_dir: Option<&str>) -> App
         }
     }
 
-    // Sempre mescla o perfil público: Ubisoft/etc. podem ter cache local
-    // parcial — se só consultarmos a community quando local_unlocked==0,
-    // conquistas novas depois da primeira sync nunca entram.
+    // Local primeiro (rápido). Community só quando o cache local não tem unlocks —
+    // consultar a web a cada troca de jogo congela a UI (timeout/rede).
     let mut source = "local".to_string();
-    if let Ok(remote) = fetch_community_unlocks(id, &user.steam_id64) {
-        let mut applied = 0usize;
-        for (api, unlock) in remote {
-            if !unlock.completed {
-                continue;
-            }
-            if let Some(row) = achievements.get_mut(&api) {
-                if !row.completed {
-                    row.completed = true;
-                    row.unlocked_at = unlock.unlocked_at.or(row.unlocked_at.clone());
-                    applied += 1;
-                }
-                if row.icon_hash.is_none() {
-                    if let Some(h) = unlock.icon_hash.clone() {
-                        row.icon_hash = Some(h);
+    let local_completed = achievements.values().filter(|a| a.completed).count();
+    let try_community = local_completed == 0 && !should_skip_community(id);
+    if try_community {
+        match fetch_community_unlocks(id, &user.steam_id64) {
+            Ok(remote) => {
+                let mut applied = 0usize;
+                for (api, unlock) in remote {
+                    if !unlock.completed {
+                        continue;
+                    }
+                    if let Some(row) = achievements.get_mut(&api) {
+                        if !row.completed {
+                            row.completed = true;
+                            row.unlocked_at = unlock.unlocked_at.or(row.unlocked_at.clone());
+                            applied += 1;
+                        }
+                        if row.icon_hash.is_none() {
+                            if let Some(h) = unlock.icon_hash.clone() {
+                                row.icon_hash = Some(h);
+                            }
+                        }
+                        if row.icon.is_none() {
+                            row.icon = unlock.icon.clone();
+                        }
+                        if (row.title.is_empty() || row.title == api) && unlock.title.is_some() {
+                            row.title = unlock.title.clone().unwrap_or(row.title.clone());
+                        }
+                    } else {
+                        achievements.insert(
+                            api.clone(),
+                            ProgressAchievement {
+                                completed: true,
+                                unlocked_at: unlock.unlocked_at,
+                                title: unlock.title.unwrap_or_else(|| api.clone()),
+                                icon: unlock.icon,
+                                icon_hash: unlock.icon_hash,
+                                stat_group: "community".into(),
+                                bit_index: -1,
+                                progress: None,
+                                progress_max: None,
+                                hidden: false,
+                                description: String::new(),
+                                description_en: String::new(),
+                            },
+                        );
+                        applied += 1;
                     }
                 }
-                if row.icon.is_none() {
-                    row.icon = unlock.icon.clone();
+                if applied > 0 || achievements.values().any(|a| a.completed) {
+                    source = "community".into();
+                    // mtime estável: hash dos unlocks (evita “sempre mudou” e loop no frontend)
+                    let mut keys: Vec<&str> = achievements
+                        .iter()
+                        .filter(|(_, a)| a.completed)
+                        .map(|(k, _)| k.as_str())
+                        .collect();
+                    keys.sort_unstable();
+                    let digest = keys.join("|");
+                    mtime_ms = digest
+                        .bytes()
+                        .fold(0u64, |acc, b| {
+                            acc.wrapping_mul(16777619).wrapping_add(u64::from(b))
+                        }) as f64;
                 }
-                if (row.title.is_empty() || row.title == api) && unlock.title.is_some() {
-                    row.title = unlock.title.clone().unwrap_or(row.title.clone());
-                }
-            } else {
-                achievements.insert(
-                    api.clone(),
-                    ProgressAchievement {
-                        completed: true,
-                        unlocked_at: unlock.unlocked_at,
-                        title: unlock.title.unwrap_or_else(|| api.clone()),
-                        icon: unlock.icon,
-                        icon_hash: unlock.icon_hash,
-                        stat_group: "community".into(),
-                        bit_index: -1,
-                        progress: None,
-                        progress_max: None,
-                        hidden: false,
-                        description: String::new(),
-                        description_en: String::new(),
-                    },
-                );
-                applied += 1;
             }
-        }
-        if applied > 0 || achievements.values().any(|a| a.completed) {
-            source = "community".into();
-            // mtime estável: hash dos unlocks (evita “sempre mudou” e loop no frontend)
-            let mut keys: Vec<&str> = achievements
-                .iter()
-                .filter(|(_, a)| a.completed)
-                .map(|(k, _)| k.as_str())
-                .collect();
-            keys.sort_unstable();
-            let digest = keys.join("|");
-            mtime_ms = digest
-                .bytes()
-                .fold(0u64, |acc, b| acc.wrapping_mul(16777619).wrapping_add(u64::from(b)))
-                as f64;
+            Err(_) => {
+                // 10 min sem insistir — troca de jogo fica leve
+                mark_community_skip(id, 600);
+            }
         }
     }
 
@@ -259,34 +292,38 @@ fn fetch_community_unlocks(
     app_id: &str,
     steam_id64: &str,
 ) -> AppResult<HashMap<String, CommunityUnlock>> {
-    let urls = [
-        format!(
-            "https://steamcommunity.com/profiles/{steam_id64}/stats/{app_id}/achievements/?xml=1&l=brazilian"
-        ),
-        format!(
-            "https://steamcommunity.com/profiles/{steam_id64}/stats/{app_id}/?xml=1&l=brazilian"
-        ),
-    ];
-
-    let mut last_err: Option<AppError> = None;
-    for url in urls {
-        match fetch_community_xml(&url) {
-            Ok(map) if !map.is_empty() => return Ok(map),
-            Ok(_) => {
-                last_err = Some(AppError::from(
-                    "Nenhuma conquista no XML do perfil (jogo sem stats públicos?).",
-                ));
-            }
-            Err(err) => last_err = Some(err),
-        }
+    // Uma URL só — segundo endpoint dobrava o tempo de espera na troca de jogo.
+    let url = format!(
+        "https://steamcommunity.com/profiles/{steam_id64}/stats/{app_id}/achievements/?xml=1&l=brazilian"
+    );
+    match fetch_community_xml(&url) {
+        Ok(map) if !map.is_empty() => Ok(map),
+        Ok(_) => Err(AppError::from(
+            "Nenhuma conquista no XML do perfil (jogo sem stats públicos?).",
+        )),
+        Err(err) => Err(err),
     }
-    Err(last_err.unwrap_or_else(|| {
-        AppError::from("Nenhuma conquista no XML do perfil (jogo sem stats públicos?).")
-    }))
+}
+
+fn fetch_community_xml_fast(url: &str) -> AppResult<String> {
+    let client = http_client()?;
+    let res = client
+        .get(url)
+        .timeout(Duration::from_millis(1200))
+        .header("Accept-Language", "pt-BR,pt;q=0.9,en;q=0.8")
+        .header("Accept", "application/xml,text/xml,text/html;q=0.9,*/*;q=0.8")
+        .send()?;
+    if !res.status().is_success() {
+        return Err(AppError::Message(format!(
+            "HTTP {} em {url}",
+            res.status()
+        )));
+    }
+    Ok(res.text()?)
 }
 
 fn fetch_community_xml(url: &str) -> AppResult<HashMap<String, CommunityUnlock>> {
-    let xml = fetch_text(url)?;
+    let xml = fetch_community_xml_fast(url)?;
     let low = xml.to_ascii_lowercase();
     if low.contains("<privacystate>private</privacystate>") || low.contains("this profile is private")
     {

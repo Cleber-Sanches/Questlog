@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useT } from '@/app/providers/LocaleProvider'
 import { Button } from '@/components/ui/Button'
 import { useSteamSettings } from '@/features/steam/hooks/useSteamSettings'
@@ -15,6 +16,17 @@ import {
   type UnlockOverlayPayload,
 } from '@/features/overlay/types'
 import { SHOW_HIDDEN_SETTING_KEY, showHiddenAchievements } from '@/features/achievements/utils/hidden'
+import {
+  COMPANION_HOTKEY_SETTING_KEY,
+  COMPANION_SETTING_KEY,
+  DEFAULT_COMPANION_HOTKEY,
+} from '@/features/companion/types'
+import {
+  refreshCompanionShortcut,
+  setCompanionHotkey,
+  toggleCompanion,
+} from '@/features/companion/api'
+import { hotkeyFromKeyboardEvent, hotkeyParts } from '@/features/companion/hotkey'
 
 export function SteamSettingsPanel() {
   const t = useT()
@@ -30,14 +42,49 @@ export function SteamSettingsPanel() {
     OVERLAY_SOUND_PROGRESS_SETTING_KEY,
     false,
   )
+  const companionOn = settingEnabled(settings, COMPANION_SETTING_KEY, true)
+  const companionHotkey = settings[COMPANION_HOTKEY_SETTING_KEY]?.trim() || DEFAULT_COMPANION_HOTKEY
+  const [recordingHotkey, setRecordingHotkey] = useState(false)
+  const [hotkeyError, setHotkeyError] = useState(false)
   const trayOn = settingEnabled(settings, TRAY_SETTING_KEY, true)
   const showHidden = showHiddenAchievements(settings)
   const extrasLocked = !overlayOn
+  const companionLocked = !companionOn
   const soundProgressLocked = extrasLocked || !overlaySoundOn || !overlayProgressOn
 
   const toggle = (key: string, on: boolean) => {
     void setSetting(key, on ? '1' : '0')
   }
+
+  const toggleCompanionSetting = (on: boolean) => {
+    void setSetting(COMPANION_SETTING_KEY, on ? '1' : '0').then(() =>
+      refreshCompanionShortcut(),
+    )
+  }
+
+  useEffect(() => {
+    if (!recordingHotkey) return
+    const onKey = (event: KeyboardEvent) => {
+      event.preventDefault()
+      event.stopPropagation()
+      if (event.key === 'Escape') {
+        setRecordingHotkey(false)
+        return
+      }
+      const next = hotkeyFromKeyboardEvent(event)
+      if (!next) {
+        setHotkeyError(true)
+        return
+      }
+      setHotkeyError(false)
+      setRecordingHotkey(false)
+      void setCompanionHotkey(next)
+        .then((saved) => setSetting(COMPANION_HOTKEY_SETTING_KEY, saved))
+        .catch(() => setHotkeyError(true))
+    }
+    window.addEventListener('keydown', onKey, true)
+    return () => window.removeEventListener('keydown', onKey, true)
+  }, [recordingHotkey, setSetting])
 
   const previewUnlock = (kind: 'difficulty' | 'progress') => {
     const withIcon = achievements.filter((a) => a.icon)
@@ -247,6 +294,93 @@ export function SteamSettingsPanel() {
                     {t('settings.steam.overlay.previewProgress')}
                   </Button>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="stSection">
+        <h3 className="stSectionTitle">{t('settings.steam.companion.title')}</h3>
+        <div className="stPanel">
+          <div className="stBundle">
+            <div className="stRow">
+              <div className="stRowLead">
+                <span className="stRowIcon" aria-hidden>
+                  <i className="ph-fill ph-game-controller" />
+                </span>
+                <div className="stRowCopy">
+                  <div className="stRowTitle">{t('settings.steam.companion.title')}</div>
+                  <p className="stRowDesc">{t('settings.steam.companion.desc')}</p>
+                </div>
+              </div>
+              <label className="settingsSwitch">
+                <input
+                  type="checkbox"
+                  checked={companionOn}
+                  onChange={(e) => toggleCompanionSetting(e.target.checked)}
+                  aria-label={t('settings.steam.companion.title')}
+                />
+                <span className="settingsSwitchUi" aria-hidden />
+              </label>
+            </div>
+
+            <div className="stBundleExtras">
+              <div className={`stRow is-sub${companionLocked ? ' is-disabled' : ''}`}>
+                <div className="stRowLead">
+                  <span className="stRowIcon" aria-hidden>
+                    <i className="ph-fill ph-keyboard" />
+                  </span>
+                  <div className="stRowCopy">
+                    <div className="stRowTitle">{t('settings.steam.companion.hotkey')}</div>
+                    <p className="stRowDesc">
+                      {hotkeyError
+                        ? t('settings.steam.companion.invalid')
+                        : t('settings.steam.companion.hotkeyDesc')}
+                    </p>
+                  </div>
+                </div>
+                <div className="stPreviewRow">
+                  <span className="stHelpKeys" aria-hidden>
+                    {hotkeyParts(companionHotkey).map((key) => (
+                      <kbd key={key} className="stKbd">
+                        {key}
+                      </kbd>
+                    ))}
+                  </span>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    disabled={companionLocked}
+                    onClick={() => {
+                      setHotkeyError(false)
+                      setRecordingHotkey(true)
+                    }}
+                  >
+                    {recordingHotkey
+                      ? t('settings.steam.companion.recording')
+                      : t('settings.steam.companion.record')}
+                  </Button>
+                </div>
+              </div>
+              <div className={`stRow is-sub${companionLocked ? ' is-disabled' : ''}`}>
+                <div className="stRowLead">
+                  <span className="stRowIcon" aria-hidden>
+                    <i className="ph-fill ph-eye" />
+                  </span>
+                  <div className="stRowCopy">
+                    <div className="stRowTitle">{t('settings.steam.companion.preview')}</div>
+                    <p className="stRowDesc">{t('settings.steam.companion.note')}</p>
+                  </div>
+                </div>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  disabled={companionLocked}
+                  onClick={() => void toggleCompanion()}
+                >
+                  {t('settings.steam.companion.preview')}
+                </Button>
               </div>
             </div>
           </div>

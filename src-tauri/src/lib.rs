@@ -65,8 +65,26 @@ pub fn run() {
             app.manage(state.clone());
             app.manage(commands::desktop::DesktopFlags::new());
             commands::desktop::prepare_overlay(app.handle());
+            commands::companion::prepare_companion(app.handle());
             if let Err(err) = commands::desktop::install_tray(app.handle(), &state) {
                 log::warn!("bandeja: {err}");
+            }
+
+            #[cfg(desktop)]
+            {
+                use tauri_plugin_global_shortcut::ShortcutState;
+                app.handle().plugin(
+                    tauri_plugin_global_shortcut::Builder::new()
+                        .with_handler(|app, _shortcut, event| {
+                            if event.state == ShortcutState::Pressed {
+                                commands::companion::on_hotkey(app);
+                            }
+                        })
+                        .build(),
+                )?;
+                if let Err(err) = commands::companion::refresh_shortcut(app.handle()) {
+                    log::warn!("atalho companion: {err}");
+                }
             }
 
             let handle = app.handle().clone();
@@ -122,6 +140,11 @@ pub fn run() {
             commands::guide_open::read_guide_open_file,
             commands::desktop::overlay_show_unlock,
             commands::desktop::overlay_hide,
+            commands::companion::companion_toggle,
+            commands::companion::companion_hide,
+            commands::companion::companion_get_snapshot,
+            commands::companion::companion_refresh_shortcut,
+            commands::companion::companion_set_hotkey,
             commands::desktop::app_show_main,
             commands::desktop::app_to_tray,
             commands::desktop::app_minimize_or_tray,

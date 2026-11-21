@@ -1,6 +1,6 @@
 [package]
 name = "questlog-setup"
-version = "0.3.14"
+version = "0.3.15"
 description = "Questlog Setup — instalador visual"
 authors = ["Questlog"]
 edition = "2021"

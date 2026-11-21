@@ -147,7 +147,14 @@ fn decode_html(text: &str) -> String {
         .join(" ")
 }
 
-fn parse_community_achievements(html: &str) -> Vec<CommunityRow> {
+fn parse_community_achievements(html: &str, app_id: &str) -> Vec<CommunityRow> {
+    // Layout novo (SSR React) — preferido.
+    let ssr_rows = parse_community_ssr(html, app_id);
+    if !ssr_rows.is_empty() {
+        return ssr_rows;
+    }
+
+    // Layout antigo (achieveRow).
     let re = regex::Regex::new(
         r#"(?is)class="achieveRow[^"]*"[\s\S]*?<img src="([^"]+)"[\s\S]*?achievePercent">\s*([\d.,]+)\s*%[\s\S]*?<h3>([\s\S]*?)</h3>[\s\S]*?<h5>([\s\S]*?)</h5>"#,
     )
@@ -169,6 +176,120 @@ fn parse_community_achievements(html: &str) -> Vec<CommunityRow> {
     rows
 }
 
+/// Extrai conquistas do JSON embutido em `valve-ssr-data` (Steam community nova).
+fn parse_community_ssr(html: &str, app_id: &str) -> Vec<CommunityRow> {
+    let Some(start) = html.find(r#"id="valve-ssr-data""#) else {
+        return Vec::new();
+    };
+    let after = &html[start..];
+    let Some(gt) = after.find('>') else {
+        return Vec::new();
+    };
+    let body = &after[gt + 1..];
+    let Some(end) = body.find("</script>") else {
+        return Vec::new();
+    };
+    let json_text = body[..end].trim_start_matches('\u{feff}');
+    let Ok(ssr) = serde_json::from_str::<Value>(json_text) else {
+        return Vec::new();
+    };
+    let Some(query_raw) = ssr
+        .pointer("/renderContext/queryData")
+        .and_then(|v| v.as_str())
+    else {
+        return Vec::new();
+    };
+    let Ok(query) = serde_json::from_str::<Value>(query_raw) else {
+        return Vec::new();
+    };
+    let Some(queries) = query.get("queries").and_then(|v| v.as_array()) else {
+        return Vec::new();
+    };
+
+    let mut schema_groups: Option<&Vec<Value>> = None;
+    let mut pct_by_key: HashMap<i64, f64> = HashMap::new();
+
+    for q in queries {
+        let key = q
+            .pointer("/queryKey/0")
+            .and_then(|v| v.as_str())
+            .unwrap_or("");
+        if key != "achievements" {
+            continue;
+        }
+        let kind = q
+            .pointer("/queryKey/2")
+            .and_then(|v| v.as_str())
+            .unwrap_or("");
+        if kind == "schema_v2" {
+            if let Some(groups) = q.pointer("/state/data/groups").and_then(|v| v.as_array()) {
+                schema_groups = Some(groups);
+            }
+        } else if kind == "globalpercentages" {
+            if let Some(obj) = q.pointer("/state/data/percentages").and_then(|v| v.as_object()) {
+                for (k, v) in obj {
+                    if let (Ok(id), Some(pct)) = (k.parse::<i64>(), json_f64(v)) {
+                        pct_by_key.insert(id, pct);
+                    }
+                }
+            }
+        }
+    }
+
+    let Some(groups) = schema_groups else {
+        return Vec::new();
+    };
+    let mut rows = Vec::new();
+    for group in groups {
+        let Some(achs) = group.get("achievements").and_then(|v| v.as_array()) else {
+            continue;
+        };
+        for ach in achs {
+            let api_name = ach
+                .get("api_name")
+                .and_then(|v| v.as_str())
+                .unwrap_or("")
+                .to_string();
+            if api_name.is_empty() {
+                continue;
+            }
+            let title = ach
+                .get("name")
+                .and_then(|v| v.as_str())
+                .unwrap_or(&api_name)
+                .to_string();
+            let description = ach
+                .get("description")
+                .and_then(|v| v.as_str())
+                .unwrap_or("")
+                .to_string();
+            let icon_file = ach
+                .get("icon_achieved")
+                .and_then(|v| v.as_str())
+                .unwrap_or("")
+                .to_string();
+            let icon = if icon_file.is_empty() {
+                String::new()
+            } else if icon_file.starts_with("http") {
+                icon_file.clone()
+            } else {
+                icon_url_for(app_id, &icon_file)
+            };
+            let internal_key = ach.get("internal_key").and_then(|v| v.as_i64());
+            let global_percent = internal_key.and_then(|k| pct_by_key.get(&k).copied());
+            rows.push(CommunityRow {
+                title,
+                description,
+                icon_hash: extract_icon_hash(&icon_file),
+                icon,
+                global_percent,
+                api_name: Some(api_name),
+            });
+        }
+    }
+    rows
+}
+
 fn fetch_global_percentages(app_id: &str) -> AppResult<Vec<(String, f64)>> {
     let url = format!(
         "https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v2/?gameid={app_id}"
@@ -183,10 +304,17 @@ fn fetch_global_percentages(app_id: &str) -> AppResult<Vec<(String, f64)>> {
         .into_iter()
         .filter_map(|item| {
             let api_name = item.get("name")?.as_str()?.to_string();
-            let percent = item.get("percent")?.as_f64()?;
+            let percent = json_f64(item.get("percent")?)?;
             Some((api_name, percent))
         })
         .collect())
+}
+
+fn json_f64(value: &Value) -> Option<f64> {
+    value
+        .as_f64()
+        .or_else(|| value.as_i64().map(|n| n as f64))
+        .or_else(|| value.as_str().and_then(|s| s.replace(',', ".").parse().ok()))
 }
 
 fn read_local_schema(
@@ -309,7 +437,7 @@ fn fetch_community_rows(app_id: &str, locale: &str) -> Vec<CommunityRow> {
         "https://steamcommunity.com/stats/{app_id}/achievements/?l={locale}"
     ))
     .ok()
-    .map(|html| parse_community_achievements(&html))
+    .map(|html| parse_community_achievements(&html, app_id))
     .unwrap_or_default()
 }
 
@@ -379,6 +507,66 @@ pub fn fetch_steam_english_texts(
     Ok(out)
 }
 
+fn icon_url_for(app_id: &str, icon_file: &str) -> String {
+    if icon_file.is_empty() {
+        String::new()
+    } else {
+        format!(
+            "https://shared.fastly.steamstatic.com/community_assets/images/apps/{app_id}/{icon_file}"
+        )
+    }
+}
+
+fn rows_from_globals(
+    app_id: &str,
+    globals: &[(String, f64)],
+    local: &Option<(HashMap<String, LocalEntry>, HashMap<String, LocalEntry>)>,
+) -> Vec<CommunityRow> {
+    globals
+        .iter()
+        .map(|(api_name, percent)| {
+            let from_local = local.as_ref().and_then(|(_, by_api)| by_api.get(api_name));
+            let icon_file = from_local.map(|e| e.icon_file.as_str()).unwrap_or("");
+            CommunityRow {
+                title: from_local
+                    .map(|e| e.title.clone())
+                    .unwrap_or_else(|| api_name.clone()),
+                description: from_local
+                    .map(|e| e.description.clone())
+                    .unwrap_or_default(),
+                icon: icon_url_for(app_id, icon_file),
+                icon_hash: from_local.and_then(|e| e.icon_hash.clone()),
+                global_percent: Some(*percent),
+                api_name: Some(api_name.clone()),
+            }
+        })
+        .collect()
+}
+
+fn rows_from_local(
+    app_id: &str,
+    local: &(HashMap<String, LocalEntry>, HashMap<String, LocalEntry>),
+) -> Vec<CommunityRow> {
+    let mut entries: Vec<&LocalEntry> = local.1.values().collect();
+    entries.sort_by(|a, b| {
+        a.stat_group
+            .cmp(&b.stat_group)
+            .then(a.bit_index.cmp(&b.bit_index))
+            .then(a.api_name.cmp(&b.api_name))
+    });
+    entries
+        .into_iter()
+        .map(|entry| CommunityRow {
+            title: entry.title.clone(),
+            description: entry.description.clone(),
+            icon: icon_url_for(app_id, &entry.icon_file),
+            icon_hash: entry.icon_hash.clone(),
+            global_percent: None,
+            api_name: Some(entry.api_name.clone()),
+        })
+        .collect()
+}
+
 fn fetch_achievements_inner(app_id: &str, custom_install_dir: Option<&str>) -> AppResult<AchievementsResult> {
     let mut rows = fetch_community_rows(app_id, "brazilian");
     if rows.is_empty() {
@@ -388,44 +576,34 @@ fn fetch_achievements_inner(app_id: &str, custom_install_dir: Option<&str>) -> A
     let globals = fetch_global_percentages(app_id).unwrap_or_default();
     let local = read_local_schema(app_id, custom_install_dir);
 
-    let mut source = if rows.is_empty() {
-        if globals.is_empty() {
-            return Err(AppError::from(
-                "Nenhuma conquista pública encontrada. O jogo pode não ter conquistas Steam.",
-            ));
-        }
-        rows = globals
-            .iter()
-            .map(|(api_name, percent)| {
-                let from_local = local.as_ref().and_then(|(_, by_api)| by_api.get(api_name));
-                let icon_file = from_local.map(|e| e.icon_file.as_str()).unwrap_or("");
-                let icon = if icon_file.is_empty() {
-                    String::new()
-                } else {
-                    format!(
-                        "https://shared.fastly.steamstatic.com/community_assets/images/apps/{app_id}/{icon_file}"
-                    )
-                };
-                CommunityRow {
-                    title: from_local
-                        .map(|e| e.title.clone())
-                        .unwrap_or_else(|| api_name.clone()),
-                    description: String::new(),
-                    icon,
-                    icon_hash: from_local.and_then(|e| e.icon_hash.clone()),
-                    global_percent: Some(*percent),
-                    api_name: Some(api_name.clone()),
-                }
-            })
-            .collect();
-        "global-percent".to_string()
-    } else {
+    // Ordem: comunidade Steam → % global → schema local do PC.
+    // Alguns jogos (ex.: Project Zomboid) não publicam página/API de conquistas.
+    let mut source = if !rows.is_empty() {
         rows = match_api_names(rows, &globals);
         if local.is_some() {
             "steam-community+local-schema+global-percent".to_string()
         } else {
             "steam-community+global-percent".to_string()
         }
+    } else if !globals.is_empty() {
+        rows = rows_from_globals(app_id, &globals, &local);
+        if local.is_some() {
+            "global-percent+local-schema".to_string()
+        } else {
+            "global-percent".to_string()
+        }
+    } else if let Some(ref schema) = local {
+        rows = rows_from_local(app_id, schema);
+        if rows.is_empty() {
+            return Err(AppError::from(
+                "Steam não publicou a lista deste jogo e o schema local está vazio. Abra o jogo na Steam uma vez e tente de novo.",
+            ));
+        }
+        "local-schema".to_string()
+    } else {
+        return Err(AppError::from(
+            "Steam não publicou a lista deste jogo. Abra o jogo na Steam uma vez (gera o schema local) e adicione de novo.",
+        ));
     };
 
     let english_by_index: Vec<(String, String)> = english_rows

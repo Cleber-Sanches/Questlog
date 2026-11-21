@@ -380,32 +380,57 @@ async function fetchSteamAchievements(appId) {
     let source = "steam-community";
     const local = readLocalSchema(id);
 
-    // Fallback final: só percentuais globais (+ schema local se existir)
+    // Fallbacks: % global → schema local do PC (alguns jogos não publicam lista na Steam)
     if (rows.length === 0) {
         const globals = await fetchGlobalPercentages(id);
-        if (!globals.length) {
+        if (globals.length) {
+            source = local ? "global-percent+local-schema" : "global-percent";
+            rows = globals.map((g) => {
+                const fromLocal = local?.byApiName?.get(g.apiName);
+                const iconFile = fromLocal?.iconFile || "";
+                const icon = iconFile
+                    ? `https://shared.fastly.steamstatic.com/community_assets/images/apps/${id}/${iconFile}`
+                    : "";
+                return {
+                    title: fromLocal?.title || g.apiName,
+                    description: fromLocal?.description || "",
+                    icon,
+                    iconHash: fromLocal?.iconHash || extractIconHash(iconFile),
+                    globalPercent: g.percent,
+                    apiName: g.apiName,
+                    statGroup: fromLocal?.statGroup,
+                    bitIndex: fromLocal?.bitIndex,
+                };
+            });
+        } else if (local?.byApiName?.size) {
+            source = "local-schema";
+            rows = [...local.byApiName.values()]
+                .sort(
+                    (a, b) =>
+                        String(a.statGroup || "").localeCompare(String(b.statGroup || "")) ||
+                        (a.bitIndex || 0) - (b.bitIndex || 0) ||
+                        String(a.apiName).localeCompare(String(b.apiName)),
+                )
+                .map((entry) => {
+                    const iconFile = entry.iconFile || "";
+                    return {
+                        title: entry.title || entry.apiName,
+                        description: entry.description || "",
+                        icon: iconFile
+                            ? `https://shared.fastly.steamstatic.com/community_assets/images/apps/${id}/${iconFile}`
+                            : "",
+                        iconHash: entry.iconHash || extractIconHash(iconFile),
+                        globalPercent: null,
+                        apiName: entry.apiName,
+                        statGroup: entry.statGroup,
+                        bitIndex: entry.bitIndex,
+                    };
+                });
+        } else {
             throw new Error(
-                "Nenhuma conquista pública encontrada. O jogo pode não ter conquistas Steam."
+                "Steam não publicou a lista deste jogo. Abra o jogo na Steam uma vez (gera o schema local) e adicione de novo.",
             );
         }
-        source = "global-percent";
-        rows = globals.map((g) => {
-            const fromLocal = local?.byApiName?.get(g.apiName);
-            const iconFile = fromLocal?.iconFile || "";
-            const icon = iconFile
-                ? `https://shared.fastly.steamstatic.com/community_assets/images/apps/${id}/${iconFile}`
-                : "";
-            return {
-                title: fromLocal?.title || g.apiName,
-                description: "",
-                icon,
-                iconHash: fromLocal?.iconHash || extractIconHash(iconFile),
-                globalPercent: g.percent,
-                apiName: g.apiName,
-                statGroup: fromLocal?.statGroup,
-                bitIndex: fromLocal?.bitIndex,
-            };
-        });
     } else if (local) {
         source = "steam-community+local-schema";
         rows = rows.map((row) => {

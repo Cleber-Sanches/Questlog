@@ -1,5 +1,11 @@
 import { useT } from '@/app/providers/LocaleProvider'
+import { useAppData } from '@/app/providers/AppDataProvider'
 import type { MessageKey } from '@/i18n'
+import {
+  COMPANION_HOTKEY_SETTING_KEY,
+  DEFAULT_COMPANION_HOTKEY,
+} from '@/features/companion/types'
+import { hotkeyParts } from '@/features/companion/hotkey'
 
 const BLOCKS: Array<{ icon: string; titleKey: MessageKey; bodyKeys: MessageKey[] }> = [
   {
@@ -16,6 +22,11 @@ const BLOCKS: Array<{ icon: string; titleKey: MessageKey; bodyKeys: MessageKey[]
     icon: 'ph-fill ph-robot',
     titleKey: 'settings.help.ai.title',
     bodyKeys: ['settings.help.ai.p1', 'settings.help.ai.p2'],
+  },
+  {
+    icon: 'ph-fill ph-game-controller',
+    titleKey: 'settings.help.companion.title',
+    bodyKeys: ['settings.help.companion.p1', 'settings.help.companion.p2'],
   },
 ]
 
@@ -36,6 +47,15 @@ const SHORTCUTS = [
 
 export function HelpSettingsPanel() {
   const t = useT()
+  const { settings } = useAppData()
+  const companionHotkey = settings[COMPANION_HOTKEY_SETTING_KEY]?.trim() || DEFAULT_COMPANION_HOTKEY
+  const shortcuts = [
+    ...SHORTCUTS,
+    {
+      keys: hotkeyParts(companionHotkey),
+      labelKey: 'settings.help.keys.companion' as const,
+    },
+  ]
 
   return (
     <div className="stStack">
@@ -74,7 +94,7 @@ export function HelpSettingsPanel() {
               <h3 className="stHelpTitle">{t('settings.help.keys.title')}</h3>
             </div>
           </div>
-          {SHORTCUTS.map((item) => (
+          {shortcuts.map((item) => (
             <div key={item.labelKey} className="stHelpKeyRow">
               <span className="stHelpKeys" aria-hidden>
                 {item.keys.map((key) => (

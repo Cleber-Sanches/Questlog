@@ -1,0 +1,8 @@
+[[permission]]
+identifier = "allow-companion"
+description = "Painel in-game: lê o snapshot e fecha a janela"
+commands.allow = [
+  "companion_get_snapshot",
+  "companion_hide",
+  "media_resolve_path"
+]

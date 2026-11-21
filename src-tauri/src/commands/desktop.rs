@@ -121,6 +121,11 @@ pub fn overlay_show_unlock(
         return Err("janela overlay indisponível".into());
     };
     reveal_overlay(&overlay);
+    let overlay_raise = overlay.clone();
+    std::thread::spawn(move || {
+        std::thread::sleep(Duration::from_millis(120));
+        let _ = overlay_raise.set_always_on_top(true);
+    });
     let overlay_emit = overlay.clone();
     let payload_emit = payload.clone();
     std::thread::spawn(move || {
@@ -205,7 +210,7 @@ pub fn handle_window_event(window: &tauri::Window, event: &tauri::WindowEvent) {
         return;
     };
 
-    if window.label() == OVERLAY_LABEL {
+    if window.label() == OVERLAY_LABEL || window.label() == "companion" {
         api.prevent_close();
         let _ = window.hide();
         return;
@@ -294,5 +299,13 @@ pub fn prepare_overlay(app: &AppHandle) {
         let _ = overlay.set_ignore_cursor_events(true);
         let _ = overlay.set_focusable(false);
         let _ = overlay.hide();
+    }
+}
+
+pub fn raise_unlock_overlay(app: &AppHandle) {
+    if let Some(overlay) = app.get_webview_window(OVERLAY_LABEL) {
+        if overlay.is_visible().unwrap_or(false) {
+            let _ = overlay.set_always_on_top(true);
+        }
     }
 }

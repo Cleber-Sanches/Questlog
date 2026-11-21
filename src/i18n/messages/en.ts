@@ -76,10 +76,16 @@ export const en = {
     'Chat writes to the guide: tips, missables, difficulty, groups, levels, and videos.',
   'settings.help.ai.p2':
     'It does not mark an achievement done and does not change what Steam already saved. If the assistant is off, chat does not write to the guide.',
+  'settings.help.companion.title': 'In-game panel',
+  'settings.help.companion.p1':
+    'The top banner still appears when an achievement unlocks. The in-game panel is separate: it opens with a shortcut and lists what is left, without Alt+Tab.',
+  'settings.help.companion.p2':
+    'The default shortcut is Ctrl+Shift+Q. Change it under Steam in Settings. Exclusive fullscreen can hide the panel.',
   'settings.help.keys.title': 'Shortcuts',
   'settings.help.keys.search': 'Search the achievement list',
   'settings.help.keys.esc': 'Close a panel, window, or Settings',
   'settings.help.keys.help': 'Open this help',
+  'settings.help.keys.companion': 'Open or close the in-game panel',
 
   'settings.language.title': 'Language',
   'settings.language.subtitle': 'Choose the interface language. Changes apply immediately.',
@@ -198,6 +204,17 @@ export const en = {
   'settings.steam.overlay.previewDifficulty': 'Unlock',
   'settings.steam.overlay.previewProgress': 'Progress',
   'settings.steam.overlay.sampleTitle': 'Soul Mask',
+  'settings.steam.companion.title': 'In-game panel',
+  'settings.steam.companion.desc':
+    'Opens over the game with a shortcut so you can see what is left. Separate from the top banner.',
+  'settings.steam.companion.hotkey': 'Shortcut',
+  'settings.steam.companion.hotkeyDesc': 'Default Ctrl+Shift+Q, so it does not fight Steam Shift+Tab.',
+  'settings.steam.companion.record': 'Set shortcut',
+  'settings.steam.companion.recording': 'Press the shortcut…',
+  'settings.steam.companion.preview': 'Open panel',
+  'settings.steam.companion.note':
+    'Exclusive fullscreen can hide the panel behind the game. Borderless usually works better.',
+  'settings.steam.companion.invalid': 'Use Ctrl, Alt, or Win together with a key.',
   'settings.steam.tray.title': 'Minimize to tray',
   'settings.steam.tray.desc':
     'Close and minimize hide the app next to the clock. Sync keeps running. Quit from the icon.',
@@ -206,6 +223,24 @@ export const en = {
   'overlay.kickerMany': '{n} achievements',
   'overlay.progress': 'Progress',
   'overlay.manyHint': 'unlocked just now',
+
+  'companion.title': 'Missing',
+  'companion.progress': '{done}/{total} · {left} open',
+  'companion.statDone': 'done',
+  'companion.statLeft': 'open',
+  'companion.empty': 'Nothing left in this game',
+  'companion.noGame': 'No active game',
+  'companion.noGameHint': 'Open Questlog and pick a game so the panel has something to show.',
+  'companion.hidden': 'Hidden achievement',
+  'companion.hiddenDesc': 'Description covered. Turn on Show hidden under Steam.',
+  'companion.tipLabel': 'Tip',
+  'companion.noTip': 'No tip on this item',
+  'companion.pick': 'Pick an achievement in the list',
+  'companion.close': 'Close panel',
+  'companion.missable': 'Missable',
+  'companion.diff.easy': 'Easy',
+  'companion.diff.medium': 'Medium',
+  'companion.diff.hard': 'Hard',
 
   'guide.pane.aria': 'Achievements',
   'guide.search.placeholder': 'Search achievement…',

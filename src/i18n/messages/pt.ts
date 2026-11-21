@@ -77,10 +77,16 @@ export const pt = {
     'O chat escreve no guia: dicas, perdíveis, dificuldade, grupos, níveis e vídeos.',
   'settings.help.ai.p2':
     'Ele não marca conquista como feita e não mexe no que a Steam já gravou. Se o assistente não estiver ligado, o chat não grava no guia.',
+  'settings.help.companion.title': 'Painel in-game',
+  'settings.help.companion.p1':
+    'O aviso no topo continua quando uma conquista destrava. O painel in-game é outra coisa: abre por atalho e lista o que falta, sem Alt+Tab.',
+  'settings.help.companion.p2':
+    'O atalho padrão é Ctrl+Shift+Q. Você troca em Steam, nas configurações. Tela cheia exclusiva do jogo pode esconder o painel.',
   'settings.help.keys.title': 'Atalhos',
   'settings.help.keys.search': 'Busca na lista de conquistas',
   'settings.help.keys.esc': 'Fecha painel, janela ou configurações',
   'settings.help.keys.help': 'Abre esta ajuda',
+  'settings.help.keys.companion': 'Abre ou fecha o painel in-game',
 
   // Language
   'settings.language.title': 'Idioma',
@@ -204,6 +210,17 @@ export const pt = {
   'settings.steam.overlay.previewDifficulty': 'Conquista',
   'settings.steam.overlay.previewProgress': 'Progresso',
   'settings.steam.overlay.sampleTitle': 'Máscara da Alma',
+  'settings.steam.companion.title': 'Painel in-game',
+  'settings.steam.companion.desc':
+    'Abre por atalho por cima do jogo para ver o que falta. Independente do aviso no topo.',
+  'settings.steam.companion.hotkey': 'Atalho',
+  'settings.steam.companion.hotkeyDesc': 'Padrão Ctrl+Shift+Q, para não brigar com o Shift+Tab da Steam.',
+  'settings.steam.companion.record': 'Definir atalho',
+  'settings.steam.companion.recording': 'Pressione o atalho…',
+  'settings.steam.companion.preview': 'Abrir painel',
+  'settings.steam.companion.note':
+    'Em tela cheia exclusiva o painel pode ficar atrás do jogo. Borderless costuma funcionar melhor.',
+  'settings.steam.companion.invalid': 'Use Ctrl, Alt ou Win junto com uma tecla.',
   'settings.steam.tray.title': 'Minimizar para a bandeja',
   'settings.steam.tray.desc':
     'O X e o minimizar escondem o app ao lado do relógio. O sync continua. Sair pelo ícone.',
@@ -212,6 +229,24 @@ export const pt = {
   'overlay.kickerMany': '{n} conquistas',
   'overlay.progress': 'Progresso',
   'overlay.manyHint': 'liberadas neste momento',
+
+  'companion.title': 'Faltando',
+  'companion.progress': '{done}/{total} · {left} abertas',
+  'companion.statDone': 'feitas',
+  'companion.statLeft': 'abertas',
+  'companion.empty': 'Nada pendente neste jogo',
+  'companion.noGame': 'Nenhum jogo ativo',
+  'companion.noGameHint': 'Abra o Questlog e escolha um jogo para o painel ter o que mostrar.',
+  'companion.hidden': 'Conquista oculta',
+  'companion.hiddenDesc': 'Descrição coberta. Ligue Mostrar ocultas em Steam.',
+  'companion.tipLabel': 'Dica',
+  'companion.noTip': 'Sem dica neste item',
+  'companion.pick': 'Escolha uma conquista na lista',
+  'companion.close': 'Fechar painel',
+  'companion.missable': 'Perdível',
+  'companion.diff.easy': 'Fácil',
+  'companion.diff.medium': 'Média',
+  'companion.diff.hard': 'Difícil',
 
   // Guide
   'guide.pane.aria': 'Conquistas',

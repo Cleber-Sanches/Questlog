@@ -405,7 +405,9 @@ export function useSteamSync(appId?: string | null) {
     if (!appId || achievements.length === 0) return
     if (bootstrappedForApp.current === appId) return
     bootstrappedForApp.current = appId
-    runAndAnnounce()
+    // Deixa a UI pintar a lista antes do sync Steam (evita “congelar” na troca).
+    const timer = window.setTimeout(runAndAnnounce, 80)
+    return () => window.clearTimeout(timer)
   }, [appId, achievements.length, runAndAnnounce])
 
   useEffect(() => {
